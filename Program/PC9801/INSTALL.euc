@@ -1,0 +1,16 @@
+How to INSTALL.
+
+
+B-Free OS の Make には、Z format が作成できる ld が必要です。
+(その ld は、/usr/local/bin に入っている必要があります)
+
+B-Free OS の make 方法
+
+トップディレクトリにて、make を実行してください。
+
+ブートプログラム/OS イメージをそれぞれ別の FD に落としてください。
+
+	cp $TOP/src/boot/boot.image /dev/fd0
+	cp $TOP/src/kernel/make/btron /dev/fd0
+
+

@@ -1,0 +1,42 @@
+\function{vdef\_dev  --- デバイスの登録}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER vdef\_dev (B *name, IO\_TYPE type, ID id, ID *rid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {name} {デバイス名。}
+  \labitem {type} {I/O の種類。}
+  \labitem {rid}  {登録したデバイスの ID。他のデバイスと重ならないユニー
+    クな ID を返す。}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_NOMEM}  システム管理領域が足りない(デバイスドライバの管理
+テーブルがオーバーフローした)。
+\end{lablist}
+
+
+\labitem{機能}
+
+{\tt vdef\_dev} は、BTRON1 仕様の {\tt def\_dev} と同様にデバイスの登
+録機能を提供します。
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: "itron"
+% End: 

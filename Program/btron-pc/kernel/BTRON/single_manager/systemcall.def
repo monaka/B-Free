@@ -1,0 +1,29 @@
+/*
+ *  BTRON systemcall リスト
+ */
+
+
+#include "include/btypes.h"
+
+/* プロセス管理システムコール
+ */
+int	cre_prc (LINK *lnk, W pri, MESSAGE *msg);
+int	rcr_prc (LINK *lnk, MESSAGE *msg);
+void	ext_prc (W exit_code);
+int	ter_prc (W pid, W abort_code, W opt);
+int	chg_pri (W pid, W new_pri, W opt);
+int	dly_tsk (W time);
+int	prc_sts (W pid, P_STATE *buff, TC *path);
+int	chg_usr (P_USER *buff);
+int	get_usr (W pid, P_USER *buff);
+int	get_inf (W pid, P_INFO *buff);
+int	snd_msg (W pid, MESSAGE *msg, W opt);
+int	cv_msg  (W t_mask, MESSAGE *msg, W msgsz, W opt);
+int	clr_msg (W t_mask, W last_mask);
+int	req_tmg (W time, W code);
+int	can_tmg (VOID);
+int	re_sem  (W cnt, W opt);
+int	del_sem (W sem_id);
+int	ai_sem  (W sem_id, W opt);
+int	sig_sem (W sem_id);
+

@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<TITLE>プロジェクト B-Free 〜 Introduction: B-Free プロジェクトとは何か</TITLE>
+</HEAD>
+<BODY>
+Previous
+<A HREF="intro-2.html">Next</A>
+<A HREF="intro.html#toc1">Table of Contents</A>
+<HR>
+<H2><A NAME="s1">1. B-Free プロジェクトとは何か</A></H2>
+
+<P>
+<BLOCKQUOTE>
+--- そのときはわからなかったが、これはそれまで私が手掛けた中で
+もっとも大胆なオペレーティングシステムのプロジェクトになる
+のだった。
+<P>Helen Custer 「INSIDE WINDOWS NT」</P>
+</BLOCKQUOTE>
+</P>
+
+<H2><A NAME="ss1.1">1.1 目的</A></H2>
+
+<P>B-Free は、フリーな BTRON を作成することを目的としたプロジェ
+クトです。</P>
+<P>すなわち、B-Free プロジェクトは、他のＯＳを使わずスタンドアローン
+で動作する BTRON。BTRON-OSの上で動作するマネージャ群。
+そして基本的なアプリケーシュンなどから構成される完全なＢＴＲＯＮ環境を
+提供します。</P>
+<P>現在のところ、BTRON 仕様の OS は商業的な目的に作成されたものだけ
+でした。BTRON-OS に興味を持っている人は、BTRON 仕様 OS を購
+入して使うしか方法はありませんでした。もちろん、この場合興味があっても
+ソースなどは見ることができません。
+しかし、B-Free プロジェクトは商業的な目的で作成するものではあり
+ません。
+自由に使用することができ、興味があるならばソースを見ることはもちろん、
+プログラムを変更することもできます。</P>
+<P>このようなプログラムを自由にながめ、変更できるような環境を作成するこ
+とを目的としたプロジェクトとして GNU プロジェクトがあります。
+基本的な目的は、B-Free プロジェクトと GNU プロジェクトは似てい
+ます。しかし、GNU プロジェクトが(ある程度改良は施されているとはいえ)
+UN*X のような (like UN*X) ＯＳの作成を目標としているのに対し、B-Free
+では、BTRON に基づいた環境を作成することで異なっています。</P>
+
+
+
+<H2><A NAME="ss1.2">1.2 対象とする仕様</A></H2>
+
+<P>1994 年現在、<CODE>BTRON</CODE> は、次の 3 つの仕様が決められ(あるいは決められよう
+とし)ています</P>
+<P>\begin{lablist}
+\labitem{BTRON1} 
+16ビット (正確には 80286 プロセッサ) を対象とした <CODE>BTRON</CODE> 。
+構造は一枚岩的なもの(?)だが、比較的貧弱なハードウェアで実用的な
+マルチタスク / マルチウィンドウ OS を実現している。</P>
+<P>\labitem{BTRON2}
+TRON チップ仕様プロセッサあるいは同等の性能をもつ 32 ビット
+プロセッサを対象とした OS 。 マイクロカーネル構造を採用して
+おり、保守性および拡張性に優れている。</P>
+<P>\labitem{BTRON3}
+BTRON1 と BTRON2 の経験に基づき定義された <CODE>BTRON</CODE> 仕様の最新
+バージョン。BTRON1 と同様にマイクロカーネル構造をもつ。1994
+年前半に仕様が fix される予定。
+\end{lablist}</P>
+<P>これらの <CODE>BTRON</CODE> 仕様のうち、B-Free プロジェクトで作成する <CODE>BTRON</CODE> は、
+<CODE>BTRON</CODE><F>13</F> を対象とします。</P>
+<P>ただし、<CODE>BTRON</CODE> <F>13</F> 仕様のうちマシン依存になっている部分については変
+更される場合もあります。たとえば、80286 を対象とした仕様などについては
+変更されるでしょう。
+また、ＯＳの内部構造については <CODE>BTRON</CODE> 1 仕様では定められていないため、
+独自に決めることとします。</P>
+
+
+
+
+<H2><A NAME="ss1.3">1.3 残りの内容</A></H2>
+
+<P>本ドキュメントの残りの章は、次のような構成になっています。</P>
+<P>\begin{description}
+\item<F>Chapter \ref{cha:user-side} </F> 一般ユーザから見た B-Free OS の説明で
+す。
+%
+\item<F>Chapter \ref{cha:structure} </F> B-Free OS の構造を概略を説明します。
+%
+\item<F>Chapter \ref{cha:core} </F> B-Free OS の最もハードウェア寄りの部分 --- 中
+心核について説明します。</P>
+<P>\item<F>Chapter \ref{cha:lowlib}</F> ユーザプログラムから見た API を提供す
+る層である LOWLIB について説明します。</P>
+<P>\item<F>Chapter \ref{cha:server} </F> B-Free OS の周辺核について説明します。</P>
+<P>\item<F>Chapter \ref{cha:device} </F> B-Free OS と周辺装置との間を取りもつソフ
+トウェアであるデバイスドライバについて説明する章です。</P>
+<P>\item<F>Chapter \ref{cha:manager} </F> B-Free OS の中で一番ユーザプログラムに
+近い層である、外核について説明します。</P>
+<P>\item<F>Chapter \ref{cha:posix}</F> B-Free のシステムインタフェース ({\sf
+API}) のひとつ、POSIX 環境について説明します。
+\end{description}</P>
+
+
+
+<HR>
+Previous
+<A HREF="intro-2.html">Next</A>
+<A HREF="intro.html#toc1">Table of Contents</A>
+</BODY>
+</HTML>

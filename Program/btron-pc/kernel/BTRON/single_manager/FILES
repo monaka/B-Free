@@ -1,0 +1,15 @@
+
+
+systemcall.def	システムコールの定義ファイル
+
+funcgen		定義ファイルから lowlib/lib/manager の
+		システムコール呼び出し部分を作成するプ
+		ログラム
+
+include		include ファイルを入れるディレクトリ
+
+lib		システムコール部分のライブラリ
+
+lowlib		BTRON manager(周辺核)用の lowlib
+
+manager		BTRON manager(周辺核)本体

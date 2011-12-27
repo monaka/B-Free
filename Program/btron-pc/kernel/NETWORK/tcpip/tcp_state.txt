@@ -1,0 +1,41 @@
+TCP state translation.
+----------------------
+
+
+TCP state
+---------
+
+close
+listen
+syn recvd
+syn send
+established
+close-wait
+fin wait-1
+closing
+list ack
+fin wait-2
+timed wait
+
+
+
+state translation
+-----------------
+
+event			state/before	
+begin			none		closed
+anything/reset		closed		closed
+passive open		closed		listen
+close			listen		closed
+syn/syn+ack		listen		syn recvd
+reset			syn recvd	listen
+send/syn		closed		syn sent
+active open/syn		closed		syn sent
+syn/syn+ack		syn sent	syn recvd
+ack			syn recvd	established
+syn+ack/ack		syn sent	established
+fin/ack			established	close wait
+close/fin		established	fin wait-1
+close/fin		syn recvd	fin wait-1
+close/fin		close awit	last ack
+

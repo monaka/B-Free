@@ -1,0 +1,14 @@
+ファイル一覧
+============
+
+assert.c
+assert.h
+dummy.c
+fs_if.c			ファイルシステムとのインタフェースを担当する関数群
+global.c
+malloc.c		malloc 機構
+memory_manager.c
+memory_manager.h
+message.c
+page_management.c	Page ツリーの管理を行う関数群
+port.c

@@ -1,0 +1,221 @@
+\newpage
+\section{ITRON の中身}
+
+
+\subsection{全体像}
+
+ITRON は大まかに分けて次の構成要素に分けることができます。
+
+\begin{itemize}
+\item タスク管理部分
+\item メモリ管理部分
+\item 割り込み管理部分
+\end{itemize}
+
+
+
+\subsection{タスクの管理}
+
+
+\subsubsection{タスク管理のためのデータ構造}
+
+
+\paragraph{タスク構造体}
+
+タスク管理を行うときの重要なデータ構造が、{\tt t\_tcb} 構造体 --- タスク構造体です。
+
+タスク構造体には、主なデータとして次の情報を記録します。
+
+\begin{itemize}
+\item コンテキスト情報(CPU依存)
+\item タスク ID
+\item タスクの優先順位
+\item タスク属性
+\item タスクの状態
+\item タスクの待ち条件
+\item セマフォ/イベントフラグ/メッセージのための情報
+\item タスクの統計情報
+\end{itemize}
+
+
+\subparagraph{コンテキスト情報}
+
+コンテキスト情報は、CPU に依存したタスクの情報です。
+コンテキストスイッチが発生した時点でのレジスタの値が入ります。
+
+コンテキスト情報は、T\_I386\_CONTEXT
+\footnote{src/kernel/itron-3.0/i386/i386.h で定義}
+という型で定義しています(80386 の場合)。
+
+\begin{quote}
+\begin{verbatim}
+コンテキスト情報構造体 (T_I386_CONTEXT)
+
+typedef struct 
+{
+  UW            backlink;
+  UW            esp0;
+  UW            ss0;
+  UW            esp1;
+  UW            ss1;
+  UW            esp2;
+  UW            ss2;
+
+  UW            cr3;
+  UW            eip;
+  UW            eflags;
+  UW            eax;
+  UW            ecx;
+  UW            edx;
+  UW            ebx;
+  UW            esp;
+  UW            ebp;
+  UW            esi;
+  UW            edi;
+  UW            es;
+  UW            cs;
+  UW            ss;
+  UW            ds;
+  UW            fs;
+  UW            gs;
+  UW            ldtr;
+  UH            t:1;
+  UH            zero:15;
+  UH            iobitmap;
+} T_I386_CONTEXT;
+\end{verbatim}
+\end{quote}
+
+\subparagraph{タスク ID}
+
+タスクを識別するために使うのがタスク ID です。
+
+タスク ID は 1 から MAX\_TASKID までの範囲を占める整数値 (32 ビット) です。
+
+システムコールでは、対象となるタスクを指定するためにタスク ID を使います。
+
+
+\subparagraph{タスクの優先度}
+
+カレントタスクが待ち状態に入るなどして、別のタスクに実行権を移すときにどのタ
+スクに切り換えるかを指定するときのよりどころとなるのが、タスクの優先度です。
+
+タスク構造体の中には、タスクの優先順位を示す値として、tsklevel と tsklevel0 
+という2つの要素があります。
+
+\begin{itemize}
+\item tsklevel は、「現在の」タスクの優先度を表します。
+\item tsklevel0 は、タスクを生成するときに指定したタスクの優先順位を示します。
+\end{itemize}
+
+タスクの優先度は、一定なわけではなく時間と共に変化します。
+
+正確には、変化するためのシステムコールがありプロセスマネージャなどのポリシー
+によって優先度が変化します。ただし、このときにも初期のタスクの優先度に戻した
+い場合(あるいは初期のタスクの優先度以上に優先度を上げたくない場合)のためにタ
+スク生成時のタスク優先度を記憶します。
+
+
+\subparagraph{タスク属性}
+
+\subparagraph{タスクの状態}
+
+\subparagraph{タスクの待ち条件}
+
+\subparagraph{セマフォ/イベントフラグ/メッセージのための情報}
+
+\subparagraph{タスクの統計情報}
+
+
+
+
+タスク構造体の型をもつ重要な大域変数として次のものがあります。
+
+\begin{quote}
+  \begin{lablist}
+  \labitem{run\_task}   現在実行中のタスク
+  \labitem{task}        システムにあるタスク構造体の領域を指すポインタ
+  \labitem{ready\_task} 現在実行可能なタスクのリスト
+  \end{lablist}
+\end{quote}
+
+
+
+\subsubsection{タスクの状態遷移図}
+
+タスクの状態遷移図を図 \ref{fig:status} に示します。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \fbox{
+      \begin{minipage}[h]{10cm}
+        \begin{center}
+          \vspace{3cm}
+          タスクの状態遷移図が入る
+          \vspace{3cm}
+        \end{center}
+      \end{minipage}
+      }
+  \end{center}
+  \caption{タスクの状態遷移図}
+  \label{fig:status}
+\end{figure}
+
+\subsubsection{タスク管理関係の関数}
+
+\paragraph{タスクリスト操作関数}
+
+まず、汎用的に使う関数としてタスクのリストを操作するための関数群があります。
+タスクのリストとしては、実行可能なタスクのリストである ready キューやセマフォ 
+などでのタスクの待ちリストなどがあります。
+
+
+\subparagraph{add\_tcb\_list}
+タスクリストの最後に要素を追加します。
+
+\subparagraph{ins\_tcb\_list}
+タスクリストの最初に要素を挿入します。
+
+\subparagraph{del\_tcb\_list}
+タスクリストの中から、指定した要素を削除します。
+
+
+
+\subsection{IPC}
+
+
+\subsubsection{セマフォ}
+
+
+\subsubsection{イベントフラグ}
+
+
+\subsubsection{メッセージ}
+
+
+\subsection{メモリの管理}
+
+
+\subsubsection{メモリを管理するためのデータ構造}
+
+
+\paragraph{物理メモリの管理}
+
+
+\paragraph{仮想メモリの管理}
+
+
+
+\subsection{割り込み管理}
+
+
+\subsubsection{割り込み管理テーブル}
+
+
+\subsubsection{割り込み管理テーブルへの登録処理}
+
+
+
+
+

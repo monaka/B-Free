@@ -1,0 +1,184 @@
+%
+% ITRON を構築するためのマニュアル。
+%
+% 本ドキュメントを LaTeX でコンパイルするには、以下のスタイルファイル
+% が必要です。
+%
+% 1) note.sty ...... 本ドキュメントファイルと一緒に添付
+% 2) Tabular ...... tabluar マクロの拡張したもの
+% 3) a4j.sty
+% 4) epsf.sty
+% 6) boxedminipage.sty
+% 7) fancyheadings.sty
+%
+%
+% なお、この ITRON 構築マニュアルは、次のファイルからできています。
+%
+% itron.tex --- メインファイル
+%   itron-make.tex ...... ITRON を作成するための方法
+%   link-manager.tex .... ITRON を使ってアプリケーションを作成するため
+%                         の方法
+%   library/data-type.tex ITRON の標準データ型
+%
+\documentstyle[a4j,epsf,note,boxedminipage,Tabular,fancyheadings]{jarticle}
+
+\setlength{\textheight}{23cm}
+\makeatletter
+\commonlabel
+%
+%
+%
+\gdef\@title{}
+\gdef\title#1{\gdef\@title{#1}}
+\gdef\@years{}
+\gdef\years#1{\gdef\@years{#1}}
+\gdef\@author{}
+\gdef\author#1{\gdef\@author{#1}}
+\gdef\@abstract{}
+\gdef\abstract#1{\gdef\@abstract{#1}}
+
+\def\maketitle{\begin{titlepage}%
+\let\footnotesize\small
+\let\footnoterule\relax
+\setcounter{page}{0}%
+\null
+\begin{flushright}
+\today
+\end{flushright}
+\vskip 3 in
+\noindent
+{\Large\sf \@title}\\
+\rule{\textwidth}{1mm}\\
+\mbox{} \hfill Copyright \copyright\ \@years\ \begin{tabular}[t]{r}
+                                              \@author\end{tabular}\\
+
+\vspace{.75in}\noindent
+{\sf \@abstract}
+\end{titlepage}%
+\setcounter{footnote}{0}%
+\gdef\@author{}\gdef\@title{}\gdef\@years{}\gdef\@abstract{}
+\let\maketitle\relax}
+
+\setlength{\textwidth}{15cm}
+\title {ITRON 構築マニュアル}
+\author {内藤隆一{\tt ggc00661@niftyserve.or.jp}}
+\years{1994}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{5}
+
+\makeatother
+
+\begin{document}
+\maketitle
+\newpage
+
+\null
+\vspace{2cm}
+\begin{minipage}[h]{10cm}
+  変更履歴
+  
+  \begin{tabular}[h]{p{4cm} p{7cm}}
+    {\tt Version 0.1 (1994/12/4) } & 初版 \\
+  \end{tabular}
+  \vspace{2cm}
+\end{minipage}
+
+\vspace{10cm}
+
+\begin{flushright}
+\begin{minipage}[h]{10cm}
+{\tt Copyright by {\it B$-$Free Project,1994}}
+
+\vspace{2cm}
+
+{\small
+  本ドキュメントに記述している ITRON は、μ ITRON 3.0 仕様を基にしたものです。 
+  μ ITRON 3.0 自体についての詳細な内容は、
+  (株)パーソナルメディアが出版している 
+  「μ ITRON 3.0 標準ハンドブック」を参考にしてください。}
+\end{minipage}
+\end{flushright}
+
+\newpage
+\tableofcontents
+\newpage
+%
+% ページスタイルの指定
+% --- fancyplain を使用している。
+%     目次には、ヘッダをつけたくないので、ここでページスタイルを指定し
+%     た。
+ %     
+\pagestyle{fancyplain}
+\renewcommand{\sectionmark}[1]{\markboth{\tt ITRON 構築マニュアル}{}}
+\renewcommand{\subsectionmark}[1]{}
+% \renewcommand{\subsectionmark}[1]{\markright{#1}}
+%\rfoot{\leftmark\\\rightmark}
+%\rfoot{\leftmark\\}
+
+\section{はじめに (本ドキュメントの内容)}
+
+本ドキュメントは、{\tt B-Free} \/ OS の中心核となる ITRON についての情
+報を記述したものです。
+
+B$-$Free OS を作成するときの ITRON(中心核) のコンパイルする方法および中心核
+の上に載るプログラム(周辺核等)をどのように中心核と一緒に動かすのかという方法
+が書いてあります。
+
+本ドキュメントの構成は以下のとおりです。
+
+\begin{itemize}
+\item ITRON の make 方法
+\item ITRON 上に載るアプリケーションの作成方法
+\item ITRON で使用できるシステムコールおよびライブラリ関数
+\end{itemize}
+
+
+
+\newpage
+\input {itron-make.tex}
+\newpage
+\input {link-manager.tex}
+\newpage
+%
+%
+%
+\section{ライブラリ}
+\input {library/data-type.tex}
+\newpage
+\subsection{システムコール}
+
+%
+%  タスク管理
+%
+\input{syscall/task/task-management.tex}
+\newpage
+\input{syscall/transport/transport.tex}
+\newpage
+\input{syscall/interrupt/interrupt.tex}
+\newpage
+\input{syscall/memory/memory.tex}
+\newpage
+\input{syscall/system/system.tex}
+\newpage
+\input{syscall/virtual/virtual-memory.tex}
+\newpage
+\input{syscall/driver/driver.tex}
+\newpage
+\input{library/library.tex}
+\newpage
+\appendix
+\input{error-number.tex}
+\newpage
+
+\newpage
+\section{索引}
+
+
+\end{document}
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: t
+% compile-command: "dvi2ps itron.dvi > itron.ps"
+% End: 

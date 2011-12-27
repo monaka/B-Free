@@ -1,0 +1,72 @@
+\function{can\_wup  --- タスクの起床要求を無効化}
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+\begin{quote}
+{\tt \#include $<$itron.h$>$}
+
+{\tt ER can\_wup (void); }
+\end{quote}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {INT $*$p\_wupcnt}{キューイングしていた起床要求の数}
+  \labitem {ID tskid}{タスク ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     タスク ID がおかしい
+\labitem {E\_NOEXS}  タスク ID で指定したタスクが存在しない
+\labitem {E\_OBJ}    タスク ID の状態が待ち状態ではない。
+\end{lablist}
+
+
+\labitem{機能}
+
+このシステムコールは、引数 tskid で指定した ID をもつタスクの起床要求
+カウンタをリセットする。
+
+タスクの起床要求カウンタは、待ち状態にあるタスクを起床するシステムコー
+ルが発行されるごとにカウントアップしていく。
+また、待ち状態にあるタスクが起床するとカウントダウンする。
+
+起床要求カウンタが1以上の値を持っているとき、待ち状態に遷移するシステ
+ムコールを発行してもタスクは待ち状態にならない。
+
+このシステムコールが発行できるのは、タスクが待ち状態にあるときだけであ
+る。タスクが待ち状態でないときは E\_OBJ のエラーとなる。
+
+
+\labitem{補足}
+
+このシステムコールは、μ ITRON 3.0 の本来の仕様と以下のような違いがあ
+ります。
+
+\begin{enumerate}
+\item タスク ID が 0 の場合にも自タスクを指定できない。
+\item 以下のエラーコードはインプリメントしていない。
+
+  \begin{itemize}
+  \item E\_OACV
+  \item EN\_OBJNO
+  \item EN\_CTXID
+  \item EN\_RPAR
+  \end{itemize}
+\end{enumerate}
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

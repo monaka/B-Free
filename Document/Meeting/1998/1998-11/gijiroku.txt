@@ -1,0 +1,55 @@
+Subject: [b-free: 2225] minutes No.49
+From: Mitsutaka Takada <mitsu.takada@nifty.ne.jp>
+To: B-Free ML <b-free@iijnet.or.jp>
+Date: Sun, 08 Nov 1998 23:30:22 +0900
+Reply-To: b-free@iijnet.or.jp
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+
+                     第49回  B-Free 全体ミーティング 議事録
+
+日時    1998年11月8日(日)  13:00 - 17:00
+場所    川崎市多摩区市民館(多摩区役所内)　第4会議室
+参加者  内藤、長谷川、吉目木、飯島、きしもと、高田(記)
+
+●TRON Support Network
+○運営費について
+前回の議事録確認を行い、プロジェクト毎に年会費として1万円をいただく。
+会計報告を近日中に行う。
+
+○プロジェクト参加ページ
+tron-net.gr.jpも安定稼動してきたのでプロジェクト参加のページを作成し、
+受け入れの体制作りを行う。
+
+○新規プロジェクトについて
+・misc M.L.  MLを先月より立ち上げる。
+・Tipo M.L.  近日中に告知用のWebをアップし MLを立ち上げる。
+             アドレスはtipo@tron-net.gr.jpを予定。
+
+○TRON探険隊
+・記事をまとめて公開する＞小池さん、高田。
+
+●B-Free
+○ドキュメントについて
+・B-Freeドキュメントを強化する。現在ドキュメントグループはほとんど活動し
+ていないため再結成をはかり、技術情報、Howtoなどのコンテンツを整備する。
+
+・ITRON関連の情報(ITRON大百科)を提供する。
+
+○B-Free MLについて
+tron-net.gr.jpがまだ「おっこち」してしまうため引き続きIIJを使用する。
+
+●次回予定
+12月6日（日）13:00-17:00
+川崎市多摩区市民館(多摩区役所内)　第3会議室
+TRON Support Network General Meeting & B-Free Staff Meeting
+今回同様、終了後にオフ会を行う予定。
+
+-------------------------------
+高田光隆
+   mitsu.takada@nifty.ne.jp
+   takada@tron-net.gr.jp
+   http://www.tron-net.gr.jp/B-Free/
+-------------------------------   

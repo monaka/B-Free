@@ -1,0 +1,36 @@
+\function{ena\_dsp  --- ディスパッチ許可}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ena\_dsp}
+
+\labitem{引数}
+
+
+
+nasil
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+dsp\_dsp によって禁止したタスクの切換えをできるようにする。
+
+\labitem{\it Internal}
+
+本システムコールは、タスク切換えのフラグ dispatch\_flag の値を TRUE 
+にする。
+
+
+\end{lablist}
+

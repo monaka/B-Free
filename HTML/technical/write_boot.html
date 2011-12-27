@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=x-euc-jp">
+<TITLE>
+B-Free/HD boot instruction.
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<H1>
+HD へ boot プログラムを書き込む方法
+</H1>
+<HR>
+
+<P>
+version 1.0<BR>
+1998/9/13<BR>
+内藤 隆一<BR>
+<P>
+
+<PRE>
+1stboot_hd.s の中をいじくって、ジオメトリ情報と読み込み開始位置を手で
+修正するのは面倒なので、自動的に計算してブートイメージに書き込むための
+プログラムも作りました。
+
+！！十分に注意して使ってください。
+！！これらのプログラムを実行したからといって、HD が破壊されることは
+！！ないはずですが、バグ等がないとは言い切れません。
+
+
+こちらは、writeboot.tar.gz という形で入っています。適当なディレクトリ
+下で展開して、make してください。read_partition、getgeo、writeboot と
+いう 3 つのコマンドができます。
+
+使い方は、
+
+	writeboot -v -w &gt;デバイス&lt; &gt;パーティション番号&lt; &gt;ブートイメージ&lt;
+
+という風になります(root ユーザで実行してください)。
+
+-v と -w はオプションで、-v が verbose、-w がブートイメージに書き込む
+ことを表しています。-w をつけないと、ブートイメージには書き込みません。
+
+
+実際には、&gt;デバイス&lt; は /dev/hda、&gt;パーティション番号&lt; はブートイメー
+ジを入れたいパーティション (1 から 4)、&gt;ブートイメージ&lt; は、make hd_image
+で作成したブートイメージファイルです。
+
+たとえば、
+
+	./writeboot -v -w /dev/hda 3 bootimage_hd
+
+と実行します。
+
+すると、以下のようなメッセージが出力されます。
+
+
+	device: /dev/hda, partition: 3, bootimage: bootimage_hd
+	/dev/hda3
+	geometry:
+		heads:     128
+		cylinders: 621
+		sectors:   63
+	start:
+		heads:     0
+		cylinders: 610
+		sectors:   1
+	old geometry information:
+	cylinder 4
+	head 5
+	sector 6
+	old start CHS information:
+	cylinder 1
+	head 2
+	sector 3
+
+
+geometry と start の各項目は、HD によって違っています。
+
+
+make hd_image で作成した直後のブートイメージを指定すると、old geometry
+information と old start DHS information は、この通りの値が出力されま
+す。もし、違った値が出たら bootimage_hd がおかしいことが考えられます。
+なお、writeboot を 1 回実行すると、この値は違った値が出力されます。
+
+# 要するに、ブートイメージに書き込まれている値が出力されるわけです。
+
+
+こうしてできた bootimage_hd を cp コマンドなり、dd コマンドなりで
+HD に書き込むとブートから立ち上げることができます(lilo などのブートセ
+レクタの設定を変更するのを忘れずに！)。
+
+
+</PRE>
+
+
+<HR>
+<A href="../index.html">B-Free オフィシャルホームページへ戻る</A>
+
+<HR>
+<font size=3>Copyright (C) 1996-1998 B-Free Project<BR></font>
+</BODY>
+</HTML>

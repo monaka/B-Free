@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=x-euc-jp">
+<TITLE>
+B-Free meeting 1997/Dec/21 A part
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<DIV ALIGN="RIGHT"><I><A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/meeting/1997-Dec-21a.html">
+http://www.sccs.chukyo-u.ac.jp/B-Free/meeting/1997-Dec-21a.html</A></I></DIV>
+
+<HR>
+
+<H1>Ｂ−Ｆｒｅｅ全体ミーティング資料 (1997/Dec/21a)</H1>
+
+<HR>
+
+<H2>1. TRON support network について</H2>
+<P>
+美崎さんの協力を得てOCN を使用する予定だったが、
+最近安価なレンタルサーバを販売するところが出てきたので、
+OCN ではなく、レンタルサーバを使用した形態にしたい。
+<P>
+PROX に資料を請求した。
+
+<P>
+<H2>2. B-Free OS の現状</H2>
+<P>
+<H3>BTRON マネージャの作業の進めかたについて</H3>
+<P>
+BTRON マネージャの作業を以下のような作業に分割して進めたい。
+<P>
+<UL>
+	<LI>マネージャが送受信するメッセージのフォーマットの決定
+	    マネージャが受けつける要求メッセージと応答メッセージの形式を決める。
+	<LI>マネージャの大まかな処理のスケルトン作成<BR>
+	    POSIX マネージャの処理が参考になると思う
+	<LI>ファイルシステムの各種ファイルシステム (1B FS や BaFS)に対する論理インタフェースモデルの作成<BR>
+	    UNIX でいう VFS/Vnode のようなインタフェースモデルを決める<BR>
+	    このインタフェースを決めれば、新しいファイルシステムを作成するときもこのインタフェースに
+	    従うだけでよい。
+	<LI>API の仕様確定作業<BR>
+	    確定した API は、<A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/technical/api/index.html">
+	    http://www.sccs.chukyo-u.ac.jp/B-Free/technical/api/index.html</A> に載せる
+	<LI>ファイルシステムの物理的なフォーマットを決める<BR>
+	    とりあえずは、1B FS
+	<LI>各 API の処理のインプリメント
+	<LI>ファイルシステム初期化のためのユーザプログラム作成
+	    mkfs や format のようなプログラム
+</UL>
+<P>
+これらの作業のうち、処理のスケルトンおよび各 API の処理のインプリメントについては、
+マネージャ担当者が行う。他の作業については担当者以外の人も参加する。
+
+<P>
+<HR>
+<A href="../index.html">B-Free オフィシャルホームページへ戻る</A>
+
+<HR>
+<font size=3>Copyright (C) 1996,1997 B-Free Project<BR></font>
+</BODY>
+</HTML>

@@ -1,0 +1,57 @@
+\documentstyle[a4j]{jarticle}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{flushright}
+  {\small １９９４年８月２３日(火)}
+\end{flushright}
+
+\begin{flushleft}
+\fbox {
+  \begin{minipage}[h]{\textwidth}
+    \vspace{5mm}
+    {\Large {\sf B-Free work list. }{\it --- Number 1 ---}}
+    \vspace{5mm}
+  \end{minipage}
+}
+\end{flushleft}
+
+
+\section{技術的な仕事}
+
+\begin{description}
+\item[(1) ITRON 作成] \hfill \\
+  B-Free OS の中心核となる、μITRON 3.0 を作成する。
+%
+\item[(2) 各種マネージャ(周辺核)のインタフェース定義を作成] \hfill \\
+  マネージャが他のタスク(プロセス)から受ける要求/返答の形式について定
+  義する。
+%
+\item[(3) デバイスドライバインタフェースの作成] \hfill \\
+  各デバイスドライバとのインタフェースを定義する。
+
+  基本的には、open/read/write... のように一律に決められると思うが、
+  デバイスドライバ固有のインタフェースが必要なものもある。
+%
+\item[(4) デバイスドライバの作成] \hfill \\
+  当面は、
+  \begin{itemize}
+  \item コンソール
+  \item キーボード
+  \item FD/HD
+  \end{itemize}
+  などを作成する。
+%
+\end{description}
+
+
+\section{ユーザグループ的な仕事}
+
+
+\end{document}
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: t
+% End: 

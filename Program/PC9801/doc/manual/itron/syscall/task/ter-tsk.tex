@@ -1,0 +1,44 @@
+\function{ter\_tsk  --- 他タスク強制終了}
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ter\_tsk (ID tskid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid}{強制終了するタスクの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_OBJ}    自タスクを指定した
+\end{lablist}
+
+
+\labitem{機能}
+引数で指定したタスクを強制的に終了させる。
+終了するタスクのもっている資源は解放しない。
+ただし、このシステムコールによって終了したタスクは、TTS\_DMT 状
+態になっただけなので、sta\_tsk システムコールによって再開する
+ことができる。
+
+\labitem {\it Internal}
+待ち状態 (TTS\_WAI) にあるタスクを強制終了する場合、
+待ち状態を解放しなければならないが、現在は単に TTS\_DMT に
+なっているだけである。
+そのため、待ち状態のまま TTS\_DMT に遷移する。
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

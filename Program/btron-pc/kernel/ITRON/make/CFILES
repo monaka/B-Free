@@ -1,0 +1,101 @@
+devconfig.o:	../common/devconfig.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+console.o:	../common/console.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
+dummy.o:	../common/dummy.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+error.o:	../common/error.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+itron_memory.o:	../common/itron_memory.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+kalloc.o:	../common/kalloc.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+main.o:	../common/main.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+memory.o:	../common/memory.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+misc.o:	../common/misc.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+pmemory.o:	../common/pmemory.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+printf.o:	../common/printf.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+syscall.o:	../common/syscall.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+task.o:	../common/task.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+time.o:	../common/time.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+version.o:	../common/version.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+virtual_memory.o:	../i386/virtual_memory.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+gdt.o:	../i386/gdt.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+tss.o:	../i386/tss.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+fault.o:	../i386/fault.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+semaphore.o:	../common/semaphore.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
+timer.o:	../ibmpc/timer.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+task2.o:	../common/task2.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+message.o:	../common/message.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+eventflag.o:	../common/eventflag.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+keyboard.o:	../ibmpc/keyboard.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+dbg_functions.o:	../common/dbg_functions.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+debug.o:	../common/debug.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+device.o:	../io/device.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+rs232c.o:	../io/rs232c.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+echo.o:	../io/echo.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+gdc7220.o:	../pc9801/gdc7220.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+syscall-if.o: ../common/syscall-if.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+system.o: ../common/system.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+lowlib.o: ../common/lowlib.c
+	$(CC) $(CFLAGS) -c $< -o $@

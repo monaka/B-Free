@@ -1,0 +1,19 @@
+main.o : main.c itron.h types.h config.h i386.h version.h errno.h task.h func.h 
+memory.o : memory.c itron.h types.h config.h i386.h memory.h errno.h func.h \
+  task.h pc98.h 
+task.o : task.c itron.h types.h config.h i386.h errno.h task.h misc.h func.h 
+version.o : version.c itron.h types.h config.h i386.h version.h 
+error.o : error.c itron.h types.h config.h i386.h errno.h version.h func.h task.h 
+dummy.o : dummy.c itron.h types.h config.h i386.h 
+printf.o : printf.c itron.h types.h config.h i386.h func.h task.h 
+console.o : console.c itron.h types.h config.h i386.h errno.h func.h task.h \
+  misc.h 
+fault.o : fault.c itron.h types.h config.h i386.h pc98.h interrupt.h errno.h \
+  task.h 
+syscall.o : syscall.c itron.h types.h config.h i386.h errno.h func.h task.h 
+misc.o : misc.c itron.h types.h config.h i386.h 
+timer.o : timer.c itron.h types.h config.h i386.h pc98.h interrupt.h 
+virtual_memory.o : virtual_memory.c i386.h types.h itron.h config.h misc.h func.h \
+  task.h 
+itron_memory.o : itron_memory.c itron.h types.h config.h i386.h task.h errno.h \
+  func.h misc.h 

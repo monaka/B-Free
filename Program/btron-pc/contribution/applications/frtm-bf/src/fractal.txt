@@ -1,0 +1,33 @@
+□ 自己平方フラクタル
+
+  f(z) = z^2 + A
+  z_{n+1} = f(z_n)
+A = -0.350 - 0.630i
+実部 -1 〜 1 虚部 -1 〜 1
+※ 下記は 32bit の整数を扱える場合のプログラム．
+
+: dot dup 50 > if drop 0 else 15 % 1+ endif setcolor 2 ndrop 
+    over 340 - minus over 220 + swap 1 1 rectf ;
+: check 50 > if drop drop 1 else dup * swap dup * + 4000000 > endif ;
+: nextr dup * 1000 / swap dup * 1000 / - 350 - ;
+: nexti * 500 / 630 - ;
+: next 1+ rotr 2 copy nextr 4 nrotr 2 copy nexti 5 nrotr drop drop ;
+: point do 3 copy check if dot 0 else next 1 endif while ;
+: fract 201 0 for I 201 0 for I 
+    over 100 - 10 * over 100 - 10 *  0 point drop loop drop loop ;
+
+□ マンデルブロート集合
+
+  f(z) = z^2 + C
+  z_{n+1} = f(z_n)
+  C = -2.0 - 1.0i 〜 0.0 + 1.0i
+
+: dot dup 100 > if drop 0 else 15 % 1+ endif setcolor 4 ndrop 
+    over 340 - minus over 220 + swap 1 1 rectf ;
+: check 100 > if drop drop 1 else dup * swap dup * + 4000000 > endif ;
+: nextr dup * 1000 / swap dup * 1000 / - 5 ndup + ;
+: nexti * 500 / 7 ndup + ;
+: next 1+ rotr 2 copy nextr 4 nrotr 2 copy nexti 5 nrotr drop drop ;
+: point do 3 copy check if dot 0 else next 1 endif while ;
+: mandel 201 0 for I 201 0 for I 
+    over 100 - 10 * over 200 - 10 * 0 0 0 point drop loop drop loop ;

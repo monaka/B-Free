@@ -1,0 +1,395 @@
+<html>
+<head>
+<title>無題ドキュメント</title>
+<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
+</head>
+
+<body bgcolor="#FFFFFF">
+<p><font size="7"><tt><font face="ＭＳ ゴシック, Osaka－等幅">タスク管理</font></tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[EN] <a name="cre_tsk">cre_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスク生成）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・ＴＣＢ（属性、優先度、起動アドレス、サイズ、その他）の設定</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・スタック領域を確保</tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅"><tt><font size="4">・生成後は<tt>DORMANT状態</tt>になる。</font></tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅"><tt><font size="4">・接続機能が利用可能</font></tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = cre_tsk( ID tskid, T_CTSK 
+  *pk_ctsk );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　T_CTSK*　　pk_ctsk　　タスク生成情報</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　　pk_ctskの中身</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　　VP　　　 　exxinf　　 拡張情報</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　　ATR　　　　tskatr　　 タスク属性（TA_ASM(アセンブラ) 
+  or TA_HLNG(高級言語) + TA_COP0(一番目のコプロセッサ) + ～TA_COP7(七番目のコプロセッサ)</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　　FP　　　　 task　　　 タスク起動アドレス</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　　PRI　　　　itskpri　　タスク起動優先度（-4～0は予約、高１～８低、それ以外はレベルＸ）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　　INT　　　　stksz　　　スタックサイズ（バイト数）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOMEM　　 ユーザスタック(stksz)のメモリが確保できない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_RSATR　　 tskatrが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_RAR　　　 pk_ctsk, task, itskpri, 
+  stkszが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが-4～0あるいは範囲外</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 同じIDのタスクが既に存在する</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_PAR　　　対象ノードでexinf、tskatr、task、itskpri、stksz</tt></font><font size="4"><tt>がサポートされていない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部やディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[EN] <a name="del_tsk">del_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスク削除）</tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅"><tt>・</tt><font size="4"><tt>タスクをDORMANT状態からNON-EXISTENT状態</tt></font></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅"><tt>・</tt><font size="4"><tt>TCBとスタック領域を解放。</tt></font></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt><font size="5">　</font></tt>ER 
+  ercd = del_tsk ( ID tskid )</font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 タスクがDORMANT状態ではない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部やディスパッチ禁止状態のタスクから他ノードのタスクを指定できない</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="sta_tsk">sta_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスク起動）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・タスクをDORMANT状態からREADY状態</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = sta_tsk(ID tskid, INT 
+  stacd);</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　INT　　　　stacd　　　タスク起動コード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクがDORMANT状態ではない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_PAR　　　対象ノードでstacd</tt></font><font size="4"><tt>がサポートされていない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部やディスパッチ禁止状態のタスクから他ノードのタスクを指定できない</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[S] <a name="ext_tsk">ext_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（自タスク終了）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・自タスクをRUN状態からDORMANT状態にする。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・自タスクの</tt></font><font face="ＭＳ ゴシック, Osaka－等幅"><font size="4"><tt>TCBとスタック領域</tt></font></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>は解放しない。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・自タスク優先度とTCBが初期化される。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　void ext_tsk( );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　戻らない。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[S] <a name="exd_tsk">exd_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（自タスクの終了と削除）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・自タスクをRUN状態からNON-EXISTENT状態にする。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・自タスク</tt></font><font face="ＭＳ ゴシック, Osaka－等幅"><font size="4"><tt>のTCBとスタック領域</tt></font></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>は解放しない。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　void exd_tsk( );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　戻らない。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="ter_tsk">ter_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（他タスク強制終了）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・他タスクをREADY、WAIT、WAIT-SUSPEND、SUSPEND状態からDORMANT状態にする。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・他タスクの資源は解放しない。</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>・他タスク優先度とTCBが初期化される。</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = ter_tsk( ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクがDORMANT状態または自タスク</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノード上のタスクを指定</tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅">　　</font></p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[R] <a name="dis_dsp">dis_dsp</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（ディスパッチ禁止）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・外部割り込み以外からプリエント(CPUによる実行権の横取り)されない</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・ディスパッチ許可されるまで状態の移行とプリエントは遅延される</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = dis_dsp( );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_CTX　　　 タスク独立部から発行、loc_cpu実行後の状態で発行</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[R] <a name="ena_dsp">ena_dsp</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（ディスパッチ許可）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・自タスクの状態移行禁止解除</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・ディスパッチ禁止中に遅延された状態の移行とプリエントを実行する</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・ディスパッチ禁止状態ではなくても正常終了する</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = ena_dsp( );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_CTX　　　 タスク独立部から発行、loc_cpu実行後の状態で発行</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="chg_pri">chg_pri</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスク優先度変更）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・変更後は同優先度の最後に並ぶ</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = chg_pri( ID tskid, PRI 
+  tskpri );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ（TSK_SELF 
+  = 0(自タスク)）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　PRI　　　　tskpri　　 タスク優先度（-4～0は予約、高１～８低、それ以外はレベルＸ）（TPRI_INI 
+  = 0(起動時優先度)レベルＸ）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_PAR　　　 tskpriが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクがDORMANT状態</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_PAR　　　対象ノードでtskpri</tt></font><font size="4"><tt>がサポートされていない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅">　　</font></p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[S] <a name="rot_rdq">rot_rdq</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスクのレディキュー回転）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・指定優先度の先頭のタスクを最後尾にを移動する</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・指定した優先度にタスクがなくてもエラーにはならない</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・タスク独立部からも利用可能</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・ディスパッチ禁止状態のタスクを含む動作はレベルＸ</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = rot_rdq( PRI tskpri 
+  );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　PRI　　　　tskpri　　 タスク優先度 タスク優先度（-4～0は予約、高１～８低、それ以外はレベルＸ）（TPRI_RUN 
+  = 0(自タスク優先度)）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_PAR　　　 tskpriが不正</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="rel_wai">rel_wai</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（他タスクの待ち状態解除）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・WAIT状態からREADY状態に移行</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・WAIT-SUSPEND状態からSUSPEND状態に移行</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = rel_wai( ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクがDORMANT状態か自タスク</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅">　　</font></p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[S] <a name="get_tid">get_tid</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（自タスクのタスクID参照）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・タスク独立部からコールされたときtskid = FALSE 
+  = 0</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = get_tid( ID *p_tskid 
+  );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[EN] <a name="ref_tsk">ref_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスク状態参照）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = ref_tsk( INT *p_wupcnt, 
+  ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ（TSK_SELF 
+  = 0(自タスク)）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　T_RTSK*　　pk_rtsk　　タスク状態のアドレス</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　pk_rtskの中身</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　PRI　　　　tskpri　　 現在の優先度</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　　UINT　　　 tskstat　　タスク状態</tt></font><font face="ＭＳ ゴシック, Osaka－等幅" size="4">（RUN(1)、REDY(2)、WAIT(4)、SUSPEND(8)、WAIT-SUSPEND(c)、DORMANT(10)）</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　その他（インプリメント依存）</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　UINT　　　 tskwait　　待ち要因　</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　ID　　　　 wid　　　　待ちオブジェクトID</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　INT　　　　wupcnt　　 起床要求カウント</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　INT　　　　suscnt　　 SUSPEND要求カウント</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　ATR　　　　tskatr　　 タスク属性</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　FP　　　　 task　　　 タスク起動アドレス</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　PRI　　　　itskpri　　タスク起動時優先度</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　INT　　　　stksz　　　スタックサイズ（バイト数）</font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_PAR　　　 pk_rtskが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_RPAR　　 exinf、tskpri、tskstatの値が範囲外</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="7" face="ＭＳ ゴシック, Osaka－等幅"><tt>タスク付属同期</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="sus_tsk">sus_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（他タスクを強制待ち状態へ移行）</tt></font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅"><tt><font size="4">・READY(WAIT)からSUSPEND(WAIT-SUSPEND)へ</font></tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・既にSUSPEND状態のときネストの回数（suscnt）を増やす</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = sus_tsk( ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクが自タスクまたはDORMANT状態</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="rsm_tsk">rsm_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（強制待ち状態のタスクを再開）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・SUSPEND(WAIT-SUSPEND)状態をREADY(WAIT)状態へ</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・ネストの回数（suscnt）が２以上ならsuscntを一減らす</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・再開後の同優先度の順番はインプリメント依存</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = rsm_tsk( ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクが自タスクまたはSUSPEND状態ではない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[EN] <a name="frsm_tsk">frsm_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（強制待ち状態のタスクを強制再開）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・SUSPEND(WAIT-SUSPEND)状態をREADY(WAIT)状態へ</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・ネストの回数（suscnt）に限らず再開 </font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・再開後の同優先度の順番はインプリメント依存</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = frsm_tsk( ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクが自タスクまたはSUSPEND状態ではない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[R] <a name="slp_tsk">slp_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（自タスクを起床待ち状態へ移行）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・既にTCBの起床要求キューイング数が1以上のとき、数を減らす</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・TCBの起床要求キューイング数が0のときRUN状態から起床待ち状態(wup_tsk待ち)になる</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = slp_tsk( );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_RLWAI　　 待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[E] <a name="tslp_tsk">tslp_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（自タスクを起床待ち状態へ移行（タイムアウト有））</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・既にTCBの起床要求キューイング数が1以上のとき、数を減らす</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・TCBの起床要求キューイング数が0のときRUN状態から起床待ち状態(wup_tsk待ち)になる</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・tmoutまでにwup_tskが実行されなければE_TMOUT</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = tslp_tsk( TMO tmout 
+  );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL 
+  = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_PAR　　　 tmout≦-2</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_RLWAI　　 待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[RN] <a name="wup_tsk">wup_tsk</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（他タスクの起床）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・他タスクが起床待ちのとき待機解除</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・他タスクが起床待ちじゃないとき</font></tt><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">TCBの起床要求キューイング数(wupcnt)を増やす</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = wup_tsk( ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクが自タスクまたはDORMANT状態</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_QOVR　　　起床要求キューイング数(wupcnt)のオーバーフロー</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p><font size="6" face="ＭＳ ゴシック, Osaka－等幅"><tt>[SN] <a name="can_wup">can_wup</a></tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>（タスクの起床要求を無効化）</tt></font></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・起床要求キューイング数を0にしてリターンする</font></tt></p>
+<p><tt><font face="ＭＳ ゴシック, Osaka－等幅" size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER ercd = can_wup( INT *p_wupcnt, 
+  ID tskid );</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>引数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ID　　　　 tskid　　　タスクＩＤ（TSK_SELF 
+  = 0(自タスク)）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>戻り値</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　INT　　　　wupcnt　　 起床要求キューイング数</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>エラーの内容</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_ID　　　　tskidが不正</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OBJ　　　 対象タスクがDORMANT状態</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_OACV　　　tskid＜-4のタスクは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　E_QOVR　　　起床要求キューイング数wupcntのオーバーフロー</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_OBJNO　　</tt></font><font size="4"><tt>対象ノードのtskidのタスクが不正または存在しない</tt></font></p>
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスク他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+</body>
+</html>

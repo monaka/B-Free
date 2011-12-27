@@ -1,0 +1,3 @@
+#!/bin/sh
+
+size $1 | tail -1 | awk '{ printf "%s\n", $4; }'

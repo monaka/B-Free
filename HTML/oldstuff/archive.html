@@ -1,0 +1,285 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=x-euc-jp">
+<TITLE>
+B-Free Project/Archive
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<H1>
+B-Free プロジェクトアーカイブ
+</H1>
+
+<BLOCKQUOTE>
+B-Free プロジェクトの成果物です。
+</BLOCKQUOTE>
+<HR>
+
+<UL>
+  <P>
+
+  <LI>IBMPC (互換機) 版
+  <P>
+    <UL>
+    <LI>version 0.0.1  1996/07/22  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.1.tar.gz">source</a><br>
+	ITRON をロードし、ITRON からキーボード入力ができる状態になった。
+
+    <P>
+     <LI>version 0.0.2  1996/07/22  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.2.tar.gz">source</a><br>
+	Version 0.0.1 に BTRON の make 環境を追加した。
+
+    <P>
+    <LI>version 0.0.3  1996/07/22  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.3.tar.gz">source</a><br>
+	Version 0.0.2 に ITRON/pc98/pc98.h の登録を追加した。
+
+    <P>
+    <LI>version 0.0.4  1996/07/22  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.4.tar.gz">source</a><br>
+	Version 0.0.3 に ITRON/pc98/*.c の登録を追加した。
+
+    <P>
+    <LI>version 0.0.5  1996/07/22  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.5.tar.gz">source</a><br>
+	Version 0.0.4 に ITRON/io/*.c の登録を追加した。
+
+    <P>
+    <LI>version 0.0.6  1996/07/22  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.6.tar.gz">source</a><br>
+	Version 0.0.5 に BTRON/make/getsize の登録を追加した。
+
+    <P>
+    <LI>version 0.0.7  1996/07/23  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.7.tar.gz">source</a><br>
+	タイマー制御の追加。ただし、また未完成。
+
+    <P>
+    <LI>version 0.0.8  1996/07/23  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.8.tar.gz">source</a><br>
+	Version 0.0.7 には boot の変更がなかったので追加した。
+	(インターバルタイマの設定には boot の処理が必要のため。... なぜ？)
+
+    <P>
+    <LI>version 0.0.9  1996/07/24  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.9.tar.gz">source</a><br>
+	Version 0.0.8 には、ITRON/i386/interrupt.s の修正が含まれていなか
+	ったので、それを入れた。
+
+    <P>
+    <LI>version 0.0.10  1996/07/24  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.10.tar.gz">source</a><br>
+	以下の変更を行った。
+	<OL>
+        <LI> 割り込みの初期化をきちんと行うようにした(これまでは、ITRON 
+	     内では初期化が正常に行われていなかった)。この変更に伴なって
+	     Version 0.0.8 の変更を 2nd boot から削除した。
+        <LI> インターバルタイマを 10ms 毎に動かすように変更した(これまで
+	     は、1ms 毎になっていた)。
+	<LI> port manager をカーネル (kernel/BTRON/make/btron) に組み込
+	     んだ。
+	<LI> キーボードにて '=' + Shift を押したとき、これまでは '=' し
+	     か出ていなかったが、正常に '+' を出るように変更した。
+	<LI> カーネルに ITRON 以外のモジュールが入っているときに、起動時
+	     に実行するように処理を加えた (PC9801 版では以前からある機能)。
+	<LI> make 環境に port manager と kernlib の作成環境を追加した。
+        </OL>
+
+    <P>
+    <LI>version 0.0.11  1996/07/26  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.11.tar.gz">source</a><br>
+	以下の変更を行なった。
+        <OL>
+	<LI> boot プログラムがモジュールをメモリにロードするときに FD の
+	     ブロック番号を表示していた部分を削除した。
+	<LI> console デバイスドライバを追加した。
+	<LI> keyboard デバイスドライバを追加した。
+	<LI> init プログラムを追加した。
+	<LI> demo プログラムが実行できなくなった。
+        </OL>
+
+    <P>
+    <LI>version 0.0.12  1996/07/29  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.12.tar.gz">source</a><br>
+	以下の変更を行なった。
+        <OL>
+	<LI> FD ドライバの追加 (BTRON/device/fd765a)
+	<LI> init プログラムに openfd/readfd コマンドを追加。
+           <PRE>
+	   openfd &lt;return&gt;
+	   readfd &lt;開始位置(バイト)&gt; &lt;return&gt;
+           </PRE>
+	   と入力することによって、FD の任意の位置から 10 バイト読み取
+	   ることができる。
+	<LI> kernlib/dma.c の中で DMA の上位アドレス (16 から 23) を設定
+	   する処理で 19 から 4 ビットを 0 クリアしていた。これでは、
+	   DMA の転送処理が 1M バイト以上の領域には行えない。そこで、
+	   19 から 4 ビットを 0 クリアしないようにした。
+        </OL>
+
+    <P>
+    <LI>version 0.0.13  1996/08/12  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.13.tar.gz">source</a><br>
+	IDE から立ち上げるための改良を行った。
+	主な変更は以下のとおり：
+        <OL>
+	<LI> 1stboot として IDE HD から立ち上げるための 1stboot_hd を作成した。
+	<LI> 2ndboot に IDE 操作用のモジュール (ide.c/ide.h) を追加した。
+	<LI> 2ndboot のコマンドに ideboot を追加した。
+        </OL>
+
+    <P>
+    <LI>version 0.0.14  1996/08/13  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.14.tar.gz">source</a><br>
+	メモリを 16MB までしか認識していなかったのを 256MB まで認識で
+	きるように変更した。
+    <P>
+    <LI>version 0.0.15  1996/10/30  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.15.tar.gz">source</a><br>
+	ITRON 中心核に vget_csl システムコールを追加。このシステムコー
+	ルは、現在のカーソル位置を返す。ただし、ITRON 中心核がコンソー
+	ルに直接表示している時のみ使用できる。<BR>
+	BTRON マネージャ用のディレクトリ (kernel/BTRON/manager) を追加。	
+    <P>
+    <LI>version 0.0.16  1996/11/6  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.16.tar.gz">source</a><BR>
+	POSIX マネージャのディレクトリを追加。
+	kernel/POSIX/manager
+    <P>
+    <LI>version 0.0.17  1996/11/6  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.17.tar.gz">source</a><BR>
+	IDE デバイスドライバの登録。
+	kernel/BTRON/device/ide
+    <P>
+    <LI>version 0.0.18 1996/11/6  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.18.tar.gz">source</a><BR>
+	以下の変更を行った。<BR>
+	1) vset_cns システムコールの追加。<BR>
+	2) カーネルからの出力をコンソールデバイスドライバを介して行うよう<BR>
+	   に変更した。
+    <P>
+    <LI>version 0.0.19 1996/11/16  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.19.tar.gz">source</a><BR>
+	以下の変更を行った。<BR>
+	1) vsys_msc システムコールの追加。<BR>
+	2) init プログラムに reset と halt コマンドを追加した。<BR>
+	3) POSIX 環境の大幅見直しを行った。<BR>
+	4) POSIX 環境での最初のファイルシステム (SFS) のためのツール<BR>
+	   (mkfs/statfs) を作成した。
+    <P>
+    <LI>version 0.0.20 1997/4/6  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.20.tar.gz">source</a><BR>
+	OS に ELF 形式の実行ファイルを使用できるようにした。
+	(OS ファイルを作成時に ELF 形式の実行ファイルから a.out 形式に
+	変換するようにした)
+    <P>
+    <LI>version 0.0.21 1997/5/11  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.21.tar.gz">source</a><BR>
+	IDE ドライバの中身を作成。
+
+    <P>
+    <LI>version 0.0.22 1997/6/30  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.22.tar.gz">source</a><BR>
+	ブートプログラムをすべて ELF モードでコンパイルするようにした。
+	今までは、オブジェクトは a.out 形式でコンパイルしていた。
+	(-b i486-linuxout を指定していた)
+	HD からのブート処理を修正。SFS ファイルシステムを認識するように
+	した。
+	今までは、HD からのブートはファイルシステムではなく、パーティシ
+	ョンの先頭のブロックから読み込んでいた。
+
+    <P>
+    <LI>version 0.0.23 1997/6/30  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.23.tar.gz">source</a><BR>
+	従来型の OS のロード処理を有効にした(2nd boot)。
+	(従来型のロード処理では、FD にベタに書き込まれた OS を読み込む)
+
+    <P>
+    <LI>version 0.0.24 1997/6/30  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.24.tar.gz">source</a><BR>
+	BTRON MM のコメントの漢字コードを SJIS から EUC に変更した。
+	BTRON MM のメモリ管理の初期化処理時に page fault になっていたバグ
+	を修正した。
+
+    <P>
+    <LI>version 0.0.25 1997/7/4  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.25.tar.gz">source</a><BR>
+	POSIX マネージャの修正。
+	root ファイルシステムをマウントし、ファイルをオープンできるようにした。
+	ただし、Floppy disk drive の種類によっては、失敗する場合あり。
+	(FD ドライバにバグがある？)
+    <P>
+    <LI>version 0.0.26 1997/7/6  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.26.tar.gz">source</a><BR>
+	POSIX マネージャおよび IDE ドライバの修正。<BR>
+	POSIX ファイルシステム (SFS) の任意のファイルを open し、read でき
+	るようにした。<BR>
+	IDE ドライバをパーティションを認識して read できるように修正した。<BR>
+	(ドライバへの要求メッセージ中の dd エントリを有効にした。このエント
+	リを IDE ドライバは今までは無視していた)
+    <P>
+    <LI>version 0.0.27 1997/7/7  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.27.tar.gz">source</a><BR>
+	POSIX マネージャ、IDE ドライバ、そして BTRON/init の修正。<BR>
+	<UL>
+	<LI>POSIX マネージャ<BR>
+	  close、chmod、chown システムコールの中身を作成した。
+	<LI>IDE ドライバ<BR>
+	  write 時にもパーティション情報を意識するよう変更した。<BR>
+	  (まだ、テスト不十分)<BR>
+	<LI>BTRON/init<BR>
+	  POSIX 関係の処理のうち、プリミティブなものを posix_if.c に移<BR>
+	  動した。なお、posix_if.c は新規作成したファイル。<BR>
+	</UL>
+    <P>
+    <LI>version 0.0.28 1997/7/9  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.28.tar.gz">source</a><BR>
+	POSIX マネージャの修正。<BR>
+	psc_getegid_f、psc_geteuid_f、psc_getgid_f、psc_getuid_f、psc_rewind_f
+	の各関数の中身を作成した。
+    <P>
+    <LI>veriosn 0.0.29 1997/10/12  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.29.tar.gz">source</a><BR>
+	POSIX lowlib の追加。<BR>
+	Console ドライバにグラフィック表示の機能を追加。<BR>
+	POSIX マネージャにファイル write 処理を追加した。<BR>
+	(write システムコール)
+    <P>
+    <LI>veriosn 0.0.30 1997/10/18  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.30.tar.gz">source</a><BR>
+	kernel/BTRON/kernlib/dma.c を変更。<BR>
+	(I/O -&gt; memory の処理を正常にできるようにした)
+    <P>
+    <LI>veriosn 0.0.31 1997/10/23  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.31.tar.gz">source</a><BR>
+        <UL>
+	<LI>kernel/POSIX/manager/syscall.c<BR>
+		不要な関数 psc_fseek_f (), psc_fstat_f () を削除した。<BR>
+		psc_rewinddir_f () の中身を作成した。<BR>
+		psc_rmdir_f () の中で使っているパラメータの構造体が <BR>
+		par_remove だったので、par_rmdir に変更した。<BR>
+	<LI>kernel/POSIX/manager/posix_syscall.h<BR>
+		struct psc_rewinddir, struct psc_rmdir の中身を作成した。<BR>
+	<LI>kernel/POSIX/manager/process.c<BR>
+		proc_set_gid () を作成した。<BR>
+	</UL>
+    <P>
+    <LI>veriosn 0.0.32 1997/10/24  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.32.tar.gz">source</a><BR>
+        <UL>
+	<LI>kernel/POSIX/manager/以下の次のファイルを更新。<BR>
+	  .depend Makefile elf.h exec.c filesystem.c memory.c posix.h <BR>
+	  posix_mm.h posix_proc.h posix_syscall.h process.c syscall.c vmtree.c<BR>
+	主に exec システムコールの処理を追加した。<BR>
+	<LI>kernel/BTRON/kernlib/sys_task.c<BR>
+	  関数 vcre_tsk() を追加した。この関数は、タスク ID を自動的に割り当て<BR>
+	  る以外は cre_tsk() と同様の処理を行う。<BR>
+	<LI>kernel/BTRON/kernlib/sys_virtual.c<BR>
+	  関数 vunm_reg() を追加した。この関数は、仮想メモリページのアンマップを行う。<BR>
+	</UL>
+    <P>
+    <LI>veriosn 0.0.33 1997/10/25  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.33.tar.gz">source</a><BR>
+        POSIX マネージャに fork 関係の処理を追加した。
+    <P>
+    <LI>veriosn 0.0.34 1997/10/28  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.34.tar.gz">source</a><BR>
+	NE2000 ドライバの(ちょっとした)修正。<BR>
+	各種ヘッダファイルの変更。
+    <P>
+    <LI>veriosn 0.0.35 1997/11/10  <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/source/b-free-pc.0.0.35.tar.gz">source</a><BR>
+	NE2000 ドライバの変更
+	NE2000 アダプタの SA_PROM の読み取り処理の追加。
+	1 フレーム分のデータの書き込み処理の追加。
+  </UL>
+
+  <P>
+  <LI>PC9801版
+  <UL>
+  <LI>version 0.1.1 <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/PC9801/source/btron-v0.1.1.tar.gz">source</a><br>
+  <P>
+  <LI>version 0.1.2 <a href="ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/PC9801/source/btron-v0.1.2.tar.gz">source</a><br>
+  </UL>
+  <P>
+
+  <LI><a href="http:tools.html">開発用のツール類</a>
+    <UL>
+    <LI>8086用アセンブラ/リンカ
+    <LI>カーネル作成用
+    </UL>
+
+</UL>
+
+<HR>
+<font size=3>Copyright (C) 1996,1997 B-Free Project<BR></font>
+</BODY>
+</HTML>

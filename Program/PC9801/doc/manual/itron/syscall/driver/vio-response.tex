@@ -1,0 +1,39 @@
+\function{vio\_response -- ＩＯのレスポンスを受けとる}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER vio\_response (ID device, T_IO_RESPONSE *res)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {device} {デバイスとつながっているメッセージのポート ID}
+  \labitem {res} {レスポンス情報}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_NOMEM}  システム管理領域が足りない(デバイスドライバの管理
+テーブルがオーバーフローした)。
+\end{lablist}
+
+
+\labitem{機能}
+
+非同期モードのデバイス読み書き時にドライバからのレスポンスを受信します。
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: "itron"
+% End: 

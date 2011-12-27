@@ -1,0 +1,220 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=x-euc-jp">
+<TITLE>
+B-Free/HD boot instruction.
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<H1>
+HD から boot する方法
+</H1>
+<HR>
+
+<P>
+version 1.0<BR>
+1997/11/18<BR>
+内藤 隆一<BR>
+<P>
+
+<OL>
+<LI>B-Free OS をインストールするパーティションを確保します。<BR>
+
+   fdisk コマンドを使って、B-Free OS をインストールするパーティション
+   を確保します。確保するパーティションは、1MB 程度の小さなパーティショ
+   ン(boot プログラムが入ります)と 20MB のパーティション(B-Free のファ
+   イルシステムとなります)です。B-Free のファイルシステムの方は、もっ
+   と小さくても大丈夫ですが、少なくとも 1MB 以上は確保するようにしてく
+   ださい。
+
+<LI>B-Free OS のソースを落とします。<BR>
+   URL: ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/
+   の下に、b-free-pc.xx.yy.zz.tar.gz という名前で入っています。<BR>
+   (xx.yy.zz はバージョンです。値の大きいものが新しいバージョンです)
+
+
+<LI>落としたファイル (tar + gzip ファイル) を適当なディレクトリで展開します。
+
+<BLOCKQUOTE>
+	tar xvzf <落としてきたファイル>
+</BLOCKQUOTE>
+
+
+<LI>ブートプログラムを変更します。
+
+  <OL>
+  <LI>1st boot のファイル 1stboot_hd.s に記述してあるパーティションの開始
+      情報を変更します。
+
+<BLOCKQUOTE>
+	! HD の場合 (パーティション 0)
+	s_cylinder:	.byte 0
+	s_head:		.byte 1
+	s_sector:	.byte 1
+</BLOCKQUOTE>
+
+<P>
+    ここでは、パーティションとして 0 (最初のパーティション)を指定して
+    います。<BR>
+
+<BLOCKQUOTE>
+    * パーティション情報については、BIOS のパラメータを参考にしてください。
+</BLOCKQUOTE>
+
+
+    <LI>1st boot のファイル 1stboot_hd.s に記述してある HD のジオメトリ情
+        報を変更します。
+
+<BLOCKQUOTE>
+	! HD の GEOMETORY 情報
+	! 例：Cylinder 255, Head 10, Sector 55
+	n_cylinder:	.byte 255
+	n_head:		.byte 16
+	n_sector:	.byte 64	! セクタだけは、最大数 + 1 にする。
+</BLOCKQUOTE>
+
+<P>
+    BIOS はセクタを 1 から数えるようになっているので、最大数 + 1 を指
+    定してください。<BR>
+
+<BLOCKQUOTE>
+    * HD のジオメトリ情報については、BIOS のパラメータを参考にしてください。
+</BLOCKQUOTE>
+   </OL>
+
+<LI> Make します。
+     boot ディレクトリに入り、make を実行します。
+
+<BLOCKQUOTE>
+	cd boot
+	make hd_image
+</BLOCKQUOTE>
+
+<P>
+   boot ディレクトリに bootimage_hd というファイルができます。
+
+<LI>boot プログラム を HD に書き込みます。<BR>
+    5. で作成した boot プログラムを、あらかじめ確保しておいた boot 用の
+       パーティションに書き込みます。
+
+<BLOCKQUOTE>
+	dd if=bootimage_hd of=/dev/<HD のパーティション>
+</BLOCKQUOTE>
+
+
+<LI>kernel を make します。<BR>
+    kernel/BTRON/make ディレクトリに移動し、make コマンドを実行します。
+
+<BLOCKQUOTE>
+	cd kernel/BTRON/make
+	make
+</BLOCKQUOTE>
+<P>
+   kernel/BTRON/make ディレクトリの下に btron というファイルができます。
+
+
+<LI> ファイルシステム作成用のツールを make。<BR>
+     kernel/POSIX/mkfs にあるファイルシステム作成用のツールを make します。
+
+<BLOCKQUOTE>
+	cd kernel/POSIX/mkfs
+	make
+</BLOCKQUOTE>
+
+<P>
+   kernel/POSIX/mkfs ディレクトリに mkfs と statfs というファイルがで
+   きます。
+
+
+<LI> ファイルシステムの作成。<BR>
+     あらかじめ準備しておいた B-Free OS のファイルシステム用のパーティショ
+     ンに B-Free OS のファイルシステムを構築します。
+
+     <OL>
+     <LI> mkfs を実行します。<BR>
+         kernel/POSIX/mkfs を実行して、パーティションをフォーマットします。
+	 <P>
+	 mkfs /dev/HDのパーティション ブロック数 ブロックサイズ I-node数
+
+<BLOCKQUOTE>
+	ブロック数		パーティションのブロック数です
+				1 ブロックは 512 バイトとして計算してください。
+	ブロックサイズ		HD をアクセスする時の単位をバイト数にて指定します。
+				512 を指定してください。
+	I-node 数		ファイルの管理情報を入れる I-node の数を指定します。
+				適当な数を指定してください。
+</BLOCKQUOTE>
+
+    mkfs を実行すると、/lost+found というディレクトリだけがあるファイ
+    ルシステムができます。
+
+    <LI> mkfs が成功したかを確認します。<BR>
+        statfs を実行してファイルシステムの中を覗いてみます。
+
+<BLOCKQUOTE>
+	statfs /dev/<HD のパーティション> dir /
+</BLOCKQUOTE>
+
+    ファイルシステムのトップディレクトリの中身が表示されます。
+    </OL>
+
+<LI>B-Free OS をファイルシステムに入れます。<BR>
+    7. で作成した B-Free OS を新しく作ったファイルシステムの中にコピー
+    します。/system/btron386 という名前でコピーする必要があります。
+
+<BLOCKQUOTE>
+	cd kernel/BTRON/make
+	statfs /dev/<HD のパーティション> mkdir /system
+	statfs /dev/<HD のパーティション> write /system/btron386 btron
+</BLOCKQUOTE>
+
+   これで、/system ディレクトリの下に btron386 というファイルが作られ
+   ます。
+   <P>
+
+   <BLOCKQUOTE>
+   statfs コマンド
+
+	statfs /dev/<HD のパーティション> dir /system 
+
+    を実行して、btron386 というファイルがあれば成功です。
+    </BLOCKQUOTE>
+
+<LI> boot パーティションから起動するための準備を行います。<BR>
+     lilo プログラムなどを使って、BTRON の boot パーティションから boot 
+     するように設定を変更します。
+
+
+<LI> boot します。<BR>
+
+   マシンを再起動します。
+<P>
+   BTRON のブートパーティションを指定して、BTRON のブートプログラムを
+   実行させます。
+<P>
+   ブートプログラムが起動すると、boot> というプロンプトを表示します。
+   ここで、B-Free OS が入っているパーティションを指定して OS を立ち上
+   げます。
+
+<BLOCKQUOTE>
+	boot hd 0 パーティション番号
+
+   パーティション番号には、B-Free OS が入っているパーティションの番号
+   を指定します(パーティション番号は 1 からはじまることに注意してくだ
+   さい)。
+</BLOCKQUOTE>
+
+
+<LI> BTRON OS が起動すれば成功です！
+</OL>
+
+
+<HR>
+<A href="../index.html">B-Free オフィシャルホームページへ戻る</A>
+
+<HR>
+<font size=3>Copyright (C) 1996,1997 B-Free Project<BR></font>
+</BODY>
+</HTML>

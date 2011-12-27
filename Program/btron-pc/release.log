@@ -1,0 +1,263 @@
+BTRON_PC_0_0_1	1996/07/22
+	ITRON をロードし、ITRON からキーボード入力ができる状態になった。
+
+BTRON_PC_0_0_2	1996/07/22
+	BTRON_PC_0_0_1 に BTRON の make 環境を追加した。
+
+BTRON_PC_0_0_3	1996/07/22
+	BTRON_PC_0_0_2 に ITRON/pc98/pc98.h の登録を追加した。
+
+BTRON_PC_0_0_4	1996/07/22
+	BTRON_PC_0_0_3 に ITRON/pc98/*.c の登録を追加した。
+
+BTRON_PC_0_0_5	1996/07/22
+	BTRON_PC_0_0_4 に ITRON/io/*.c の登録を追加した。
+
+BTRON_PC_0_0_6	1996/07/22
+	BTRON_PC_0_0_5 に BTRON/make/getsize の登録を追加した。
+
+BTRON_PC_0_0_7	1996/07/23
+	タイマー制御の追加。ただし、また未完成。
+
+BTRON_PC_0_0_8	1996/07/23
+	BTRON_PC_0_0_7 には boot の変更がなかったので追加した。
+	(インターバルタイマの設定には boot の処理が必要のため。... なぜ？)
+
+BTRON_PC_0_0_9	1996/07/24
+	BTRON_PC_0_0_8 には、ITRON/i386/interrupt.s の修正が含まれていなか
+	ったので、それを入れた。
+
+BTRON_PC_0_0_10	1996/07/24
+	以下の変更を行った。
+	1) 割り込みの初期化をきちんと行うようにした(これまでは、ITRON 
+	   内では初期化が正常に行われていなかった)。この変更に伴なって
+	   BTRON_PC_0_0_8 の変更を 2nd boot から削除した。
+	2) インターバルタイマを 10ms 毎に動かすように変更した(これまで
+	   は、1ms 毎になっていた)。
+	3) port manager をカーネル (kernel/BTRON/make/btron) に組み込
+	   んだ。
+	4) キーボードにて '=' + Shift を押したとき、これまでは '=' し
+	   か出ていなかったが、正常に '+' を出るように変更した。
+	5) カーネルに ITRON 以外のモジュールが入っているときに、起動時
+	   に実行するように処理を加えた (PC9801 版では以前からある機能)。
+	6) make 環境に port manager と kernlib の作成環境を追加した。
+
+BTRON_PC_0_0_11	1996/07/26
+	以下の変更を行なった。
+	1) boot プログラムがモジュールをメモリにロードするときに FD の
+	   ブロック番号を表示していた部分を削除した。
+	2) console デバイスドライバを追加した。
+	3) keyboard デバイスドライバを追加した。
+	4) init プログラムを追加した。
+	5) demo プログラムが実行できなくなった。
+
+BTRON_PC_0_0_12	1996/07/29
+	以下の変更を行なった。
+	1) FD ドライバの追加 (BTRON/device/fd765a)
+	2) init プログラムに openfd/readfd コマンドを追加。
+	   openfd <return>
+	   readfd <開始位置(バイト)> <return>
+	   と入力することによって、FD の任意の位置から 10 バイト読み取
+	   ることができる。
+	3) kernlib/dma.c の中で DMA の上位アドレス (16 から 23) を設定
+	   する処理で 19 から 4 ビットを 0 クリアしていた。これでは、
+	   DMA の転送処理が 1M バイト以上の領域には行えない。そこで、
+	   19 から 4 ビットを 0 クリアしないようにした。
+
+BTRON_PC_0_0_13 1996/08/12
+	IDE から立ち上げるための改良を行った。
+	主な変更は以下のとおり：
+	1) 1stboot として IDE HD から立ち上げるための 1stboot_hd を作成した。
+	2) 2ndboot に IDE 操作用のモジュール (ide.c/ide.h) を追加した。
+	3) 2ndboot のコマンドに ideboot を追加した。
+
+BTRON_PC_0_0_14	1996/08/13
+	メモリを 16MB までしか認識していなかったのを 256MB まで認識で
+	きるように変更した。
+
+BTRON_PC_0_0_15
+	ITRON 中心核に vget_csl システムコールを追加。このシステムコー
+	ルは、現在のカーソル位置を返す。ただし、ITRON 中心核がコンソー
+	ルに直接表示している時のみ使用できる。
+	BTRON マネージャ用のディレクトリ (kernel/BTRON/manager) を追加。
+
+BTRON_PC_0_0_16 1996/11/6
+	POSIX マネージャのディレクトリを追加。
+	kernel/POSIX/manager
+
+BTRON_PC_0_0_17 1996/11/6
+	IDE デバイスドライバの登録。
+	kernel/BTRON/device/ide
+
+BTRON_PC_0_0_18 1996/11/6
+	以下の変更を行った。
+	1) vset_cns システムコールの追加。
+	2) カーネルからの出力をコンソールデバイスドライバを介して行うよう
+	   に変更した。
+
+BTRON_PC_0_0_19
+	以下の変更を行った。
+	1) vsys_msc システムコールの追加。
+	2) init プログラムに reset と halt コマンドを追加した。
+	3) POSIX 環境の大幅見直しを行った。
+	4) POSIX 環境での最初のファイルシステム (SFS) のためのツール
+	   (mkfs/statfs) を作成した。
+
+BTRON_PC_0_0_20
+	OS に ELF 形式の実行ファイルを使用できるようにした。
+	(OS ファイルを作成時に ELF 形式の実行ファイルから a.out 形式に
+	変換するようにした)
+
+BTRON_PC_0_0_21 1997/5/11
+	IDE ドライバの中身を作成。
+
+BTRON_PC_0_0_22 1997/6/30
+	ブートプログラムをすべて ELF モードでコンパイルするようにした。
+	今までは、オブジェクトは a.out 形式でコンパイルしていた。
+	(-b i486-linuxout を指定していた)
+	HD からのブート処理を修正。SFS ファイルシステムを認識するように
+	した。
+	今までは、HD からのブートはファイルシステムではなく、パーティシ
+	ョンの先頭のブロックから読み込んでいた。
+
+BTRON_PC_0_0_23 1997/6/30
+	従来型の OS のロード処理を有効にした(2nd boot)。
+	(従来型のロード処理では、FD にベタに書き込まれた OS を読み込む)
+
+BTRON_PC_0_0_24 1997/6/30
+	BTRON MM のコメントの漢字コードを SJIS から EUC に変更した。
+	BTRON MM のメモリ管理の初期化処理時に page fault になっていたバグ
+	を修正した。
+
+BTRON_PC_0_0_25 1997/7/4
+	POSIX マネージャの修正。
+	root ファイルシステムをマウントし、ファイルをオープンできるようにした。
+	ただし、Floppy disk drive の種類によっては、失敗する場合あり。
+	(FD ドライバにバグがある？)
+
+BTRON_PC_0_0_26 1997/7/6
+	POSIX マネージャおよび IDE ドライバの修正。
+	POSIX ファイルシステム (SFS) の任意のファイルを open し、read でき
+	るようにした。
+	IDE ドライバをパーティションを認識して read できるように修正した。
+	(ドライバへの要求メッセージ中の dd エントリを有効にした。このエント
+	リを IDE ドライバは今までは無視していた)
+
+BTRON_PC_0_0_27 1997/7/7
+	POSIX マネージャ、IDE ドライバ、そして BTRON/init の修正。
+	POSIX マネージャ
+	  close、chmod、chown システムコールの中身を作成した。
+	IDE ドライバ
+	  write 時にもパーティション情報を意識するよう変更した。
+	  (また、テスト不十分)
+	BTRON/init
+	  POSIX 関係の処理のうち、プリミティブなものを posix_if.c に移
+	  動した。なお、posix_if.c は新規作成したファイル。
+
+BTRON_PC_0_0_28 1997/7/9
+	psc_getegid_f、psc_geteuid_f、psc_getgid_f、psc_getuid_f、psc_rewind_f
+	の各関数の中身を作成した。
+
+BTRON_PC_0_0_29 1997/10/12
+	POSIX lowlib の追加。
+	Console ドライバにグラフィック表示の機能を追加。
+	POSIX マネージャにファイル write 処理を追加した。
+	(write システムコール)
+
+BTRON_PC_0_0_30 1997/10/18
+	kernel/BTRON/kernlib/dma.c を変更。
+	(I/O -> memory の処理を正常にできるようにした)
+
+BTRON_PC_0_0_31 1997/10/23
+	kernel/POSIX/manager/syscall.c
+		不要な関数 psc_fseek_f (), psc_fstat_f () を削除した。
+		psc_rewinddir_f () の中身を作成した。
+		psc_rmdir_f () の中で使っているパラメータの構造体が 
+		par_remove だったので、par_rmdir に変更した。
+	kernel/POSIX/manager/posix_syscall.h
+		struct psc_rewinddir, struct psc_rmdir の中身を作成した。
+	kernel/POSIX/manager/process.c
+		proc_set_gid () を作成した。
+
+BTRON_PC_0_0_32 1997/10/24
+	kernel/POSIX/manager/以下の次のファイルを更新。
+	  .depend Makefile elf.h exec.c filesystem.c memory.c posix.h 
+	  posix_mm.h posix_proc.h posix_syscall.h process.c syscall.c vmtree.c
+	主に exec システムコールの処理を追加した。
+	kernel/BTRON/kernlib/sys_task.c
+	  関数 vcre_tsk() を追加した。この関数は、タスク ID を自動的に割り当て
+	  る以外は cre_tsk() と同様の処理を行う。
+	kernel/BTRON/kernlib/sys_virtual.c
+	  関数 vunm_reg() を追加した。この関数は、仮想メモリページのアンマップ
+	  を行う。
+
+BTRON_PC_0_0_33 1997/10/25
+	POSIX マネージャに fork 関係の処理を追加した。
+
+BTRON_PC_0_0_34 1997/10/28
+	NE2000 ドライバの(ちょっとした)修正。
+	各種ヘッダファイルの変更。
+
+BTRON_PC_0_0_35 1997/11/10
+	NE2000 ドライバの変更
+	NE2000 アダプタの SA_PROM の読み取り処理の追加。
+	1 フレーム分のデータの書き込み処理の追加。
+
+BTRON_PC_0_0_36 1998/02/24
+	POSIX 環境での fork システムコールの追加。
+	ただし、lowlib を通して fork はまだできない。
+	(init プログラムが直接 fork 要求を POSIX マネージャ
+	に対して送っている)
+
+BTRON_PC_0_0_37 1998/05/24
+	・IDE ディスク関連処理の変更(拡張フォーマットへの対応)
+	1) パーティションテーブルのサイズ、スタートブロック番号を
+	   計算するときに、BIOS が変換しているジオメトリで計算するよう
+	   に変更した。
+	2) BIOS が変換したであろうジオメトリの値をディスクパラメータの 
+	   now_cylinder、now_head、now_sector_track に入れるようにした。
+	   (初期化時の処理に追加)
+	3) ide_id() で、IDE ディスクのモデル名の他にジオメトリ情報も出
+	   力するように処理を変更した。512MB 以上のディスクについては、
+	   BIOS でジオメトリ変換した情報も出力するようにした。
+
+	・enum 宣言の最後の要素に ',' がついているものについて、',' を
+	  削除した (ANSI の文法に従った)。
+
+BTRON_PC_0_0_38 1998/10/28
+	・kernel/ITRON/i386/locore.s 内で使っている ltr のオペランド
+	  を %eax から %ax に変更した。
+	・boot/Makefile
+	  build/mktable のコマンド起動時にカレントディレクトリ指定 './' を追加し
+	  た。これを付けないと、環境変数 PATH にカレントディレクトリが入ってい
+	  ない場合コマンドが見つからず、エラーになる。
+	  clean 実行時、bootimage も削除するようにした。
+
+BTRON_PC_0_0_39 1998/11/10
+	・BTRON single manager で使う systemcall.def ファイルの追加。
+	  systemcall.def --- システムコールの定義ファイル
+			     このファイルを使って、システムコールのスタブルーチンや
+			     システムコールの呼び出し等に使用する構造体を自動生成する。
+
+BTRON_PC_0_0_40 1998/12/08
+	・boot の変更
+	・kernel/BTRON/device/console の変更(グラフィックが正常に表示できるようにした)
+	・kernel/Makefile の削除
+	・kerne/BTRON/init にスクリプト言語 (Mitten) 組み込み
+
+BTRON_PC_0_0_41 1998/05/22
+	・グラフィック関係の改良
+	・POSIX ファイルシステムの BUG FIX
+	・mkfs プログラム名を mksfs に変更
+	・mkfs の引数の意味を変更
+	・dc390 ドライバのスケルトン追加
+	・wconsole ドライバの追加
+	・svga_cons ドライバのスケルトン追加
+	・ne2000 ドライバの送信処理の追加
+	・boot コマンドのパラメータの変更
+	・kernlib, port-manager のディレクトリの移動
+	・driver task、lowlib から ITRON system call への経路の確保
+	・statfs の debug
+	・FD からの boot の高速化
+	・sfsck の追加
+	・lowlib から POSIX マネージャまでの経路の BUG FIX

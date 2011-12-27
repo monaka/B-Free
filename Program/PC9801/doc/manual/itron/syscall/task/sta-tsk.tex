@@ -1,0 +1,40 @@
+\function{sta\_tsk  --- タスクの起動}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER sta\_tsk (ID tskid, INT stacd)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid} {タスク ID}
+  \labitem {stacd} {起動したタスクへ渡す引数}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     タスク ID が不正
+\labitem {E\_NOEXS}   タスクが TTS\_DMT 状態でない
+\end{lablist}
+
+
+\labitem{機能}
+
+ 引数tskidで指定したタスクを起動する。
+
+ 指定したタスクは、cre\_tsk で生成されている必要がある。
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

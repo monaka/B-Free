@@ -1,0 +1,55 @@
+
+\subsubsection{システム管理機能}
+
+  \function{get\_ver --- バージョン番号取得}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER get\_ver (T\_VER *ver)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {ver}{ITRON のバージョン番号(返り値)}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+ITRON のバージョンを返す。
+
+get\_ver システムコールは、バージョンを次の構造体のデータとして返す。
+
+\begin{quote}
+  \begin{verbatim}
+typedef struct t_ver
+{
+  UH    maker;
+  UH    id;
+  UH    spver;
+  UH    prver;
+  UH    prno[4];
+  UH    cpu;
+  UH    var;
+} T_VER;
+  \end{verbatim}
+\end{quote}
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

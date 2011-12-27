@@ -1,0 +1,17 @@
+main.o: main.c boot.h types.h errno.h config.h location.h memory.h \
+ console.h date.h strings.h macros.h dma.h fd.h file.h vram.h page.h \
+ a.out.h interrupt.h idt.h
+console.o: console.c location.h memory.h console.h macros.h
+keyboard.o: keyboard.c types.h location.h config.h interrupt.h idt.h
+memory.o: memory.c types.h location.h config.h memory.h
+date.o: date.c location.h date.h
+idt.o: idt.c types.h idt.h interrupt.h
+cinterrupt.o: cinterrupt.c types.h interrupt.h
+fd.o: fd.c types.h interrupt.h idt.h fd.h dma.h errno.h file.h
+misc.o: misc.c types.h misc.h
+dma.o: dma.c types.h dma.h
+page.o: page.c types.h config.h location.h errno.h page.h
+version.o: version.c
+lib.o: lib.c types.h location.h memory.h console.h macros.h misc.h \
+ vram.h
+ide.o: ide.c types.h interrupt.h idt.h dma.h errno.h file.h ide.h

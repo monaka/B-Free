@@ -1,0 +1,1141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=SHIFT_JIS ">
+<meta name="GENERATOR" content="Namo WebEditor v1.20">
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+
+<p><font size="7"><tt>　　　　タスク管理</tt></font><font size="4"><tt> </tt></font></p>
+<p><font size="6"><tt><a name="cre_tsk">cre_tsk</a></tt></font><font size="6"><tt> </tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CTSK*　　pk_ctsk　　タスク生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_ctskの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exxinf　　 拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　tskatr　　 タスク属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 task　　　 タスク起動アドレス</tt></font></p>
+<p><font size="4"><tt>　　PRI　　　　itskpri　　タスク起動優先度</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　stksz　　　スタックサイズ（バイト数）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_ID　　E_RSATR　　E_OBJ</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　E_PAR　　EN_OBJNO　　EN_CTXID　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_tsk">del_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OBJ　　E_OACV</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="6"><tt><a name="sta_tsk">sta_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　stacd　　　タスク起動コード</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OBJ　　E_OACV</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ext_tsk">ext_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="exd_tsk">exd_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ter_tsk">ter_tsk</a></tt></font><font size="4"><tt><a name="ter_tsk"><br></a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OBJ　　E_OACV</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="6"><tt><a name="dis_dsp">dis_dsp</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ena_dsp">ena_dsp</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="chg_pri">chg_pri</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>　PRI　　　　tskpri　　 タスク優先度</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OBJ　　E_OACV　　E_PAR　　</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID　　EN_PAR</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="6"><tt><a name="rot_rdq">rot_rdq</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　PRI　　　　tskpri　　 タスク優先度</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="rel_wai">rel_wai</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OBJ　　E_OACV</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="6"><tt><a name="get_tid">get_tid</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_tsk">ref_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RTSK*　　pk_rtsk　　タスク状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rtskの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　PRI　　　　tskpri　　 現在の優先度</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 tskstat　　タスク状態</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID　　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>　</tt></font></p>
+<p><font size="6"><tt>タスク付属同期</tt></font></p>
+<p><font size="6"><tt><a name="sus_tsk">sus_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OBJ　　E_OACV</tt></font></p>
+<p><font size="4"><tt>　E_QOVR　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="rsm_tsk">rsm_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="frsm_tsk">frsm_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="slp_tsk">slp_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="tslp_tsk">tslp_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="wup_tsk">wup_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_OBJ　　</tt></font></p>
+<p><font size="4"><tt>　E_QOVR　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="can_wup">can_wup</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　wupcnt　　 起床要求キューイング数</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_OBJ　　</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID　　EN_RPAR</tt></font></p>
+<p><font size="4"><tt>　</tt></font></p>
+<p><font size="7"><tt>同期・通信</tt></font></p>
+<p><font size="6"><tt><a name="cre_sem">cre_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CSEM*　　pk_csem　　セマフォ生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_csemの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　sematr　　 セマフォ情報</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　isemcnt　　セマフォ初期値（レベルＸ）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxsem　　 セマフォ最大値（レベルＸ）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_ID　　E_RSATR　　E_OACV　　E_OBJ</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_sem">del_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="sig_sem">sig_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_QOVR</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="wai_sem">wai_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="preq_sem">preq_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="twai_sem">twai_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_sem">ref_sem</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RSEM*　　pk_rsem　　セマフォ状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rsemの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　wtsk　　　 待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　INT　　　semcnt　　 現在のセマフォカウント値</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_RPAR　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="cre_flg">cre_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CFLG*　　pk_cflg　　イベント生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cflgの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　flgatr　　 イベントフラグ情報</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 isemcnt　　イベントフラグ初期値</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_RSATR　　E_ID　　E_NOEXS</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　E_PAR　　EN_OBJNO　　EN_PAR　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_flg">del_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="set_flg">set_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 setptn　　 セットするビットパターン</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="clr_flg">clr_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 clrptn　　 クリアするビットパターン</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="wai_flg">wai_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 waiptn　　 待機ビットパターン</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 wfmode　　 待機モード</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 flgptn　　 待機解除のビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_OBJ　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="pol_flg">pol_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 waiptn　　 待機ビットパターン</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 wfmode　　 待機モード</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 flgptn　　 待機解除のビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_OBJ　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="twai_flg">twai_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 waiptn　　 待機ビットパターン</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 wfmode　　 待機モード</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 flgptn　　 待機解除のビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_OBJ　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_flg">ref_flg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CFLG*　　pk_rflg　　イベントフラグ状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rflgの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 flgptn　　 イベントフラグのビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　EN_RPAR　　EN_CTXID　　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="cre_mbx">cre_mbx</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMBX*　　pk_cmbx　　メイルボックス生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmbxの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　mbxatr　　 wtsk　　　 メイルボックス属性</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　bufcnt　　 メッセージの数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_ID　　E_RSATR　　E_OBJ</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_mbx">del_mbx</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="snd_msg">snd_msg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_MSG　　　pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_QOVR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="rcv_msg">rcv_msg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　T_MSG*　　 pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="prcv_msg">prcv_msg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　T_MSG*　　 pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="trcv_msg">trcv_msg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　T_MSG*　　 pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_mbx">ref_mbx</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RMBX*　　pk_rmbx　　メイルボックス状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmbxの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　T_MSG　　　pk_msg　　 次に受信されるメッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="7"><tt>拡張同期・通信</tt></font></p>
+<p><font size="6"><tt><a name="cre_mbf">cre_mbf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMBF*　　pk_cmbf　　メッセージバッファ生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmbfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　mbfatr　　 メッセージバッファ属性</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　bufsz　　　メッセージバッファのサイズ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxmsz　　 メッセージの最大長</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOMEM　　E_RSATR　　E_OACV　　E_PAR</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　EN_OBJNO　　EN_CTXID　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_mbf">del_mbf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_OACV　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="snd_mbf">snd_mbf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　送信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　送信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p><font size="4"><tt>　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="psnd_mbf">psnd_mbf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　送信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　送信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p><font size="4"><tt>　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="tsnd_mbf">tsnd_mbf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　送信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　送信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_CTXID</tt></font></p>
+<p><font size="4"><tt>　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="rcv_mbf">rcv_mbf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　受信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　受信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="prcv_mbf">prcv_mbf</a></tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　受信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　受信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="trcv_mbf">trcv_mbf</a></tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　受信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　受信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_mbf">ref_mbf</a></tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　TRMBF*　　 pk_rmbf　　メッセージバッファ状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmbfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報　　　 　</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　 　受信待機アドレスの有無</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　stsk　　　 送信待機アドレスの有無</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　msgsz　　　次に受信されるメッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　frbufsz　　空きバッファの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="cre_por">cre_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMBF*　　pk_cpor　　ランデブ用ポート生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cporの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　poratr　　 ポート属性</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxcmsz　　呼出時メッセージの最大長</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxrmsz　　返答用メッセージの最大長</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOMEM　　E_OACV　　E_PAR　　E_OBJ</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　EN_OBJNO　　EN_PAR　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_por">del_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="cal_por">cal_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="pcal_por">pcal_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="tcal_por">tcal_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX　　EN_OBJNO　　EN_PAR</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="acp_por">acp_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 acpptn　　 受信側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　呼出メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　tdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_OACV　　E_PAR　　E_DLT　　E_RLWAI</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　E_CTX　　EN_NOSPT</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="pacp_por">pacp_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 acpptn　　 受信側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　呼出メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　tdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_OACV　　E_PAR　　E_DLT　　E_RLWAI</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　E_CTX　　EN_NOSPT</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="tacp_por">tacp_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 acpptn　　 受信側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　呼出メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　tdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_OACV　　E_PAR　　E_DLT　　E_RLWAI</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　E_CTX　　EN_NOSPT</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="fwd_por">fwd_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　回送前のランデブ番号</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　E_OBJ</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　EN_NOSPT</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="rpl_rdv">rpl_rdv</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　返答メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 返答メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_OBJ　　E_CTX　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_por">ref_por</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RPOR*　　pk_rpor　　ポート状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rpor</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 呼出待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　atsk　　　 受信待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_ID　　E_NOEXS　　E_OACV　　E_PAR　　EN_OBJNO</tt></font></p>
+<p><font size="4"><tt>　ENCTXID　　EN_RPAR</tt></font></p>
+<p>　</p>
+<p><font size="7"><tt>割込み管理</tt></font></p>
+<p><font size="6"><tt><a name="def_int">def_int</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 dintno　　 割込み定義番号</tt></font></p>
+<p><font size="4"><tt>　T_DINT*　　pk_dint　　割込みハンドラ定義情報</tt></font></p>
+<p><font size="4"><tt>　pk_dintの中身</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　intatr　　 割込みハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 inthdr　　 割込みハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_RSATR　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_int">ref_int</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_CTX</tt></font></p>
+<p><font size="6"><tt><a name="ret_wup">ret_wup</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　起床タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_ID　　E_NOEXS　　E_QOVR　　E_OBJ　　E_CTX　　EN_CTXID</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="loc_cpu">loc_cpu</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="unl_cpu">unl_cpu</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="dis_int">dis_int</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 eintno　　 割込み許可番号</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ena_int">ena_int</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 eintno　　 割込み許可番号</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="chg_iXX">chg_iXX</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 iXXXX　　　割込みマスク（レベル、優先度）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_iXX">ref_iXX</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 iXXXX　　　割込みマスク（レベル、優先度）</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　</tt></font></p>
+<p>　</p>
+<p><font size="7"><tt>メモリプール管理</tt></font></p>
+<p><font size="6"><tt><a name="cre_mpl">cre_mpl</a></tt></font><font size="6"><tt>　</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMPL*　　pk_cmpl　　可変長メモリプール生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmplの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　mplatr　　 メモリプール属性</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　mplsz　　　メモリプールの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_ID　　E_RSATR　　E_OBJ　　E_PAR</tt></font></p>
+<p><font size="4"><tt>　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_mpl">del_mpl</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="get_blk">get_blk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　blksz　　　メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_RSATR　　E_DLT　　E_PAR</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="pget_blk">pget_blk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　blksz　　　メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_RSATR　　E_DLT　　E_PAR</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="tget_blk">tget_blk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　blksz　　　メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_RSATR　　E_DLT　　E_PAR</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="rel_blk">rel_blk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_mpl">ref_mpl</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RMPL　　 pk_rmpl　　メモリプール状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmplの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　frsz　　　 空き領域の大きさ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxsz　　　最大空き領域の大きさ</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="cre_mpf">cre_mpf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMPF*　　pk_cmpf　　固定長メモリプール生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmpfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　mpfatr　　 メモリプール属性</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　mpfsz　　　メモリプールの大きさ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　blfsz　　　固定長メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_ID　　E_PAR　　E_OACV　　E_OBJ</tt></font></p>
+<p><font size="4"><tt>　E_RSATR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="del_mpf">del_mpf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="get_blf">get_blf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="pget_blf">pget_blf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="6"><tt><a name="tget_blf">tget_blf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV　　E_DLT</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　E_TMOUT　　E_CTX</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="6"><tt><a name="rel_blf">rel_blf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_mpf">ref_mpf</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RMPF*　　pk_rmpf　　メモリプール状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmpfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　frbcnt　　 空き領域のブロック数</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_ID　　E_PAR　　E_OACV</tt></font></p>
+<p>　</p>
+<p><font size="7"><tt>時間管理</tt></font></p>
+<p><font size="6"><tt><a name="set_tim">set_tim</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　SYSTEM*　　pk_tim　　 現在時刻を示すアドレス</tt></font></p>
+<p><font size="4"><tt>　　SYSTEM　 　systim　　 システム設定用の現在時刻</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="get_tim">get_tim</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　SYSTEM*　　pk_tim　　 現在時刻を示すアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　上記のpk_timの内容</tt></font></p>
+<p><font size="4"><tt>　　SYSTEM　 　systim　　 システム設定用の現在時刻</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="dly_tsk">dly_tsk</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　DLYTIME　　dlytim　　 遅延時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_CTX　　E_PAR　　E_RLWAI</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="def_cyc">def_cyc</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　周期起動ハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_DCYC*　　pk_dcyc　　周期起動ハンドラ定義情報</tt></font></p>
+<p><font size="4"><tt>　pk_dcycの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　cycatr　　 周期起動ハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 cychdr　　 周期起動ハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 cycact　　 周期起動ハンドラ活性状態</tt></font></p>
+<p><font size="4"><tt>　　CYCTIME　　cyctim　　 周期起動時間間隔</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_PAR　　E_RSATR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="act_cyc">act_cyc</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　周期起動ハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 cycact　　 周期起動ハンドラ活性状態</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_cyc">ref_cyc</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　周期起動ハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_RCYC*　　pk_rcyc　　周期起動ハンドラ状態アドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rcycの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　CYCTIME　　lfttim　　 次のハンドラ起動までの時間</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 cycact　　 周期起動ハンドラ活性状態</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="def_alm">def_alm</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　アラームハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_DALM*　　pk_dalm　　アラームハンドラ情報</tt></font></p>
+<p><font size="4"><tt>　pk_dalmの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　almatr　　 アラームハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 almhdr　　 アラームハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 tmmode　　 起動時間選択</tt></font></p>
+<p><font size="4"><tt>　　CYCTIME　　cyctim　　 周期起動時間間隔</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOMEM　　E_RSATR　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_alm">ref_alm</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　almno　　　アラームハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_RALM*　　pk_ralm　　アラームハンドラ状態アドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_ralmの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ALMTIME　　lfttim　　 ハンドラ起動までの残り時間</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_NOEXS　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ret_tmr">ret_tmr</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_CTX</tt></font></p>
+<p>　</p>
+<p><font size="7"><tt>システム管理</tt></font></p>
+<p><font size="6"><tt><a name="get_ver">get_ver</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　T_VER*　　 pk_ver　　 バージョン情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_verの中身</tt></font></p>
+<p><font size="4"><tt>　　UH　　　 　maker　　　OS製造メーカー</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 id　　　　 OS型式番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 spver　　　ITRON仕様バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prver　　　OS製品バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prno[4]　　製品番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 cpu　　　　CPU情報</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 var　　　　バリエーション</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_sys">ref_sys</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　T_RSYS*　　pk_rsys　　システム情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　上記のpk_rsysの内容</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　sysstat　　システム状態</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="ref_cfg">ref_cfg</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　T_RCFG*　　pk_rcfg　　コンフィグレーション情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rcfgの中身</tt></font></p>
+<p><font size="4"><tt>　　ハード依存の情報</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="def_svc">def_svc</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　FN　　　　 s_fncd　　 拡張機能コード</tt></font></p>
+<p><font size="4"><tt>　T_DSVC*　　pk_dsvc　　拡張SVCハンドラ定義情報</tt></font></p>
+<p><font size="4"><tt>　pk_dsvcの中身</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　svcatr　　 拡張SVCハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 svchdr　　 拡張SVCハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_NOMEM　　E_RSATR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="def_exc">def_exc</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　INT　　　　exckind　　例外の種類</tt></font></p>
+<p><font size="4"><tt>　T_DEXC*　　pk_dexc　　例外ハンドラ定義情報</tt></font></p>
+<p><font size="4"><tt>　pk_dexcの中身</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　excatr　　 例外ハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 exchdr　　 例外ハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_NOMEM　　E_RSATR</tt></font></p>
+<p>　</p>
+<p><font size="7"><tt>ネットワーク</tt></font></p>
+<p><font size="6"><tt><a name="nrea_dat">nrea_dat</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 srcnode　　転送元のノード番号</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 srcadr　　 転送元のアドレス</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 dstadr　　 転送先のアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　datsz　　　データのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　reasz　　　送られてきたデータの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_CTX　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="nwri_dat">nwri_dat</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 srcadr　　 転送元のアドレス</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 srcnode　　転送先のノード番号</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 dstadr　　 転送先のアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　datsz　　　データのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　reasz　　　送ったデータの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_CTX　　EN_PAR</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="nget_nod">nget_nod</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 node　　　 ノード番号</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt><a name="nget_ver">nget_ver</a></tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 node　　　 ノード番号</tt></font></p>
+<p><font size="4"><tt>　T_VER*　　 pk_ver　　 バージョン情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_verの中身</tt></font></p>
+<p><font size="4"><tt>　　UH　　　 　maker　　　OS製造メーカー</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 id　　　　 OS型式番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 spver　　　ITRON仕様バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prver　　　OS製品バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prno[4]　　製品番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 cpu　　　　CPU情報</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 var　　　　バリエーション</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　E_PAR　　E_CTX</tt></font></p>
+</body>
+</html>

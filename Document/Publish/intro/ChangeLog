@@ -1,0 +1,13 @@
+Fri Mar 24 03:29:46 1995    (night@ibmpc0.bfree.win.or.jp)
+
+	* 1995/3/25,26 に行われた第２回カーネルミーティング用の資料。
+
+Thu Nov 24 01:31:28 1994    (night@ibmpc0.bfree.win.or.jp)
+
+	* syscall-route.obj
+	  システムコールの流れを示す図として TGIF で作成した。
+
+	* B-Free-1st.tex
+	  中心核の章でシステムコールの流れの説明に図を追加した。
+	  (図の本体は syscall-route.obj)
+	  タイトルから '(案)' の単語を取った。

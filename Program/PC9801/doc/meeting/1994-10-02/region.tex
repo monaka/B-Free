@@ -1,0 +1,606 @@
+\documentstyle[note,epsf,a4j]{jarticle}
+
+\newcommand{\function}[1]{
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+   \stepcounter{subsection}
+   \addcontentsline{toc}{subsection}{#1}
+  \vspace{1cm}}
+
+
+\title{仮想記憶管理のメカニズムの提案}
+\author{内藤隆一}
+
+\begin{document}
+\notetitle
+
+{\tt $Date: 2011/12/27 17:13:36 $}
+
+{\tt $Revision: 1.1 $ }
+
+\tableofcontents
+
+\newpage
+\section{適用範囲}
+
+本ドキュメントは、B-Free 中心核である ITRON で仮想記憶管理をサポートす
+る場合のモデルおよび実現方法について記述したものである。
+
+ * 周辺核での仮想記憶管理については記述していない。
+
+本ドキュメントに記述した内容はあくまでも提案であり、実際の B-Free 中心
+核の仮想記憶管理を定義したものではない。
+
+本ドキュメントに対する意見は、次のメイルアドレスに送ってほしい。
+
+
+{\tt 内藤隆一 GGC00661@niftyserve.or.jp}
+
+
+
+
+\section{モデル}
+
+B-Free での仮想記憶管理をモデル化したものを 図 \ref{fig:model} に示す。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=model.eps}
+  \end{center}
+  \caption{B-Free での仮想記憶のモデル}
+  \label{fig:model}
+\end{figure}
+
+仮想記憶は、リージョン (Region) という単位で管理する。
+この場合の管理というのは、仮想領域のアドレス、物理メモリのマップ情報、
+そして、読み書きの許可を表す permission である。
+
+1つのタスクには1つ以上のリージョンを結びつけることができる。
+たとえば、BTRON レベルでのユーザプロセス(の中のタスク)は、プログラムの
+実行部分(コード部分)が入るテキスト・リージョン、読み書きするためのデー
+タが入るデータ・リージョン(実際には、データ・リージョンは、恐らく実行
+前に値が決まっている変数が入るリージョンと、実行前には領域だけが決まっ
+ているリージョンそして、ヒープのために使われるリージョンの3つのリージ
+ョンに分かれるだろう)、そしてスタック領域を表すスタック・リージョンと
+いう複数の Region と結びついている。
+
+タスクが複数のリージョンを所有するのは、次のような利点がある。
+
+\begin{enumerate}
+\item 
+   リージョンごとに permission が指定できる。そのことによって、テキス
+   トは実行するだけで読み書きできないなどの指定ができる。すべてひとつ
+   のリージョンにしてしまうと、permission は最少公倍数的なものになって
+   しまうだろう(つまり、読み/書き/実行のすべてを許可した状態になってし
+   まう)。
+
+\item 
+   リージョンを仮想空間の中で離して置くことによって、リージョンの大き
+   さを広げることができる。成長するリージョンにはヒープ、スタックなど
+   がある。
+\end{enumerate}
+
+
+逆に、複数タスクが1つのリージョンを所有してもよい。この場合、複数のタ
+スクから所有されるリージョンは、共有メモリとなる(図 \ref{fig:share})。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=share.eps}
+  \end{center}
+  \caption{複数タスクからの共有}
+  \label{fig:share}
+\end{figure}
+
+B-Free OS では、デフォルトでデータを共有することはしない。しかし、プロ
+グラムの実行部分についてはデフォルトで共有する。これは、プログラムの実
+行部分は大抵の場合変更しないため、共有しても他のプロセスに影響をおよぼ
+すことがないからである。
+プログラムの実行部分を変更するような場合、リージョンを共有しないように
+システムに要求する必要がある。もし、共有しているプログラムの実行部分を
+変更しようとした場合、メモリの保護違反となりプログラムは、強制終了する。
+
+複数のリージョンが、仮想空間の中で重なりあうことはできない。
+
+
+\section{リージョン}
+
+\subsection{リージョンを管理する情報}
+
+リージョンは、一言でいうと任意のタスクの仮想空間の一部の領域である。
+
+リージョンを管理するための情報には、次の種類がある。
+
+\begin{description}
+\item[(1)リージョンで管理する仮想空間領域] \hfill \\
+
+   リージョンが管理する仮想空間は次の3つのパラメータで表す。
+
+   \begin{itemize}
+   \item リージョンの開始仮想アドレス
+   \item 最少サイズ
+   \item 最大サイズ
+   \item 大きさが変わらないリージョンの場合には、最少サイズ、最大サイズは
+     同じ値となる。
+   \end{itemize}
+
+\item[(2) permission] \hfill \\
+
+  仮想メモリ中のページの読み書きの許可状態を表す。
+
+  \begin{itemize}
+  \item 実行可/実行不可
+  \item 書き込み可/書き込み不可
+  \item 読み込み可/読み込み不可
+  \end{itemize}
+
+\item[(3) 物理メモリのマッピング情報] \hfill \\
+
+   リージョンの中のページのうちどれが物理メモリとマッピングしているか、
+   マッピングしていた場合には物理メモリ(ページ)番号を記憶する。
+
+\item[(4) メモリフォールトハンドラ] \hfill \\
+   メモリフォールトが発生した場合、どのように処理するかを指定する情報
+\end{description}
+
+
+\subsection{リージョンの操作}
+
+タスクは、リージョンの内容を直接操作することはできない。
+リージョンの内容を変更する場合、中心核(ITRON)のシステムコールを実行し
+なければいけない。
+
+中心核のもつリージョン操作関数を表 \ref{tab:function-list} に示す。
+もともと ITRON では、仮想記憶操作については定義していない。
+そのため、リージョン操作システムールは ITRON で規定している独自システ
+ムコールとしてシステムコール名の最初に 'v' がつく。
+
+\begin{table}[htbp]
+  \begin{center}
+    \leavevmode
+    \caption{リージョン操作関数一覧}
+
+    \begin{tabular}[h]{l p{10cm}} \hline 
+      \multicolumn{1}{c}{システムコール名} &
+      \multicolumn{1}{c}{機能} \\ \hline \hline
+%
+      vcre\_reg  &      リージョンの生成              \\
+      vdel\_reg  &      リージョンの削除              \\
+      vmap\_reg  &      リージョンのマップ            \\
+      vunm\_reg  &      リージョンのアンマップ        \\
+      vdup\_reg  &      リージョンの複製を作る        \\
+      vprt\_reg  &      リージョンのプロテクト情報の設定 \\
+      vshr\_reg  &      タスク間でのリージョンの共有  \\
+      vput\_reg  &      リージョンへの書き込み        \\
+      vget\_reg  &      リージョンからの読み込み      \\
+      vsts\_reg  &      リージョンの情報              \\
+    \end{tabular}
+  \end{center}
+  \label{tab:function-list}
+\end{table}
+
+\newpage
+\appendix
+\section{リージョン操作関数}
+
+
+
+\function{vcre\_reg --- リージョンの生成}
+
+\begin{lablist}
+  
+\labitem{呼び出し方法}
+
+{\tt ER vcre\_reg (id, start, min, max, perm, handle)}
+
+\labitem{引数}
+
+\begin{lablist}
+\labitem {id}         リージョンを生成するタスク
+\labitem {start}      リージョンの先頭仮想アドレス
+\labitem {min}        リージョンの最小サイズ(初期サイズ)
+\labitem {max}        リージョンの最大サイズ
+\labitem {perm}       リージョンの permission
+\labitem {handle}     マップされていない仮想ページにアクセスした時の処
+                      理を指定する 
+\end{lablist}
+
+\labitem{機能}
+
+引数に指定したとおりの新しいリージョンを作成する。
+
+新しく作成したリージョンは、引数 id で指定したタスクに結びつける。
+
+もし、引数で指定した仮想アドレス領域にすでに別のリージョンが存在した場
+合にはエラーとなる。 
+
+なお、このシステムコールを発行した時点では、仮想メモリだけが確保され実
+メモリはマッピングされない。
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンの確保に成功  
+\labitem {E\_NOMEM}  メモリが不足している
+\labitem {E\_ID}     引数で指定したタスク ID が不正
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である
+\labitem {E\_OBJ}    すでに別のリージョンが仮想アドレス領域上に存在している
+\end{lablist}
+
+\end{lablist}
+
+\newpage
+
+\function{vdel\_reg --- リージョンの削除}
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vdel\_reg (id, start) }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{id}     削除するリージョンをもつタスク
+  \labitem{start}  削除するリージョンの先頭アドレス
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンの削除に成功  
+\labitem {E\_ID}     引数 id に対応するタスクが存在しない
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である
+\end{lablist}
+
+
+\labitem{機能}
+
+引数 start で指定したアドレス領域を管理するリージョンを削除する。
+削除したリージョンに含まれる領域中のデータは破棄する。
+
+start の値で指定したアドレスは、リージョンの先頭アドレスである必要はな
+い。リージョン内のアドレスならば、どのリージョンを指定したかをシステム
+コール内で判断する。
+\end{lablist}
+
+\newpage
+
+\function {vmap\_reg --- リージョンのマップ}            
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vmap\_reg (id, start, size)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{id}        タスク ID
+  \labitem{start}     マップする領域の先頭アドレス
+  \labitem{size}      マップするページ数(バイト単位)
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     リージョンのマップに成功  
+  \labitem{E\_NOMEM}  (物理)メモリが不足している
+  \labitem {E\_NOSPT}  本システムコールは、未サポート機能である。
+\end{lablist}
+
+
+\labitem{機能}
+
+引数で指定したアドレス領域に物理メモリを割り付ける。
+
+複数のページを指定しひとつのページでもマップできなかった場合、
+マップできた他のページへは、物理メモリを割り付けられない。
+
+マップする物理メモリのアドレスは指定できない。中心核が仮想メモリに割り
+付ける物理メモリを適当に割り振る。
+
+\end{lablist}
+
+\newpage
+\function {vunm\_reg --- リージョンのアンマップ}        
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt Er vunm\_reg (id, addr, size)}
+
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {id}   リージョンをもつタスク
+  \labitem {addr} アンマップする仮想メモリ領域の先頭アドレス
+  \labitem {size} アンマップする仮想メモリ領域のサイズ(バイト単位)
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     アンマップに成功  
+\labitem {E\_ID}     引数 id に対応するタスクが存在しない
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である
+\end{lablist}
+
+
+\labitem{機能}
+
+引数 id で指定したタスクに附属するリージョンの物理メモリのマップを
+解除する。
+
+物理メモリの内容は、破棄される。
+
+\end{lablist}
+
+\newpage
+\function {vdup\_reg --- リージョンの複製を作る}        
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vdup\_reg (src, dst, start)}
+
+
+\labitem{引数}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{src}    複製するリージョンをもつタスク
+  \labitem{dst}    リージョンの複製先のタスク
+  \labitem{start}  複製するリージョンの先頭アドレス
+\end{lablist}
+
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンの複製に成功  
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である。
+\end{lablist}
+
+
+\labitem{機能}
+
+指定したタスクのもつリージョンを複製する。
+
+複製したリージョンは、全く別のものとして扱われる。
+src, dst のどちらかのタスクがリージョンの領域を変更しても、もう片方の
+タスクは影響を受けない。
+
+\end{lablist}
+
+\newpage
+\function {vprt\_reg --- リージョンのプロテクト情報の設定} 
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vprt\_reg (id, start, prot)}
+
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{id}     リージョンをもつタスク
+  \labitem{start}  リージョンの先頭仮想アドレス
+  \labitem{prot}   プロテクト情報
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンのプロテクト情報の設定に成功  
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である。
+\end{lablist}
+
+
+\labitem{機能}
+
+リージョンに含まれるすべての仮想メモリページのプロテクト情報を設定する。
+
+プロテクト情報としては以下の値が指定できる。
+
+\begin{description}
+\item[VPROT\_READ]    読み込み可能
+\item[VPROT\_WRITE]   書き込み可能
+\item[VPROT\_EXEC]    実行可能
+\end{description}
+
+\end{lablist}
+
+\newpage
+\function {vshr\_reg --- タスク間でのリージョンの共有}  
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vshr\_reg (src, dst, start)}
+
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{src}    共有元のリージョンをもつタスク
+  \labitem{dst}    新たにリージョンを共有するタスク
+  \labitem{start}  リージョンの先頭アドレス
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンの共有に成功  
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である。
+\end{lablist}
+
+
+\labitem{機能}
+
+引数 src で指定したタスクのもつリージョンを引数 dst で指定したタスクに
+割り当てる。割りあてたリージョンは共有される。
+
+共有されたリージョンに含まれる仮想アドレス領域には、タスク間で同じ物理
+アドレスを割り当てる。そのため、片方のタスクが仮想アドレス領域内の情報
+を変更した場合、他方のタスクにも反映される。
+
+\end{lablist}
+
+\newpage
+\function {vput\_reg --- リージョンへの書き込み}        
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vput\_reg (id, start, size, buf) }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{id}     リージョンを持つタスク
+  \labitem{start}  書き込む領域の先頭アドレス
+  \labitem{size}   リージョンに書き込むサイズ
+  \labitem{buf}    リージョンに書き込むデータ
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンへの書き込みに成功  
+\labitem {E\_ID}     引数 id に対応したタスクは存在しない
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である
+\end{lablist}
+
+
+\labitem{機能}
+
+任意のタスクの仮想メモリ領域にデータを書き込む。
+
+ページインなどに使用できる。
+
+
+\end{lablist}
+
+\newpage
+\function {vget\_reg --- リージョンからの読み込み}      
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vput\_reg (id, start, size, buf) }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{id}     リージョンを持つタスク
+  \labitem{start}  読み込む領域の先頭アドレス
+  \labitem{size}   リージョンから読み込むサイズ
+  \labitem{buf}    リージョンから読み込んだデータを収めるバッファ
+\end{lablist}
+
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     成功  
+\labitem {E\_ID}     リージョンをもつタスク
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である
+\end{lablist}
+
+\labitem{機能}
+
+任意のタスクの仮想メモリ領域からデータを読み込む。
+
+ページアウトなどに使用できる。
+
+
+\end{lablist}
+
+\newpage
+\function {vsts\_reg --- リージョンの情報}              
+
+\begin{lablist}
+
+\labitem{呼び出し方法}
+
+{\tt ER vsts\_reg (id, start, stat)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{id}     リージョンをもつタスク
+  \labitem{start}  リージョンの先頭アドレス
+  \labitem{stat}   リージョン情報が入る(リージョン情報の詳細は未決定である)
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     リージョンの情報の取得に成功  
+\labitem {E\_ID}     引数 id で指定したタスクは存在しない
+\labitem {E\_NOSPT}  本システムコールは、未サポート機能である
+\end{lablist}
+
+
+\labitem{機能}
+
+リージョンの情報を取得する。
+
+リージョン情報としては次のものが考えられる。
+
+\begin{itemize}
+\item リージョンの先頭仮想アドレス
+\item リージョンのサイズ
+\item プロテクト情報
+\end{itemize}
+
+\end{lablist}
+
+
+
+%
+\end{document}
+
+
+% Local Variables: 
+% mode: tex
+% TeX-master: t
+% compile-command: dvi2ps region.dvi > region.ps
+% End: 

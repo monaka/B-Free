@@ -1,0 +1,102 @@
+\documentstyle[a4j,note,epsf]{jarticle}
+
+\newcommand{\function}[1]{
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+   \stepcounter{subsection}
+   \addcontentsline{toc}{subsection}{#1}
+  \vspace{1cm}}
+
+\title {ITRON (中心核) のシステムコール}
+\author {内藤隆一}
+
+
+\begin{document}
+\notetitle
+
+{\tt $Date: 2011/12/27 17:13:36 $}
+
+{\tt $Revision: 1.1 $}
+
+\tableofcontents
+
+\newpage
+
+
+\section{はじめに}
+
+
+ITRON は、このドキュメントに示すシステムコールを提供する。
+これらのシステムコールは、マイクロ ITRON V3.0 を元に最小限必要となるも
+のを選択したものである。よって ITRON のフルセットの機能全てはそなえて
+いない。
+
+以下では、ITRON (中心核) のシステムコールを 表 \ref{tab:list} の分類にし
+たがって、説明する。 
+
+\begin{table}[htbp]
+  \caption{ITRON のシステムコールの分類}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l} \hline 
+      タスク管理機能 \\
+    \end{tabular}
+  \end{center}
+  \label{tab:list}
+\end{table}
+
+
+\section{タスク管理機能}
+
+$<$ タスク管理とはうにゃらうにゃら $>$
+
+\newpage
+\function { cre\_tsk --- タスク生成 }
+
+\begin{lablist}
+  \labitem {呼び出し形式} 
+
+  \#include <itron.h>
+
+  cre\_tsk (ID tskid, T\_CTSK *tskpkt);
+
+  \labitem {引数}
+
+  \begin{lablist}
+    \labitem {tskid}  生成するタスクの ID
+    \labitem {tskpkt} タスクの生成情報。以下の構造体にて指定する。
+
+    \begin{verbatim}
+typedef struct t_ctsk
+{
+  VP            exinf;          /* 拡張情報             */
+  ATR           tskatr;         /* タスク属性           */
+  FP            startaddr;      /* タスク起動アドレス   */
+  PRI           itskpri;        /* タスク起動時優先度   */
+  INT           stksz;          /* スタックサイズ       */
+  ADDR_MAP      *addrmap;       /* アドレスマップ       */
+                                /* 仮想メモリのマップ   */
+                                /* テーブル             */
+} T_CTSK;
+    \end{verbatim}
+  \end{lablist}
+
+  \labitem {機能}  新しいタスクを生成する。
+
+  \labitem {返り値}  以下の返り値が返る。
+
+  \begin{lablist}
+    \labitem {E\_OK} システムコールは正常に終了した。
+  \end{lablist}
+\end{lablist}
+\newpage
+\function {del\_tsk --- }
+\end{document}
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: t
+% End: 

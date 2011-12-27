@@ -1,0 +1,63 @@
+\function{cre\_tsk  --- タスクの生成}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+\begin{quote}
+{\tt \#include $<$itron.h$>$}
+
+{\tt ER cre\_tsk (ID tskid, T\_CTSK *pk\_ctsk);}
+\end{quote}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid} {生成するタスクの ID}
+  \labitem {pk\_ctsk} タスク生成情報
+
+  \begin{lablist}
+    \labitem {tskatr}           タスク属性
+    \labitem {startaddr}        タスク起動アドレス
+    \labitem {itskpri}          タスク起動時優先度
+    \labitem {stksz}            スタックサイズ
+    \labitem {addrmap}          アドレスマップ    
+  \end{lablist}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}   システムコールは正常に終了した
+\labitem {E\_OK}   正常終了
+\labitem {E\_ID}   タスクの ID 番号が不正
+\labitem {E\_OBJ}  同一のタスクが存在している
+\end{lablist}
+
+
+\labitem{機能}
+
+引数 tskid のタスク ID をもつタスクを生成する。
+
+生成したタスクは、DORMANT 状態となる。
+
+タスクの実行を開始するには、システムコール sta\_tsk を呼び出す必要があ
+る。
+実行を開始するときのエントリアドレスは、引数 pk\_ctsk の中の startaddr 
+によって指定する。
+
+引数 tskid で指定した値と同じタスク ID をもつタスクが既に存在していた
+場合には、E\_ID のエラーとなる。
+よって、タスク生成には、必ずユニークなタスク ID を指定する必要がある。
+
+\labitem{関連関数}
+
+\begin{itemize}
+\item sta\_tsk タスクの実行を開始する。
+\end{itemize}
+
+\end{lablist}
+

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+
+COUNT=1
+
+rm funcs.h
+awk '{ print $1 }' | 
+while read f
+do
+	echo $f | awk "{printf \"  DEF_SYSCALL (%s),\t\t/* %2.2d */\n\", \$f, $COUNT}"
+	cat head > $f.c
+	echo "int" >> $f.c
+	echo "psys_$f (void *argp)" >> $f.c
+	echo "{" >> $f.c
+	echo "  struct a"  >> $f.c
+	echo "    {" >>  $f.c
+	echo "      /* ここに引数の定義を入れる */" >>  $f.c
+	echo "    } *args = (struct a *)argp;" >>  $f.c
+	echo >> $f.c
+	echo "  /*" >> $f.c
+	echo "   * まだインプリメントしていない。ENOSYS を返す。" >> $f.c
+	echo "   */" >> $f.c
+	echo "  errno = ENOSYS;" >> $f.c
+	echo >> $f.c
+	echo "  return (NULL);" >> $f.c
+	echo "}" >> $f.c
+	COUNT=`expr $COUNT + 1`
+	echo "extern int	psys_$f (void *argp);" >> funcs.h
+done

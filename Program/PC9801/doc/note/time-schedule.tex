@@ -1,0 +1,147 @@
+\documentstyle[a4j,note]{jarticle}
+
+
+\makeatletter
+
+% -----------------------------------------------------------------------------
+% 最も長い項目ラベルを探してインデントの幅をこれに合わせるリスト環境マクロです。
+% ただし、「２-パス」 です。最初にLaTeXすると、description風に決まった
+% 幅のままですが、もう一回LaTeXすると、最長の項目ラベルに合わせてインデント
+% します。各項目は\itemではなく\labitemで指定します。
+% 
+% 例えば
+% 
+%  \begin{lablist}
+%  \labitem{項目１}     ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ
+%  ｘｘｘｘｘｘｘｘｘｘｘ
+%  ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ
+%  \labitem{項目２２}   ｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚ
+%  \labitem{項目３}     ｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃ
+%  \end{lablist}
+% 
+% とします。
+% なお、複数のlablist環境がある時、defaultでは各環境毎に最長のラベルを
+% さがしますが、\commonlabelコマンドを入れると、以下のすべてのlablist
+% の中で最も長いラベルに合わせます。もとの状態に戻すには\nocommonlabel
+% を入れます（これらはlablist環境の外で指定します）。
+% 
+%-----------------------------------------------------------------------
+%=======================================================================
+\newdimen\lab@labelwidth
+\lab@labelwidth=0pt
+\newcount\lab@count
+\lab@count=1
+\newif\iflab@no
+\let\iflab@no=\iftrue\relax
+
+\def\commonlabel{\let\iflab@no=\iffalse\relax}
+\def\nocommonlabel{\let\iflab@no=\iftrue\relax\global\advance\lab@count by 1}
+
+\def\lablist{
+ \let\@orgitem=\item\relax
+ \def\item{\@ifnextchar [{\@labitem}{\@noitemargtrue \@labitem[\@itemlabel]}}
+ \begin{list}{}{\def\makelabel##1{##1\hfil}
+ \iflab@no\lab@labelwidth=0pt\fi
+ \@ifundefined{lab@\@roman{\lab@count}}%
+  {\setlength{\labelwidth}{2.5em}}%
+  {\setlength{\labelwidth}{\csname lab@\@roman{\lab@count}\endcsname}}
+ \setlength{\labelsep}{1em}
+ \setlength{\leftmargin}{\labelwidth}
+ \addtolength{\leftmargin}{2\labelsep}} % labelsep both sides of label
+}
+
+\def\@labitem[#1]{\labitem{#1}}
+\def\labitem#1{\settowidth{\@tempdima}{#1}\ifdim\@tempdima>\lab@labelwidth
+\global\lab@labelwidth=\@tempdima\fi\@item[#1]}
+
+\def\endlablist{\if@filesw
+ \immediate\write\@auxout{\string\@lablist{lab@\@roman{\lab@count}}%
+  {\the\lab@labelwidth}}\fi
+ \iflab@no\global\advance\lab@count by 1\fi
+ \end{list}
+ \let\item=\@orgitem\relax
+}
+\def\@lablist#1#2{\global\@namedef{#1}{#2}}
+\makeatother
+
+
+\title{B$-$FREE メモランダム}
+
+\begin{document}
+\notetitle
+
+\fbox{
+  \begin{minipage}[h]{\textwidth}
+    \vspace{5mm}
+    \begin{center}
+      \begin{minipage}[h]{13cm}
+        {\Large 16. グローバルスケジュール}
+      \end{minipage}
+    \end{center}
+  \end{minipage}
+}
+
+\vspace{1cm}
+
+\begin{lablist}
+  \labitem{1994/Jul} B$-$free コア\footnote{
+    ITRON 3.0 に準拠したマイクロカーネル。}
+  デモンストレーション版作成。
+%
+  \labitem{1994/Aug} デモンストレーション版をFPMCその他にアップロード。 \\
+                     B$-$free への参加呼びかけ。
+%
+  \labitem{1994/Sep} B$-$free ブレーンストーミング (1)。\\
+                     外部仕様書(案) 配布。
+                     make 環境配布(1)。
+%
+  \labitem{1994/Oct} 外部仕様書(案)に対するコメント吸収。\\
+                     (電子メイルその他)
+%
+  \labitem{1994/Nov} B$-$free ブレーンストーミング (2) --- 作業分担。\\
+                     B$-$free 外部仕様書(Request for comment 版)作成。\\
+                     B$-$free 外部仕様書(Request for comment 版)公開。外部からのコメント求む。\\
+                     make 環境配布(2)。
+%
+  \labitem{1994/Dec} B$-$free ブレーンストーミング (3)。\\
+                     B$-$free 外部仕様書(fix 1 版)作成/公開。\\
+                     ［Tronshow 1994］
+
+  \labitem{1995/Feb} B$-$free ブレーンストーミング (4)。\\
+                     マネージャ群の詳細仕様書(案)配布。\\
+                     μITRON 3.0に準拠したマイクロカーネル作成。(PC9801版) \\
+                     作成環境(μITRON 3.0 およびライブラリ) ソース一般公開。
+%
+  \labitem{1995/Mar} マネージャ群の詳細仕様書(案)へのコメント吸収。\\
+                     起動に必要な最低限のデバイスドライバ
+                     (fd/hd/pd/key)作成。\\
+                     B$-$free サーバ仕様書作成開始。\\
+                     B$-$free AP 作成環境(PDK) 第一版作成開始。
+%
+  \labitem{1995/Apr} B$-$free ブレーンストーミング (5)。\\
+                     マネージャ群の詳細仕様書(fix 1) 作成/公開。\\
+                     マネージャ群(第一版)作成開始。
+%
+  \labitem{1995/May} B$-$free サーバ仕様書公開。\\
+                     B$-$free サーバ作成開始。\\
+                     B$-$free ウィンドウシステム作成開始。
+%
+  \labitem{1995/Jun} B$-$free ブレーンストーミング (6)。\\
+                     B$-$free (第０版) αバージョン公開。\\
+                     ［電脳文化祭 (2)］
+%
+  \labitem{1995/Aug} B$-$free ブレーンストーミング (7)。\\
+                     B$-$free (第０版:PC9801版) βバージョン公開。\\
+                     B$-$free AP 作成環境(PDK) 第一版公開。
+%
+  \labitem{1995/Oct} B$-$free ブレーンストーミング (8)。\\
+%
+  \labitem{1995/Dec} B$-$free (第一版) 公開
+\end{lablist}
+
+\end{document}
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: t
+% End: 

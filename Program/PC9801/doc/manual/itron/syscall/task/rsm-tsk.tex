@@ -1,0 +1,37 @@
+\function{rsm\_tsk  --- 強制待ち状態のタスクから待ち状態を解除}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER rsm\_tsk (ID tskid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid}{対象となるタスクの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     タスク ID が不正
+\labitem {E\_NOEXS}  タスクが存在しない(TTS\_NON 状態)
+\labitem {E\_OBJ}    タスクの状態が不正(TTS\_SUS, TTS\_WAS, TTS\_NON 以外)
+\end{lablist}
+
+
+\labitem{機能}
+
+待ち状態にあるタスクを待ち状態から強制的に解除する。
+
+待ち状態は多重になることがあるが、このシステムコールは、ひとつだけ待ち
+を解除する。
+
+
+\end{lablist}
+

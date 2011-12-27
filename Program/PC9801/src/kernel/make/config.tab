@@ -1,0 +1,48 @@
+#
+# $Id: config.tab,v 1.1 2011/12/27 17:13:36 liu1 Exp $
+#
+# $Log: config.tab,v $
+# Revision 1.1  2011/12/27 17:13:36  liu1
+# Initial Version.
+#
+# Revision 1.14  1996-01-06 16:10:44  night
+# posix.pm のエントリを追加。
+#
+# Revision 1.13  1995/12/05 15:14:44  night
+# SCSI ドライバの名前を scsi から wd33c93 に変更。
+#
+# Revision 1.12  1995/10/10  16:25:48  night
+# エントリにシステム初期立ち上げ用のプログラム "init" を追加した。
+#
+# Revision 1.11  1995/10/01  13:09:26  night
+# FD ドライバの分のエントリを追加
+#
+#
+#  file name			virtual addr	physical addr	type    name
+../itron-3.0/make/itron.image	0x80020000	0x020000	kernel  "kernel"
+../servers/port-manager		0x00010000	0x080000	kernel "port-manager"
+#
+#  Driver(s)
+#
+../device/console/console	0x80100000	0x100000	driver	"driver.console"
+../device/keyboard/keyboard	0x80110000	0x110000	driver  "driver.keyboard"
+../device/fd765a/fd765a		0x80120000	0x120000	driver	"driver.fd"
+#../device/ide/ide		0x80130000	0x130000	driver  "driver.ide"
+../device/wd33c93/wd33c93	0x80140000	0x140000	driver	"driver.scsi"
+#../device/rs232c/rs232c	0x80150000	0x150000	driver  "rs232c"
+#
+#
+# POSIX server(s)
+#
+#../../posix/server/posix-fm	0x00001000	0x200000	user	"posix.fs"
+#../../posix/server/posix-mm	0x00001000	0x210000	user	"posix.mm"
+../../posix/server/posix-pm	0x00001000	0x220000	user	"posix.pm"
+../init/init			0x00001000	0x300000	user	"init"
+
+#
+# LOWLIB
+#
+#../posix/lowlib/lowlib		0x88000000	0x280000	lowlib  "posixlib"
+
+
+

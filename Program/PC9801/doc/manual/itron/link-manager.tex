@@ -1,0 +1,102 @@
+\section{周辺核とのリンク}
+
+本章では、ITRON を使って応用プログラムを載せるための方法について記述します。
+応用プログラムの例としては、B-Free の周辺核などがあります(というより、こっちが本題)。 
+
+
+\subsection{立ち上げ方法}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \boxedminipage[h]{13cm}
+    \begin{center}
+      \vspace{5mm}
+      \begin{tabular}[h]{l p{8cm}}
+        (1) IPL  &BOOT を読み込む \\
+        (2) BOOT &ヘッダを読み込む \\
+        (3) BOOT &ヘッダに書かれているモジュールを読み込む \\
+        (4) KERNEL &ヘッダの順序にモジュールの初期化 (起動)ルーチ
+            ンを呼び出す。\\
+        (5) 各モジュール &初期化ルーチンの実行 \\
+      \end{tabular}
+      \vspace{5mm}
+    \end{center}
+    \endboxedminipage
+  \end{center}
+  \caption{立ち上げ方法}
+  \label{fig:app-load}
+\end{figure}
+
+
+
+\subsection{周辺核とのリンク方法}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \boxedminipage[h]{13cm}
+        \null
+        \vspace{2cm}
+        \begin{center}
+          リンクするための手順の図
+        \end{center}
+        \vspace{3cm}
+    \endboxedminipage
+  \end{center}
+  \caption{リンクするための手順}
+  \label{fig:link-flow}
+\end{figure}
+
+\subsubsection{リンク記述ファイル}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \fbox{
+    \begin{minipage}[h]{15cm}
+      {\small \tt
+        \begin{tabular}[h]{l l c c c}
+        \multicolumn{2}{l}{\# 註釈 (行の中で \# 以下は註釈であり解釈されない)} \\
+        \#                                                         \\
+        \multicolumn{1}{l}{\# 種類}    &\multicolumn{1}{c}{ファイル名} 
+        & 仮想アドレス & 物理アドレス & モード \\
+        kernel      &kernel/itron-3.0/make/itron.image              
+        & 0x80010000 & 0x10000 & KERNEL \\
+        manager     &kernel/btron/device/device.manager             
+        & 0x88000000 & 0x20000 & KERNEL \\
+        driver      &kernel/device/console/console.driver           
+        & 0x88100000 & 0x30000 & KERNEL \\
+        driver      &kernel/device/keyboard/keyboard.driver         
+        & 0x88200000 & 0x40000 & KERNEL \\
+        user        &tool/cli/cli.ap
+        & 0x88300000 & 0x50000 & USER \\
+        \end{tabular}
+        }
+    \end{minipage}
+    }
+  \end{center}
+  \caption{リンク記述ファイルの中身}
+  \label{fig:link-config}
+\end{figure}
+
+リンク記述ファイルには、次の内容が入ります。
+
+\begin{lablist}
+  \labitem {モジュールの種類} 
+  ここでは、リンクするプログラムをモジュールと呼びます。
+
+  モジュールの種類としては、カーネル(kernel)(このモジュールのみひとつ
+  しかない)/マネージャ(manager)/ドライバ(driver)/ユーザプログラム
+  (user)(外核も含む)のうちひとつを指定します。
+%
+  \labitem {ファイル名}
+  モジュールの中身が入っているファイルを指定します。
+%
+  \labitem {オプション}
+  モジュールの挙動を細かく指定する時に使用します。
+\end{lablist}
+
+モジュールは、リンク記述ファイルに書いてある順番で起動します。
+ただし、カーネルについては、どこに書いてあろうと一番最初に起動します。
+

@@ -1,0 +1,35 @@
+\function{dis\_dsp  --- ディスパッチ禁止}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER dis\_dsp (VOID)}
+
+\labitem{引数}
+
+なし
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+タスクの切換えを禁止する。
+
+\labitem{\it Internal}
+
+ITRON 内では、タスク切換えの許可/不許可は、フラグ dispatch\_flag の値
+が TRUE か FALSE かで行っている(値 TRUE の場合にタスク切換えを行う)。 
+本システムコールは、タスク切換えのフラグ dispatch\_flag の値を FALSE 
+にする。
+
+\end{lablist}
+

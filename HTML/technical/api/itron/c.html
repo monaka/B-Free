@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=SHIFT_JIS ">
+<meta name="GENERATOR" content="Namo WebEditor v1.20">
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+
+<p><font size="4"><tt>タスク管理</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_tsk( ID tskid, T_CTSK* pk_ctsk )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_tsk( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = sta_tsk( ID tskid, INT stacd )</tt></font></p>
+<p><font size="4"><tt>　 void 　ext_tsk( )</tt></font></p>
+<p><font size="4"><tt>　 void 　exd_tsk( )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ter_tsk( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = dis_dsp( )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ena_dsp( )</tt></font></p>
+<p><font size="4"><tt>ER ercd = chg_pri( ID tskid, PRI tskpri )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rot_rdq( PRI tskpri )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rel_wai( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = get_tid( ID* p_tskid );</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_tsk( T_RTSK* pk_rtsk, ID tskid );</tt></font></p>
+<p><font size="4"><tt>　</tt></font></p>
+<p><font size="4"><tt>タスク付属同期</tt></font></p>
+<p><font size="4"><tt>ER ercd = sus_tsk( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rsm_tsk( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = frsm_tsk( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = slp_tsk( )</tt></font></p>
+<p><font size="4"><tt>ER ercd = tslp_tsk( TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = wup_tsk( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = can_wup( INT* p_wupcnt, ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_sem( ID semid, T_CSEM* pk_csem )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_sem( ID semid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = sig_sem( ID semid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = wai_sem( ID semid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = preq_sem( ID semid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = twai_sem( ID semid, TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_sem ( T_RSEM* pk_rsem, ID semid)</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_flg( ID flgid, T_CFLAG* pk_cflg )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_flg( ID flgid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = set_flg( ID flgid, UINT setptn )</tt></font></p>
+<p><font size="4"><tt>ER ercd = clr_flg( ID flgid,UINT clrptn )</tt></font></p>
+<p><font size="4"><tt>ER ercd = wai_flg( UINT* p_flgptn, ID flgid, UINT waiptn, 
+UINT wfmode )</tt></font></p>
+<p><font size="4"><tt>ER ercd = pol_flg( UINT* p_flgptn, ID flgid, UINT waiptn, 
+UINT wfmode )</tt></font></p>
+<p><font size="4"><tt>ER ercd = twai_flg( UINT* p_flgptn, ID flgid, UINT waiptn, 
+UINT wfmode, TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_flg( T_RFLG* pk_rflg, ID flgid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_mbx( ID mbxid, T_CMBX* pk_cmbx)</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_mbx( ID mbxid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = snd_msg( ID mbxid, T_MSG* pk_msg )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rcv_msg( T_MSG** ppk_msg, ID mbxid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = prcv_msg( T_MSG** ppk_msg, ID mbxid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = trcv_msg( T_MSG** ppk_msg, ID mbxid, TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_msg( T_RMBX* pk_rmbx, ID mbxid )</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>拡張同期・通信</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_mbf( ID mbfid, T_CMBF* p_cmbf )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_mbf( ID mbfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = snd_mbf( ID mbfid, VP msg, INT msgsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = psnd_mbf( ID mbfid, VP msg, INT msgsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = tsnd_mbf( ID mbfid, VP msg, INT msgsz, TMO tmout 
+)</tt></font></p>
+<p><font size="4"><tt>ER ercd = rcv_mbf( VP msg, INT* p_msgsz, ID mbfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = prcv_mbf( VP msg, INT* p_msgsz, ID mbfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = trcv_mbf( VP msg, INT* p_msgsz, ID mbfid, TMO 
+tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_mbf( T_RMBF* pk_rmbf, ID mbfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_por( ID porid, T_CPOR* pk_cpor )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_por( ID porid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = cal_por( VP msg, INT* p_rmsgsz, ID porid, UINT 
+calptn, INT cmsgsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = pcal_por( VP msg, INT* p_rmsgsz, ID porid, UINT 
+calptn, INT cmsgsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = tcal_por( VP msg, INT* p_rmsgsz, ID porid, UINT 
+calptn, INT cmsgsz, TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = acp_por( RNO* p_rdvno, VP msg, INT* p_rmsgsz, ID 
+porid, UINT acpptn )</tt></font></p>
+<p><font size="4"><tt>ER ercd = pacp_por( RNO* p_rdvno, VP msg, INT* p_rmsgsz, 
+ID porid, UINT acpptn )</tt></font></p>
+<p><font size="4"><tt>ER ercd = tacp_por( RNO* p_rdvno, VP msg, INT* p_rmsgsz, 
+ID porid, UINT acpptn TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = fwd_por( ID porid, UINT acpptn, RNO rdvno, VP 
+msg, INT cmsgsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rpl_por( RNO rdvno, VP msg, INT rmsgsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_por( T_POR* pk_rpor, ID porid )</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>割込み管理</tt></font></p>
+<p><font size="4"><tt>ER ercd = def_int( UINT dintno, T_DINT* pk_dint )</tt></font></p>
+<p><font size="4"><tt>　 void 　ret_int( )</tt></font></p>
+<p><font size="4"><tt>　 void 　ret_wup( ID tskid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = loc_cpu( )</tt></font></p>
+<p><font size="4"><tt>ER ercd = unl_cpu( )</tt></font></p>
+<p><font size="4"><tt>ER ercd = dis_int( UINT eintno )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ena_int( UINT eintno )</tt></font></p>
+<p><font size="4"><tt>ER ercd = chg_iXX( UINT iXXXX )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_iXX( UINT* p_iXXXX )</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>メモリプール管理</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_mpl( ID mplid, T_CMPL* pk_cmpl )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_mpl( ID mplid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = get_blk( VP* p_blk, ID mplid, INT blksz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = pget_blk( VP* p_blk, ID mplid, INT blksz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = tget_blk( VP* p_blk, ID mplid, INT blksz, TMO 
+tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rel_blk( ID mplid, VP blk )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_mpl( T_RMPL* pk_rmpl, ID mplid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = cre_mpf( ID mpfid, T_CMPF* pk_cmpf )</tt></font></p>
+<p><font size="4"><tt>ER ercd = del_mpf( ID mpfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = get_blf( VP* p_blf, ID mpfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = pget_blf( VP* p_blf, ID mpfid )</tt></font></p>
+<p><font size="4"><tt>ER ercd = tget_blf( VP* p_blf, ID mpfid, TMO tmout )</tt></font></p>
+<p><font size="4"><tt>ER ercd = rel_blf( ID mpfid, VP* p_blf )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_mpf( T_RMPF* pk_rmpf, ID mpfid )</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>時間管理</tt></font></p>
+<p><font size="4"><tt>ER ercd = set_tim( SYSTEM* pk_tim )</tt></font></p>
+<p><font size="4"><tt>ER ercd = get_tim( SYSTEM* pk_tim )</tt></font></p>
+<p><font size="4"><tt>ER ercd = dly_tsk( DLYTIME dlytim )</tt></font></p>
+<p><font size="4"><tt>ER ercd = def_cyc( HNO cycno, T_DCYC* pk_dcyc )</tt></font></p>
+<p><font size="4"><tt>ER ercd = act_cyc( HNO cycno, UINT cycact )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_cyc( T_RCYC* pk_rcyc, HNO cycno )</tt></font></p>
+<p><font size="4"><tt>ER ercd = def_alm( HNO almno, T_DALM* pk_dalm )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_alm( T_RALM* pk_ralm, HNO almno )</tt></font></p>
+<p><font size="4"><tt>　 void 　ret_tmr( )</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>システム管理</tt></font></p>
+<p><font size="4"><tt>ER ercd = get_ver( T_VER* pk_ver )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_sys( T_RSYS* pk_rsys )</tt></font></p>
+<p><font size="4"><tt>ER ercd = ref_cfg( T_RCFG* pk_rcfg )</tt></font></p>
+<p><font size="4"><tt>ER ercd = def_svc( FN s_fncd, T_DSVC* pk_dsvc )</tt></font></p>
+<p><font size="4"><tt>ER ercd = def_exc( UINT exckind, TDEXC* pk_dexc )</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>ネットワークサポート</tt></font></p>
+<p><font size="4"><tt>ER ercd = nrea_dat( INT* p_reasz, VP dstadr, NODE srcnode, 
+VP srcadr, INT datsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = nwri_dat( INT* p_wrisz, NODE dstnode, VP dstadr, 
+VP srcadr, INT datsz )</tt></font></p>
+<p><font size="4"><tt>ER ercd = nget_nod( NODE* p_node )</tt></font></p>
+<p><font size="4"><tt>ER ercd = nget_ver( T_VER* pk_ver, NODE node )</tt></font></p>
+</body>
+</html>

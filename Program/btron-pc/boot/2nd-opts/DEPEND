@@ -1,0 +1,25 @@
+main.o: main.c boot.h lib.h types.h errno.h config.h location.h \
+ memory.h console.h date.h strings.h macros.h dma.h fd.h file.h vram.h \
+ page.h a.out.h interrupt.h idt.h ide.h sfs.h vga.h asm.h main.h
+console.o: console.c lib.h types.h errno.h location.h memory.h \
+ console.h macros.h
+keyboard.o: keyboard.c types.h location.h config.h interrupt.h idt.h \
+ asm.h
+memory.o: memory.c types.h location.h config.h memory.h asm.h
+date.o: date.c types.h location.h date.h lib.h asm.h
+idt.o: idt.c types.h errno.h idt.h interrupt.h
+cinterrupt.o: cinterrupt.c types.h asm.h interrupt.h
+fd.o: fd.c types.h lib.h interrupt.h idt.h fd.h dma.h errno.h file.h \
+ asm.h
+misc.o: misc.c types.h misc.h
+dma.o: dma.c types.h errno.h asm.h dma.h
+page.o: page.c types.h config.h location.h errno.h page.h
+version.o: version.c
+lib.o: lib.c types.h location.h memory.h console.h macros.h misc.h \
+ vram.h asm.h lib.h
+ide.o: ide.c types.h macros.h config.h boot.h memory.h interrupt.h \
+ idt.h dma.h errno.h file.h page.h a.out.h asm.h lib.h ide.h date.h
+vga.o: vga.c errno.h types.h location.h memory.h console.h macros.h \
+ misc.h vram.h asm.h vga.h images/opening.xbm
+evaluate.o: evaluate.c macros.h file.h errno.h types.h page.h sfs.h \
+ asm.h lib.h dma.h config.h commands.h

@@ -1,0 +1,150 @@
+normal code 
+totoal 80 key (FUNC +6)
+
+	esc	1
+	F1	3b
+	F2	3c
+	F3	3d
+	F4	3e
+	F5	3f
+	F6	40
+	F7	41
+	F8	42
+	F9	43
+	F10	44
+	(F11)	57	# F1+FUNC
+	(F12)	58	# F2+FUNC
+
+	`	29
+	1	2
+	2	3
+	3	4
+	4	5
+	5	6
+	6	7
+	7	8
+	(7)	47	# 7+NUMLOCK
+	8	9
+	(8)	48	# 8+NUMLOCK	
+	9	a
+	(9)	49	# 9+NUMLOCK
+	0	b
+	(0)	37	# 0+NUMLOCK
+	-	c
+	^	d
+##	\	7d
+	bs	e
+
+	tab	f
+	q	10
+	w	11	
+	e	12
+	r	13
+	t	14
+	y	15
+	u	16
+	(4)	4b	#u+NUMLOCK
+	i	17
+	(5)	4c	#i+NUMLOCK
+	o	18
+	(6)	4d	#o+NUMLOCK
+	p	19
+	(-)	4a	#p+NUMLOCK
+##	@	1a
+	[	1a	# jp106 -> 1b
+	]	1b
+	\	2b
+##	ent	1c
+
+	caps	-none-
+	a	1e
+	s	1f
+	d	20
+	f	21
+	g	22
+	h	23
+	j	24
+	(1)	4f	#j+NUMLOCK
+	k	25
+	(2)	50	#k+NUMLOCK
+	l	26
+	(3)	51	#l+NUMLOCK
+	;	27
+	(+)	4e	#;+NUMLOCK
+##	:	28
+	`	28
+##	]	2b
+	ent	1c
+
+	shift	-none-
+	z	2c
+	x	2d
+	c	2e
+	v	2f
+	b	30
+	n	31
+	m	32
+	(0)	52	#m+NUMLOCK
+	,	33
+	.	34
+	(.)	53	#.+NUMLOCK
+	/	35
+	(/)	35	#/+NUMLOCK
+##	\	73
+	shift	-none-
+	up_arr	48
+
+	func	-none-
+##	ctrl	-none-
+##	l_win	5b
+	alt	-none-
+##	nexfer	7b
+	space	39
+##	xfer	79
+##	kana	70
+	alt	-none-
+##	r_win	5c
+##	menu	5d
+	ctrl	-none-
+
+##	print	37
+##	scrool	46
+##	pause	45
+
+##	insert	52
+##	home	47
+##	pageup	49
+##	del	53
+##	end	4f	
+##	pagedw	51
+
+##	up_arr	48
+	l_arr	4b
+##	dw_arr	50
+	r_arr	4d
+	dw_arr	50
+
+	(PgUp)	49
+	(home)	47
+	(end)	4f
+	(PgDn)	50
+
+
+##	num	45	same code (pause)
+##	/	35
+##	*	37	same code (print)
+##	-	4a
+##	7home	47	same code
+##	8	48
+##	9pgup	49	same code
+##	+	4e
+##	4l_arr	4b	same
+##	5	4c
+##	6r_arr	4d	same
+##	1	4f
+##	2	50
+##	3	51
+##	ent	1c
+##	0	52
+##	del	53
+

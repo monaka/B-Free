@@ -1,0 +1,365 @@
+
+FoRTh Modoki for B-Free OS
+ver 1.3.4 B-Free 1.7.10  Jun. 3, 2000. 
+Copyright (C) 1999, 2000  浪花 智英 (Tomohide Naniwa)
+naniwa@mechgw.mech.yamaguchi-u.ac.jp
+
+0. コンパイル
+
+□ B-Free OS でのコンパイル
+手順
+1. 必要に応じて Makefile 中の ROOT の定義を書き換えてください．
+2. B-Free OS がコンパイルされていることを確認してください．OS をコンパ
+   イルするには kernel/BTRON/make の下で make を実行します．
+3. frtm の make を実行します．frtm という実行ファイルが作成されます．
+4. 実行ファイルを POSIX filesystem に書き込みます．書き込みには
+   kernel/POISX/mkfs/statfs を使用します．
+5. frtm の起動は init> が出ているところで (/frtm) cexec などファイル
+   名を指定して cexec を実行してください．
+6. frtm を終了するには quit と入力します．
+
+I. はじめに
+このプログラムは FORTH を模擬したソフトですが，完全に FORTH を再現した
+ものではありません．コンパイラは持ちませんが，ユーザー定義ワードでは定
+数やワードを定義時に解釈します．
+
+式の解釈は逆ポーランド記法に従って行われます．if による条件分岐．
+do-while, for-loop などのループのための構造もあります．また，ワードを
+組み合わせて新たなワードを作ることもできます．
+
+現在のところ扱えるのは整数のみです．数字の入力は 10 進数，16 進数(頭に
+0x を付ける)，8 進数(頭に 0 を付ける)で行えます．
+
+frtm.h の中で各種スタックのサイズ等を定義しています．それぞれ，
+
+#define STMAX 100    ; 数値計算用スタック
+#define DICMAX 20    ; ユーザー定義ワードの最大数
+#define CSMAX 200    ; ユーザー定義ワードの本体の記憶領域
+#define RSMAX 100    ; ユーザー定義ワード実行用スタック
+#define SSMAX 80     ; ループなどの入れ子用スタック
+#define MAX_NAME 8   ; ユーザー定義ワード名の最大文字数
+#define LINE 100     ; １行の最大文字数
+
+となっています．適宜変更してください．
+
+II. 基本機能
+□ 定義済ワード
+.	10 進表示
+.h	16 進表示
+.o	8 進表示
+cr	改行
+sp	空白
++	和
+-	差
+*	積
+/	商
+%	余り
+=	同値
+<	より小さい
+<=	以下
+>	より大きい
+>=	以上
+!	真偽反転
+1+	1 加算
+1-	1 減算
+0=	0 と同値
+abs	絶対値
+max	最大
+min	最小
+dup	複製
+swap	交換
+drop	除去
+over	スタックの２番目の複製
+rot	スタックの上位３つを回転し，３番目をトップへ
+rotr	スタックの上位３つを回転し，トップを３番目へ
+ndup	スタックの n 番目を複製
+nrot	スタックを回転し，n 番目をトップへ
+nrotr	スタックを回転し，トップを n 番目へ
+ndrop	スタックの上位 n 個を除去
+copy	スタックの上位 n 個を複製
+SP	呼び出した時点のスタックの深さをスタックのトップに追加
+minus	符合変換
+spaces  複数個の空白
+esc	エスケープコード(0x1B)の出力
+help	関数名一覧
+quit	終了
+
+□ 文字列の表示
+(Hello_World) echo cr
+スタックには
+    '0dlr' 'oW_o' 'lleH'
+と整数型にパックした文字列が入る．echo は文字列中に 0 が現れるまで順に
+表示する．
+
+文字列中で \ (バックスラッシュ)によるコントロール・コードのエスケープ
+が可能である．利用可能な文字定数は '\n'(改行)，'\t'(水平タブ), '\b'(バッ
+クスペース)と '\ddd' (ddd は８進数) である．ただし，８進数の文字定数で
+は最上位の数が 0 であることを仮定している．尚，これ以外の文字はそのま
+ま文字列中に追加される．
+
+III. プログラム構造
+□ 条件分岐
+<cond> if <block 1> endif
+<cond> if <block 1> else <block 2> endif
+
+仕様
+<cond> が 0 以外なら <block 1> を実行．
+<cond> が 0 なら <block 2> を実行．
+
+制限
+
+else ブロックは複数書ける．
+
+例題
+0 if 1 else 2 endif . cr
+
+□ do ループ
+do <block 1> <cond> while
+
+仕様
+<cond> が 0 であれば終了．0 以外なら do に戻って繰り返し．
+
+例題
+1 do dup . cr 1 + dup 5 < while drop
+1 do dup . sp 1 do dup . sp 1 + dup 5 < while cr drop 1 + dup 4 < while drop
+
+□ for ループ
+<n1> <n2> for <block> loop
+<n1> <n2> for <block> <n3> +loop
+
+仕様
+<block> 終了後 n2 + 1(またはn3) を実行し，n1 より小さければ for に戻っ
+て繰り返し．
+
+I リターンスタック上の n2 をスタックに追加する．
+
+制限
+n1, n2 は正の数とする．
+
+例題
+5 0 for I . cr loop
+10 0 for I . sp 5 1 for I . sp loop cr 2 +loop
+
+□ ワードの定義
+: name <block> ;
+
+仕様
+name を持つワードを作成する．
+
+制限
+do や for のループの中ではワードの登録はできない．
+
+ユーザー辞書は新しく定義されたものから順に検索するため，再帰が可能になっ
+ている．また，ワードを再定義しても古いワードの定義はそのまま残る．
+
+□ 例題
+・平均
+: ave + 2 / ;
+10 28 ave . cr
+
+・階乗 [fact(1) = 1, fact(n) = n*fact(n-1)]
+: facti 1 swap 1+ 1 for I * loop ;
+: fact dup 1 = if else dup 1- fact * endif ;
+10 facti . cr
+10 fact . cr
+
+・フィボナッチ数列 [fib(0) = 0, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2)]
+: fib dup 0= if else dup 1 = if else dup 1- fib swap 2 - fib + endif endif ;
+7 fib . cr
+: fibi dup 0= if else 0 1 rot 1 for swap over + loop swap drop endif ;
+30 fibi . cr
+20 0 for I fibi . sp loop cr
+
+・ハノイの塔
+: move1 (Move disk ) echo . swap  ( from ) echo . ( to ) echo . cr ;
+: hanoi dup 1 = if move1 else
+    3 ndup 3 ndup + 6 - minus 4 ndup swap 3 ndup 1- hanoi
+    3 ndup 3 ndup 3 ndup move1
+    1- rotr swap over + 6 - minus swap rot hanoi
+  endif ;
+1 2 2 hanoi
+1 2 4 hanoi
+
+・N Queens
+: N 2 * 3 + ;
+: disp dup N ndup 0 for 
+    dup N ndup 0 for over I = 
+      if (Q ) echo else (. ) echo endif 
+    loop cr drop drop 
+  loop drop ;
+: check over 0 for 
+    3 ndup 6 ndup = if drop 0 else 
+        3 ndup 6 ndup - abs 3 ndup 6 ndup - = if drop 0 else 1 = endif 
+    endif
+    5 nrot 5 nrot drop drop 
+  loop rotr drop drop ;
+: nq dup N ndup 0 for 
+    I over 1+ dup N 1- copy 1 check if 
+      dup N ndup over 1+ = if dup N copy disp cr else nq endif 
+    endif
+  drop drop loop ;
+: queens dup 0 for I 0 nq drop drop loop drop ;
+
+4 queens
+
+［puzzle というワードを使って上記のハノイの塔と N Queens パズルを解く
+ワードをユーザー辞書に追加することができます．］
+
+□ 辞書コマンド
+help  システム定義ワード，ユーザー定義ワードの一覧を表示．
+
+forget <name>
+<name> という名前を持つワード以降にユーザーが定義したワードを全部消去する．
+
+def <name>
+<name> という名前を持つワードの定義を，再評価可能な形式で表示する．
+
+□ ワードの探索
+ワードはシステム辞書，ユーザー辞書の順に探索される．ユーザー辞書は新し
+く登録されたものから検索される．
+
+IV. グラフィクス
+UNIX 上でコンパイルした場合は X11 環境で，B-Free でコンパイルした場合
+は vga モードでのグラフィクスが利用できます．
+
+□ ワード
+gm		グラフィクス・モードへ
+tm		テキスト・モードへ
+x y moveto	(x, y) へ移動
+x y lineto	現在位置から (x, y) まで直線描画
+x y rmoveto	現在位置から (x, y) だけ移動
+x y rlineto	現在位置から (x, y) だけ直線描画
+x y w h rect	矩形領域の描画
+x y w h rectf	矩形領域の塗り潰し
+x y point	点の描画
+x y w h ellips	楕円の描画
+x y w h ellipsf	楕円の塗り潰し
+c setcolor	色設定(0: 黒 〜青緑水赤紫黄〜 15: 白)
+c setbgc	文字列の背景色の指定
+n setfont	フォントの指定 (0: a14, 1: 7x14bold)
+x y s drawstr	(x, y) に文字列 s を表示(背景はそのまま)
+x y s drawistr	(x, y) に文字列 s を表示(背景も塗り潰す)
+cls		画面消去
+
+□ 例題
+・ 色を変えながら矩形領域を塗り潰す．
+: boxes 16 0 for I setcolor 10 20 I * + dup 100 100 rectf loop ;
+gm boxes
+tm
+
+・再帰図形(Koch 曲線)
+: pre 5 copy drop ;
+: genx 3 ndup 6 ndup - * minus 100 / swap 4 ndup 7 ndup - * 100 / + 5 ndup +
+  5 nrotr 4 ndrop ;
+: geny swap 3 ndup 6 ndup - * 100 / swap 4 ndup 7 ndup - * 100 / + 4 ndup +
+  5 nrotr 4 ndrop ;
+: gen 6 copy genx 7 nrotr geny ;
+: keep 7 nrotr 7 nrotr pre ;
+: post 9 nrot 9 nrot 4 nrot 4 nrot 5 ndup 1- ;
+: line moveto lineto ;
+: koch dup 0= if drop line else 
+    pre 0 0 gen keep 33 0 gen post koch
+    pre 33 0 gen keep 50 -28 gen post koch
+    pre 50 -28 gen keep 66 0 gen post koch
+    pre 66 0 gen keep 100 0 gen post koch
+    5 ndrop
+  endif ;
+gm 50 250 600 250 4 koch
+tm
+
+: kochs 10 setcolor  89 440 551 440 4 koch
+        11 setcolor 551 440 320  40 4 koch
+        12 setcolor 320  40  89 440 4 koch ;
+gm kochs
+tm
+
+［graphics というワードを使って，boxes と Koch 曲線を描くワードをユー
+ザー辞書に追加することができます］
+
+V. B-Free OS 専用ワード
+□ ファイル操作
+
+open	ファイルのオープン．ファイル名とモードをスタックから取る．
+	用法: (/test.txt) 10 open . cr
+	モードは 2 (O_RDWR), 8 (O_CREAT) の or で指定．0 は O_RDONLY．
+write	ファイルへの文字列の書き込み．文字列とファイル ID をスタックから
+	取る．
+	用法: (Hello World) 3 write
+close	ファイルのクローズ．ファイル ID をスタックから取る．
+	用法: 3 close
+dir	ディレクトリの一覧表示．ディレクトリをスタックから取る．
+	用法: (/) dir
+cat	ファイルの内容の表示．ファイル名をスタックから取る．
+	用法: (/test.txt) cat
+unlink	ファイルの削除．ファイル名をスタックから取る．
+	用法: (/test.txt) unlink
+mkdir	ディレクトリの作成．ディレクトリ名をスタックから取る．
+	用法: (/test1) mkdir
+rmdir	ディレクトリの削除．ディレクトリ名をスタックから取る．
+	用法: (/test1) rmdir
+chdir	ディレクトリの移動．ディレクトリ名をスタックから取る．
+	用法: (/test1) chdir
+load	ファイルからのワードの読み込み．ファイル名をスタックから取る．
+	用法: (/mandel.bf) load
+
+ファイル ID の 0, 1, 2 はそれぞれ標準入力，標準出力，標準エラー出力に
+予約されています．(Hello World) 1 write とすることで，画面への出力が
+可能です．
+
+□ 外部プログラムの実行
+
+exec	外部プログラムの起動．ファイル名をスタックから取る．
+	用法: (/frtm) exec
+	注意: exec 後，親プロセスは子プロセスの終了を待ちます．
+
+□ 漢字コードの表示（gm でグラフィック・モードに移行後に実行）
+
+kfopen	（漢字）フォントファイルのオープンファイル名をスタックから取る．
+	用法: (/k14.bfb) kfopen
+kfclose	（漢字）フォントファイルのクローズ
+	用法: kfclose
+drawkch	漢字の表示．描画位置の x, y 座標と漢字コードをスタックから取る．
+	漢字コードは 7bit JIS コードで指定．
+	用法: 10 10 0x4f32 drawkch
+
+□ ウィンドウ関係
+
+multi	グラフィックモードに移行して 2 枚のウィンドウを表示し，それぞれ
+	で frtm を起動する．F1 キーでウィンドウを移動できる．
+	frtm を全て終了するとテキストモードに戻る．
+	注意: multi を利用してウィンドウを表示しているときは winmod による
+	      ウィンドウの状態の変更は行なわないでください．また tm でテキ
+	      ストモードに戻るとやはり固まりますので，これも使用しないでく
+	      ださい．
+
+winmod	gm でグラフィック・モードに移行した後のウィンドウのモードを変更
+	する．モードをスタックから取る．
+	0 80x25 のウィンドウを使用．
+	1 80x12 のウィンドウを２枚表示し，上側のウィンドウを使用．
+	2 80x12 のウィンドウを２枚表示し，下側のウィンドウを使用．
+	ウィンドウ間の移動に F1 キーが使用可能．
+	用法: 1 winmod
+	注意: multi を使って複数のウィンドウを利用している場合には
+              winmod は使用しない下さい．
+
+□ デバッグ用ワード
+
+tasklist  ITRON タスクの一覧の表示．テキストモードでのみ動作．
+	  用法: tasklist
+pmemstat  物理メモリーの利用状況の表示．テキストモードでのみ動作．	
+	  用法: pmemstat
+prtflist　POSIX manager が malloc で管理している free list の表示．
+	  テキストモードでのみ動作
+	  用法: prtflist
+
+VI. ソースコードについて．
+バージョン 1.3.0 以降の FoRTh Modoki (frtm) は GNU General Public
+License に従うものとします．
+
+コメント等がいただければはげみになります．
+
+---
+(putprop '浪花　智英
+    'affiliation  '(山口大学大学院 理工学研究科 環境共生工学専攻)
+    'e-mail	  '(naniwa@scr.mech.yamaguchi-u.ac.jp)
+    'URL  '(http://www.scr.mech.yamaguchi-u.ac.jp/staff/naniwa.html))

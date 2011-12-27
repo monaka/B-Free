@@ -1,0 +1,723 @@
+#!/usr/bin/perl
+
+die "$0: need driver name.\n" if (@ARGV != 1);
+
+print "Making driver's skelton for $ARGV[0]...\n";
+$name = lc($ARGV[0]);
+$NAME = uc($ARGV[0]);
+
+$filename[0] = "${name}.c";
+$contents[0] =<<'__END_NAME_C__';
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $*/
+static char rcs[] = "@(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+
+
+/* 
+ * $Log: Conf.server,v $
+ * Revision 1.1  2011/12/27 17:13:35  liu1
+ * Initial Version.
+ *
+ * Revision 1.1  1999-12-29 17:18:46  monaka
+ * First version.
+ *
+ * Revision 1.1  1998/12/19 07:50:25  monaka
+ * Pre release version.
+ *
+ */
+
+/*
+ *
+ *
+ */
+
+#include "%%name%%.h"
+#include "%%name%%_internal.h"
+
+
+/*
+ *	 局所変数群の宣言
+ *
+ */
+static W	mydevid;	/* 自分自身のid */
+static ID	recvport;	/* 要求受けつけ用ポート */
+static W	initialized;
+
+struct device	dev_table[MAX_%%NAME%%];
+
+
+static void	main_loop (void);
+static void	init_driver (void);
+
+
+/* start --- %%name%% ドライバのメイン関数
+ */
+void
+start ()
+{
+  probe (&dev_table[0]); /* デバイスが存在しているかをチェックする */
+  init_driver ();
+
+  printf ("registed %%name%% driver.\n");
+  main_loop ();
+}
+
+
+/*
+ * 初期化
+ *
+ * o ファイルテーブル (file_table) の初期化
+ * o 要求受けつけ用のメッセージバッファ ID をポートマネージャに登録
+ */
+static void
+init_driver (void)
+{
+  int		i;
+  ER		error;
+
+  init_log ();
+
+  /*
+   * 要求受けつけ用のポートを初期化する。
+   */
+  recvport = get_port (sizeof (DDEV_RES), sizeof (DDEV_RES));
+  if (recvport <= 0)
+    {
+      dbg_printf ("%%name%%: cannot make receive porrt.\n");
+      slp_tsk ();
+      /* メッセージバッファ生成に失敗 */
+    }
+
+  error = regist_port (%%NAME%%_DRIVER, recvport);
+  if (error != E_OK)
+    {
+      /* error */
+    }
+
+}
+
+
+
+/*
+ *
+ */
+static void
+main_loop (void)
+{
+  DDEV_REQ	req;
+  extern ER	sys_errno;
+  UW		rsize;
+
+  /*
+   * 要求受信 - 処理のループ
+   */
+  for (;;)
+    {
+      /* 要求の受信 */
+      get_req (recvport, &req, &rsize);
+      switch (sys_errno)
+	{
+	case E_OK:
+	  /* 正常ケース */
+	  process_request (&req);
+	  break;
+
+	default:
+	  /* Unknown error */
+	  slp_tsk ();
+	  break;
+	}
+    }
+
+  /* ここの行には、来ない */
+}
+
+
+/*
+ *
+ */
+ER
+process_request (DDEV_REQ *req)
+{
+  switch (req->header.msgtyp)
+    {
+    case DEV_OPN:
+      /* デバイスのオープン */
+      open_%%name%% (req->header.mbfid, &(req->body.opn_req));
+      break;
+
+    case DEV_CLS:
+      /* デバイスのクローズ */
+      close_%%name%% (req->header.mbfid, &(req->body.cls_req));
+      break;
+
+    case DEV_REA:
+      read_%%name%% (req->header.mbfid, &(req->body.rea_req));
+      break;
+
+    case DEV_WRI:
+      write_%%name%% (req->header.mbfid, &(req->body.wri_req));
+      break;
+
+    case DEV_CTL:
+      control_%%name%% (req->header.mbfid, &(req->body.ctl_req));
+      break;
+    }
+}
+
+/*
+ * デバイスのオープン
+ */
+ER
+open_%%name%% (ID caller, DDEV_OPN_REQ *packet)
+{
+  /*** ここにコードをついかしてください ***/
+
+  return (E_NOSPT);
+}
+
+/*
+ * デバイスのクローズ
+ */
+ER
+close_%%name%% (ID caller, DDEV_CLS_REQ *packet)
+{
+  /*** ここにコードをついかしてください ***/
+
+  return (E_NOSPT);
+}
+
+/*
+ *
+ */
+ER
+read_%%name%% (ID caller, DDEV_REA_REQ *packet)
+{
+  /*** ここにコードをついかしてください ***/
+
+  return (E_NOSPT);
+}
+
+/*
+ *
+ */
+ER
+write_%%name%% (ID caller, DDEV_WRI_REQ *packet)
+{
+  /*** ここにコードをついかしてください ***/
+
+  return (E_NOSPT);
+}
+
+/*
+ *
+ */
+ER
+control_%%name%% (ID caller, DDEV_CTL_REQ *packet)
+{
+  /*** ここにコードをついかしてください ***/
+
+  return (E_NOSPT);
+}
+__END_NAME_C__
+
+$filename[1] = "${name}.h";
+$contents[1] =<<'__END_NAME_H__';
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+
+/* 
+ * $Log: Conf.server,v $
+ * Revision 1.1  2011/12/27 17:13:35  liu1
+ * Initial Version.
+ *
+ * Revision 1.1  1999-12-29 17:18:46  monaka
+ * First version.
+ *
+ * Revision 1.1  1998/12/19 07:50:25  monaka
+ * Pre release version.
+ *
+ */
+
+/*
+ *
+ */
+#ifndef	__%%NAME%%_H__
+#define	__%%NAME%%_H__	1
+
+
+#define %%NAME%%_DRIVER	"driver.%%name%%"
+
+#define MAX_%%NAME%%	1
+
+
+#endif /* __%%NAME%%_H__ */
+__END_NAME_H__
+
+$filename[2] = "${name}_internal.h";
+$contents[2] =<<'__END_NAME_INTERNAL_H__';
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+/* $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+
+/* 
+ * $Log: Conf.server,v $
+ * Revision 1.1  2011/12/27 17:13:35  liu1
+ * Initial Version.
+ *
+ * Revision 1.1  1999-12-29 17:18:46  monaka
+ * First version.
+ *
+ * Revision 1.1  1998/12/19 07:50:25  monaka
+ * Pre release version.
+ *
+ */
+
+
+#ifndef	__%%NAME%%_INTERNAL_H__
+#define	__%%NAME%%_INTERNAL_H__	1
+
+
+#include "../../ITRON/h/itron.h"
+#include "../../ITRON/h/errno.h"
+#include "../../BTRON/device/console/console.h"
+#include "../../BTRON/servers/port-manager.h"
+
+
+/*** ここにデバイスの定義をかいてください ***/
+
+
+/* デバイス構造体 
+ * %%NAME%% デバイスは、各々この構造体で管理している
+ */
+struct device
+{
+  /*** ここに ***/
+};
+
+
+
+#include "global.h"
+#include "funcs.h"
+
+
+#endif /* __%%NAME%%_INTERNAL_H__ */
+__END_NAME_INTERNAL_H__
+
+$filename[3] = 'Makefile';
+$contents[3] = <<'__END_MAKEFILE__';
+# $Revision: 1.1 $
+#
+#
+
+DEBUG=-DDEBUG
+IDENT=-DI386 -DIBMPC
+
+CPP=/lib/cpp
+ROOT=../../../ITRON
+#CFLAGS=-b i486-linuxaout -I. -I$(ROOT) -I$(ROOT)/h -I$(ROOT)/i386 -I../../kernlib -fno-builtin $(IDENT)
+CFLAGS=-I. -I$(ROOT) -I$(ROOT)/h -I$(ROOT)/i386 -I../../kernlib -fno-builtin $(IDENT) $(DEBUG)
+CC=gcc
+AS=/usr/local/bin/as
+KP=kp -input-code euc
+MKDEPEND=$(CC) -M
+STARTADDR=%%address%%
+ENTRY=start
+LIBS=../../kernlib/libkernel.a
+#LD=/usr/local/bin/ld
+LD=/usr/bin/ld
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.s
+	$(CPP) $(ASFLAGS) $*.s | $(AS) -o $*.o
+
+OBJS=%%name%%.o misc.o
+SRCS=%%name%%.c misc.c
+
+all: %%name%%
+
+%%name%%: $(OBJS)
+	$(LD) -static -o $@ -e ${ENTRY} -Ttext=$(STARTADDR) $(OBJS) $(LIBS)
+
+tags:
+	etags *.[hcs]
+
+depend:
+	$(MKDEPEND)  $(CFLAGS) -x c $(SRCS) > .depend
+
+clean:
+	rm -f $(OBJS) %%name%%
+__END_MAKEFILE__
+
+$filename[4] = 'funcs.h';
+$contents[4] = <<'__END_FUNCS_H__';
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+
+/* 
+ * $Log: Conf.server,v $
+ * Revision 1.1  2011/12/27 17:13:35  liu1
+ * Initial Version.
+ *
+ * Revision 1.1  1999-12-29 17:18:46  monaka
+ * First version.
+ *
+ * Revision 1.1  1998/12/19 07:50:25  monaka
+ * Pre release version.
+ *
+ */
+
+/*
+ *
+ */
+#ifndef	__FUNCS_H__
+#define	__FUNCS_H__	1
+
+/* %%name%%.c */
+extern ER	process_request (DDEV_REQ *req);
+extern ER	open_%%name%% (ID caller, DDEV_OPN_REQ *packet);
+extern ER	close_%%name%% (ID caller, DDEV_CLS_REQ *packet);
+extern ER	read_%%name%% (ID caller, DDEV_REA_REQ *packet);
+extern ER	write_%%name%% (ID caller, DDEV_WRI_REQ *packet);
+extern ER	control_%%name%% (ID caller, DDEV_CTL_REQ *packet);
+
+
+/* misc.c */
+extern void	init_log (void);
+extern void	print_digit (UW d, UW base);
+extern W	printf (B *fmt,...);
+extern W	put_string (B *line, ID port);
+extern W 	putc (int ch, ID port);
+
+
+
+#endif /* __FUNCS_H__ */
+__END_FUNCS_H__
+
+$filename[5] = 'global.h';
+$contents[5] = <<'__END_GLOBAL_H__';
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+
+/* 
+ * $Log: Conf.server,v $
+ * Revision 1.1  2011/12/27 17:13:35  liu1
+ * Initial Version.
+ *
+ * Revision 1.1  1999-12-29 17:18:46  monaka
+ * First version.
+ *
+ * Revision 1.1  1998/12/19 07:50:25  monaka
+ * Pre release version.
+ *
+ */
+
+/*
+ *
+ */
+#ifndef __GLOBAL_H__
+#define	__GLOBAL_H__	1
+
+
+
+/* %%name%%.c */
+extern struct device	dev_table[MAX_%%NAME%%];
+
+
+#endif /* __GLOBAL_H__ */
+__END_GLOBAL_H__
+
+$filename[6] = 'misc.c';
+$contents[6] =<<'__END_MISC_C__';
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+
+static char rcsid[] = "@(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/kernel/BTRON/servers/Conf.server,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+
+
+/*
+ * $Log: Conf.server,v $
+ * Revision 1.1  2011/12/27 17:13:35  liu1
+ * Initial Version.
+ *
+ * Revision 1.1  1999-12-29 17:18:46  monaka
+ * First version.
+ *
+ * Revision 1.1  1998/12/19 07:50:25  monaka
+ * Pre release version.
+ *
+ */
+
+
+#include "%%name%%.h"
+#include "%%name%%_internal.h"
+
+
+
+
+
+static ID	log_port;
+static ID	dev_recv;
+
+
+static ER	vprintf (B *fmt, VP arg0);
+
+
+
+
+/* init_log - ログ出力機構を初期化する
+ *
+ *
+ */
+void
+init_log (void)
+{
+  if (find_port (CONSOLE_DRIVER, &log_port) != E_PORT_OK)
+    {
+      dbg_printf ("POSIX: Cannot open console device.\n");
+      slp_tsk ();
+      /* DO NOT REACHED */
+    }
+
+  dev_recv = get_port (sizeof (DDEV_RES), sizeof (DDEV_RES));
+  if (dev_recv <= 0)
+    {
+      dbg_printf ("POSIX: Cannot allocate port\n");
+      slp_tsk ();
+      /* DO NOT REACHED */
+    }
+}
+
+
+void
+print_digit (UW d, UW base)
+{
+  static B digit_table[] = "0123456789ABCDEF";
+
+  if (d < base)
+    {
+      putc ((W)(digit_table[d]), log_port);
+    }
+  else
+    {
+      print_digit (d / base, base);
+      putc ((W)(digit_table[d % base]), log_port);
+    }
+}
+
+#define INC(p,x)	(((W)p) = (((W)p) + sizeof (x)))
+
+/*
+ *
+ */
+W
+printf (B *fmt,...)
+{
+  VP arg0;
+  ER err;
+
+  arg0 = (VP)&fmt;
+  INC (arg0, B *);
+  err = vprintf (fmt, (VP)arg0);
+  return (err);
+}
+
+static ER
+vprintf (B *fmt, VP arg0)
+{
+  VP *ap;
+
+  for (ap = (VP *)arg0; *fmt != '\0'; fmt++)
+    {
+      if ((*fmt) == '%')
+	{
+	  ++fmt;
+	  switch (*fmt)
+	    {
+	    case 's':
+	      put_string (*(B **)ap, log_port);
+	      INC (ap, B *);
+	      break;
+
+	    case 'd':
+	      if ((W)*ap < 0)
+		{
+		  ((W)*ap) = -((W)*ap);
+		  putc ('-', log_port);
+		}
+	      print_digit ((W)*ap, 10);
+	      INC (ap, W);
+	      break;
+
+	    case 'x':
+	      print_digit ((UW)*ap, 16);
+	      INC (ap, W);
+	      break;
+
+	    default:
+	      putc ('%', log_port);
+	      break;
+	    }
+	}
+      else
+	{
+	  putc (*fmt, log_port);
+	}
+    }
+}
+
+
+
+W
+put_string (B *line, ID port)
+{
+  W i;
+
+  for (i = 0; line[i] != '\0'; i++)
+    {
+      putc (line[i], port);
+    }
+  return (i);
+}
+
+
+W 
+putc (int ch, ID port)
+{
+  DDEV_REQ		req;		/* 要求パケット */
+  DDEV_RES		res;		/* 返答パケット */
+  W			rsize;
+  ER			error;
+  W			i;
+  
+  
+  req.header.mbfid = dev_recv;
+  req.header.msgtyp = DEV_WRI;
+  req.body.wri_req.dd = 0xAA;
+  req.body.wri_req.size = 1;
+  req.body.wri_req.dt[0] = (char)(ch & 0xff);
+  error = snd_mbf (port, sizeof (req), &req);
+  if (error != E_OK)
+    {
+      dbg_printf ("cannot send packet. %d\n", error);
+      return;
+    }
+  rsize = sizeof (res);
+  error = rcv_mbf (&res, (INT *)&rsize, dev_recv);
+  if (res.body.wri_res.errcd != E_OK)
+    {
+      dbg_printf ("%d\n", res.body.wri_res.errcd);
+      return (0);
+    }      
+  return (1);
+}
+
+
+
+/* _assert - ASSERT マクロによって呼び出される関数
+ *
+ * メッセージを出力し、プログラムを終了する。
+ *
+ */ 
+void
+_assert (B *msg)
+{
+  printf ("ASSERT: ");
+  printf ("%s\n", msg);
+  for (;;)
+    {
+      slp_tsk ();
+    }
+}
+
+
+
+void
+busywait (W count)
+{
+  W	i;
+  W	dummy;
+
+  while (count-- > 0)
+    {
+      for (i = 0; i < 10000; i++)
+	{
+	  dummy++;
+	}
+    }
+}
+__END_MISC_C__
+
+for($i = 0; $i < @contents; $i++) {
+    $contents[$i] =~ s/%%name%%/$name/mg;
+    $contents[$i] =~ s/%%NAME%%/$NAME/mg;
+}
+
+mkdir "$name", 0777 || die "$0: Can't create directory $name\n";
+
+for($i = 0; $i < @filename; $i++) {
+    print "Creating $filename[$i] ...\n";
+    open FD, ">$name/$filename[$i]";
+    print FD $contents[$i];
+    close FD;
+    print "...Done.\n";
+}
+
+print "Done.\n";
+exit 0;
+

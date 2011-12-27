@@ -1,0 +1,32 @@
+List of authors
+
+
+このファイルの内容：
+
+このファイルには、BTRON OS のソースの作者の一覧が書いてあります。
+(Linux でいう /usr/src/linux/MAINTAINERS と同様の内容です)
+
+一覧の項目の意味は次のとおり：
+
+	Name: プログラマの名前
+	Mail: Contact 先のメイルアドレス
+	Web:  ソース内容についての Web page の URL
+
+
+
+Script language interpreter, and other kernel modules.
+Name: 邑中 雅樹
+Mail: monaka@asahi-net.email.ne.jp
+
+Script language interpreter, and other kernel modules.
+Name: 浪花　智英 (Tomohide Naniwa)
+Mail: naniwa@mechgw.mech.yamaguchi-u.ac.jp
+
+SCSI and other driver
+Name: きしだまさみ (Masami Kishida)
+Mail: kishida0@osk.3web.ne.jp
+
+Rest
+Name: 内藤 隆一
+Mail: night@tron-net.gr.jp
+

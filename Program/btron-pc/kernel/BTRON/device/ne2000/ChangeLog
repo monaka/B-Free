@@ -1,0 +1,44 @@
+Fri Mar  5 01:07:51 1999  Naitoh Ryuichi  <night@ibmpc0.bfree.rim.or.jp>
+
+	* ne2000low.c: 
+	  write_frame() の中身を作成(今までのは捨てた)。
+	  copy_to_ne2000() の作成。copy_to_ne2000() は、ne2000 内部のバッ
+	  ファへ送信したいデータをコピーするための関数。
+
+	* ne2000_internal.h: マクロ追加。
+	#define MAX_MTU_LENGTH		1514
+	#define MIN_ETHER_LENGTH	64
+
+
+Wed Mar  3 00:28:54 1999  Naitoh Ryuichi  <night@ibmpc0.bfree.rim.or.jp>
+
+	* ChangeLog: 変更歴ファイルの追加。
+
+	* ne2000low.c: 初期化処理の変更。
+
+	* ne2000_internal.h: 
+	構造体 struct device の名前を struct ne2000_device に変更。中身も
+	変更した。
+	
+	次のマクロを新たに定義した。
+	#define LOC_MEM_START		0x4000
+	#define LOC_MEM_END		0x8000
+	#define LOC_MEM_SIZE		0x4000
+	#define LOC_RX_MEM_START	0x4c00
+	#define TX_PAGE_START		64
+	#define RX_PAGE_START		76
+	#define RX_PAGE_END		128
+	#define NE2000_PAGE_SIZE	256
+	#define TX_BUF_SIZE		6
+	#define MAX_TX_BUF		2
+
+	* ne2000.h: マクロ DEFAULT_INTR の追加。
+
+	* ne2000.c: 初期化処理を若干変更。
+
+	* global.h: 大域変数 max_adaptor についての定義を追加。
+
+	* Makefile: interrupt.c についての登録
+
+	* interrupt.c: 割り込み関係のファイル作成
+

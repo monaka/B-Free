@@ -1,0 +1,6 @@
+svga_cons
+log
+err
+misc.o
+svga_cons.o
+svga_conslow.o

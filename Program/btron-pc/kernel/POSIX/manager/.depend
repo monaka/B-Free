@@ -1,0 +1,143 @@
+posix.o: posix.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+version.o: version.c
+request.o: request.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+filesystem.o: filesystem.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+memory.o: memory.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+process.o: process.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+log.o: log.c posix.h ../../ITRON/h/itron.h ../../ITRON/h/../h/types.h \
+ ../../ITRON/h/../h/config.h ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+syscall.o: syscall.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+global.o: global.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+vmtree.o: vmtree.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+exec.o: exec.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h
+fork.o: fork.c posix.h ../../ITRON/h/itron.h \
+ ../../ITRON/h/../h/types.h ../../ITRON/h/../h/config.h \
+ ../../ITRON/h/../h/../i386/i386.h \
+ ../../ITRON/h/../h/../i386/../h/types.h ../../ITRON/h/../i386/i386.h \
+ ../../ITRON/h/../h/region.h ../../ITRON/h/../h/itron_module.h \
+ ../../ITRON/h/itron_syscall_func.h ../../ITRON/h/errno.h \
+ ../../ITRON/kernlib/device.h ../../ITRON/kernlib/message.h \
+ ../../ITRON/kernlib/../../ITRON/h/types.h \
+ ../../BTRON/device/console/console.h \
+ ../../BTRON/device/console/../../../ITRON/kernlib/device.h \
+ ../../ITRON/servers/port-manager.h posix_syscall.h assert.h \
+ sfs/sfs_fs.h sfs/../../../ITRON/h/types.h posix_fs.h posix_proc.h \
+ posix_mm.h utsname.h elf.h ../../ITRON/kernlib/libkernel.h

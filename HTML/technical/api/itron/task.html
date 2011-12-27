@@ -1,0 +1,34 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+   <meta name="GENERATOR" content="Mozilla/4.51 [ja] (Win98; I) [Netscape]">
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000FF" vlink="#800080" alink="#FF0000">
+<tt><font size=+1>TTS_NON(0x00000000)　NON-EXITENT　 未生成状態</font></tt> 
+<p><tt><font size=+1>TTS_RUN(0x00000001)　RUN　　　　　 走行状態</font></tt> 
+<p><tt><font size=+1>TTS_RDY(0x00000002)　READY　　　　 走行可能状態</font></tt> 
+<p><tt><font size=+1>TTS_WAI(0x00000004)　WAIT　　　　　待ち状態</font></tt>
+<p><tt><font size=+1>TTS_SUS(0x00000008)　SUSPEND　　　 強制待ち状態。他から強制的に待機</font></tt> 
+<p><tt><font size=+1>TTS_WAS(0x00000010)　WAIT-SUSPEND　WAIとSUSの両方の状態</font></tt> 
+<p><tt><font size=+1>TTS_DMT(0x00000020)　DORMANT　　　 休止状態。生成しているが起動してない</font></tt> 
+<p>　
+<p><font size="4" face="ＭＳ ゴシック, Osaka－等幅">WAITの種類</font>
+<p><tt><font size="+1">　tskwait(待ち要因)　　　　　　　　　　　　　　　　　　　　 wid(ID)</font></tt> 
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_SLP(1)　　(t)slp_tskの起床待ち</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_DLY(2)　　dly_tskの遅延</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_NOD(8)　　接続応答待ち</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_FLG(10)　 wai_flgのイベントフラグ待ち　　　　　flgid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_SEM(20)　 wai_semのセマフォ資源獲得待ち　　　　semid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_MBX(40)　 rcv_msgのメイルボックス受信待ち　　　mbxid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_SMBX(80)　snd_msgのメイルボックス送信待ち　　　mbfid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_MBF(100)　rcv_mbfのメッセージバッファ受信待ち　mbfid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_CAL(200)　ランデブ呼出待ち　　　　　　　　 　　porid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_ACP(400)　ランデブ受付待ち　　　　　　　　 　　porid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_RDV(800)　ランデブ終了待ち</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_CAL | TTW_RDV(a00)</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　　　　　　　　ランデブ呼出または終了待ち</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_MPL(1000) get_blkの可変長メモリブロック待ち　　mplid</font></p>
+<p><font face="ＭＳ ゴシック, Osaka－等幅" size="4">　TTW_MPF(2000) get_blfの固定長メモリブロック待ち　　mpfid</font></p>
+</body>
+</html>

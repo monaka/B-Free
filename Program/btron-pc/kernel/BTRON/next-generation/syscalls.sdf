@@ -1,0 +1,280 @@
+#Systemcall defines 1.0
+dispri,point,gdsp_ptr,W req,-
+dispri,point,gget_ptr,PTRSTS *sts,PTRIMAGE *img,-
+dispri,point,gini_ptr,void,-
+dispri,point,gmot_ptr,W sts,-
+dispri,point,gmov_ptr,PNT pos,-
+dispri,point,gset_ptr,W style,PTRIMAGE *img,COLORVAL fgcol,COLORVAL bgcol,-
+dispri,shape,gcls_env,W gid,-
+dispri,shape,gcnv_abs,W gid,PPTR pp,-
+dispri,shape,gcnv_col,W gid,COLORVAL cv,LPTR pixv,-
+dispri,shape,gcom_bmp,W gid,RPTR dr,C_BMPTR cbmp,LPTR stat,-
+dispri,shape,gcop_bmp,W srcid,RPTR sr,W dstid,RPTR dr,GSCAN *mask,W mode,-
+dispri,shape,gcre_pat,W gid,PAT *def,B *loc,B **pat,LPTR size,-
+dispri,shape,gdra_arc,W gid,RECT r,PNT sp,PNT ep,UW attr,PAT *pat,W angle,W mode,-
+dispri,shape,gdra_lin,W gid,PNT p1,PNT p2,UW attr,PAT *pat,W mode,-
+dispri,shape,gdra_pln,W gid,POLYGON *p,UW attr,PAT *pat,W mode,-
+dispri,shape,gdra_pnt,W gid,PNT p,LONG val,W mode,-
+dispri,shape,gdra_spl,W gid,W np,PPTR pt,UW attr,PAT *pat,W mode,-
+dispri,shape,gfil_cho,W gid,RECT r,PNT sp,PNT ep,PAT *pat,W angle,W mode,-
+dispri,shape,gfil_ovl,W gid,RECT r,PAT *pat,W angle,W mode,-
+dispri,shape,gfil_pnt,W gid,PNT p,PAT *pat,W mode,-
+dispri,shape,gfil_pol,W gid,POLYGON *p,PAT *pat,W mode,-
+dispri,shape,gfil_rec,W gid,RECT r,PAT *pat,W angle,W mode,-
+dispri,shape,gfil_rgn,W gid,LONG val,PNT p,PAT *pat,W mode,-
+dispri,shape,gfil_rrc,W gid,RECT r,W rh,W rv,PAT *pat,W angle,W mode,-
+dispri,shape,gfil_scn,W gid,GSCAN *scan,PAT *pat,W mode,-
+dispri,shape,gfil_sec,W gid,RECT r,PNT sp,PNT ep,PAT *pat,W angle,W mode,-
+dispri,shape,gfra_cho,W gid,RECT r,PNT sp,PNT ep,UW attr,PAT *pat,W angle,W mode,-
+dispri,shape,gfra_ovl,W gid,RECT r,UW attr,PAT *pat,W angle,W mode,-
+dispri,shape,gfra_pol,W gid,POLYGON *p,UW attr,PAT *pat,W mode,-
+dispri,shape,gfra_rec,W gid,RECT r,UW attr,PAT *pat,W angle,W mode,-
+dispri,shape,gfra_rrc,W gid,RECT r,W rh,W rv,UW attr,PAT *pat,W angle,W mode,-
+dispri,shape,gfra_sec,W gid,RECT r,PNT sp,PNT ep,UW attr,PAT *pat,W angle,W mode,-
+dispri,shape,gget_bmp,W gid,BMPTR bmap,-
+dispri,shape,gget_bnd,W gid,RPTR rp,-
+dispri,shape,gget_col,W gid,W p,COLORVAL *cv,W cnt,-
+dispri,shape,gget_dev,W gid,TC *dev,-
+dispri,shape,gget_for,W gid,RLPTR rlp,-
+dispri,shape,gget_fra,W gid,RPTR rp,-
+dispri,shape,gget_msk,W gid,LPTR pixmask,-
+dispri,shape,gget_spc,TC *dev,DEV_SPEC *buf,-
+dispri,shape,gget_vis,W gid,RPTR rp,-
+dispri,shape,gini_env,W gid,-
+dispri,shape,gloc_env,W gid,W lock,-
+dispri,shape,gmov_bnd,W gid,W dh,W dv,-
+dispri,shape,gmov_cor,W gid,W dh,W dv,-
+dispri,shape,gnew_env,W gid,-
+dispri,shape,gopn_dev,TC *dev,B *param,-
+dispri,shape,gopn_mem,TC *dev,BMPTR bmap,B *param,-
+dispri,shape,gpic_arc,PNT pt,RECT r,PNT sp,PNT ep,W angle,W width,-
+dispri,shape,gpic_cho,PNT pt,RECT r,PNT sp,PNT ep,W angle,W width,-
+dispri,shape,gpic_lin,PNT pt,PNT p0,PNT p1,W width,-
+dispri,shape,gpic_ovl,PNT pt,RECT r,W angle,W width,-
+dispri,shape,gpic_pln,PNT pt,POLYGON *poly,W width,-
+dispri,shape,gpic_pol,PNT pt,POLYGON *poly,W width,-
+dispri,shape,gpic_rec,PNT pt,RECT r,W angle,W width,-
+dispri,shape,gpic_rrc,PNT pt,RECT r,W rh,W rv,W angle,W width,-
+dispri,shape,gpic_scn,PNT pt,GSCAN *scan,-
+dispri,shape,gpic_sec,PNT pt,RECT r,PNT sp,PNT ep,W angle,W width,-
+dispri,shape,gpic_spl,PNT p,W np,PPTR pt,W width,-
+dispri,shape,grot_bmp,W srcid,W dstid,RPTR rp,PPTR dp,W angle,GSCAN *mask,W mode,-
+dispri,shape,grst_bmp,W gid,RPTR gr,BMPTR bmap,RPTR br,GSCAN *mask,W mode,-
+dispri,shape,gsav_bmp,W gid,RPTR gr,BMPTR bmap,RPTR br,GSCAN *mask,W mode,-
+dispri,shape,gscr_rec,W gid,RECT r,W dh,dv,RLPTR rlp,PAT *pat,-
+dispri,shape,gset_col,W gid,W p,COLORVAL *cv,W cnt,-
+dispri,shape,gset_for,W gid,RLPTR rlp,-
+dispri,shape,gset_fra,W gid,RECT r,-
+dispri,shape,gset_lmk,W gid,W nbytes,B *mask,-
+dispri,shape,gset_msk,W gid,LONG pixmask,-
+dispri,shape,gset_vis,W gid,RECT r,-
+dispri,shape,gsiz_cbm,W gid,RPTR rp,W compac,LPTR size,-
+dispri,shape,gsiz_pat,W gid,W kind,W hsize,W vsize,LPTR size,-
+dispri,shape,gtst_pnt,W gid,PNT p,LPTR val,-
+dispri,shape,gunc_bmp,W gid,RPTR dr,C_BMPTR cbmp,RPTR sr,W mode,-
+dispri,string,gcop_chr,W gid,PNT asize,PNT isize,B *img,W mode,-
+dispri,string,gdra_chp,W gid,W h,W v,TCODE ch,W mode,-
+dispri,string,gdra_chr,W gid,TCODE ch,W mode,-
+dispri,string,gdra_stp,W gid,W h,W v,TC *str,W len,W mode,-
+dispri,string,gdra_str,W gid,TC *str,W len,W mode,-
+dispri,string,gget_chc,W gid,COLORVAL *chfgc,COLORVAL *chbgc,-
+dispri,string,gget_chh,W gid,TCODE ch,-
+dispri,string,gget_chp,W gid,W *h,W *v,-
+dispri,string,gget_chw,W gid,TCODE ch,-
+dispri,string,gget_fnt,W gid,FONTSPEC *fnt,FONTINF *inf,-
+dispri,string,gget_sth,W gid,TC *str,W len,CHGAP *cap,W *pos,-
+dispri,string,gget_stw,W gid,TC *str,W len,CHGAP *gap,W *pos,-
+dispri,string,gset_chc,W gid,COLORVAL chfgc,COLORVAL chbgc,-
+dispri,string,gset_chp,W gid,W h,W v,W abs,-
+dispri,string,gset_fnt,W gid,FONTSPEC *fnt,-
+nuclus,devmgr,chg_dmd,TC *dev,UW mode,デバイスのアクセスモード変更
+nuclus,devmgr,cls_dev,W dd,W eject,W *error,デバイスのクローズ
+nuclus,devmgr,ctl_dev,W dd,UW cmd,B *param,W *error,デバイスの制御
+nuclus,devmgr,dev_sts,TC *dev,DEV_STATE *buf,デバイスの管理情報の取り出し
+nuclus,devmgr,get_dev,TC *dev,W num,論理デバイス名の取り出し
+nuclus,devmgr,lst_dev,DEV_INFO *dev,W ndev,登録済みデバイスの取り出し
+nuclus,devmgr,opn_dev,TC *dev,UW o_mode,W *error,デバイスのオープン
+nuclus,devmgr,rea_dev,W dd,LONG start,B *buf,LONG size,LPTR a_size,W *error,デバイスからのデータ読み込み
+nuclus,devmgr,wri_dev,W dd,LONG start,B *buf,LONG size,LPTR a_size,W *error,デバイスへのデータ書き込み
+nuclus,evtmgr,chg_emk,W mask,システム・イベントマスクの変更
+nuclus,evtmgr,chg_pda,W attr,ポインティングデバイス属性の変更
+nuclus,evtmgr,clr_evt,W t_mask,W lask_mask,イベントの削除
+nuclus,evtmgr,get_etm,ULPTR time,イベントタイマーの取り出し
+nuclus,evtmgr,get_evt,W t_mask,EVENT *evt,UW opt,イベントの取り出し
+nuclus,evtmgr,get_kid,KBD_ID *id,キーボードIDの取り出し
+nuclus,evtmgr,get_kmp,KEYMAP keymap,キー状態の取り出し
+nuclus,evtmgr,get_krm,KEPMAP keymap,自動リピート対象キーの取り出し
+nuclus,evtmgr,get_krp,W *offset,W *interval,キーリピート間隔の取り出し
+nuclus,evtmgr,get_ktb,KEYTAB *keytab,文字コード変換表の取り出し
+nuclus,evtmgr,get_pdp,PNT *pos,PD位置の取り出し
+nuclus,evtmgr,put_evt,EVENT *evt,UW opt,イベントの発生
+nuclus,evtmgr,set_krm,KEYMAP keymap,自動リピート対象キーの設定
+nuclus,evtmgr,set_krp,W offset,W interval,キーリピート間隔の設定
+nuclus,evtmgr,set_ktb,KEYTAB *keytab,文字コード変換表の設定
+nuclus,evtmgr,set_pdp,PNT pos,PD位置の設定
+nuclus,evtmgr,sig_buz,UW type,ブザーの発生
+nuclus,filmgr,apd_rec,W fd,B *buf,LONG size,W type,UW subtype,UW units,レコードの追加
+nuclus,filmgr,att_fls,TC *dev,TC *name,LINK *lnk,W r_only,ファイルシステムの接続
+nuclus,filmgr,chg_fat,LINK *lnk,W attr,ファイルのアクセス属性変更
+nuclus,filmgr,chg_fls,TC *dev,TC *fs_name,TC *fs_locate,ファイルシステム情報の変更
+nuclus,filmgr,chg_fmd,LINK *lnk,A_MODE *mode,ファイルのアクセスモード変更
+nuclus,filmgr,chg_fnm,LINK *lnk,TC *name,ファイル名の変更
+nuclus,filmgr,chg_ftm,LINK *lnk,F_TIME *times,ファイル日時の変更
+nuclus,filmgr,chg_wrk,LINK *lnk,作業ファイルの変更
+nuclus,filmgr,chk_fil,LINK *lnk,UW mode,TC *pwd,ファイルのアクセス権チェック
+nuclus,filmgr,cls_fil,W fd,ファイルのクローズ
+nuclus,filmgr,cre_fil,LINK *lnk,TC *name,A_MODE *mode,UW atype,W opt,ファイルの生成
+nuclus,filmgr,cre_lnk,LINK *lnk,F_LINK *ref,W opt,リンクファイルの生成
+nuclus,filmgr,del_fil,LINK *org,LINK *lnk,W force,ファイルの削除
+nuclus,filmgr,del_fls,TC *dev,W eject,ファイルシステムの切断
+nuclus,filmgr,del_rec,W fd,レコードの削除
+nuclus,filmgr,fil_sts,LINK *lnk,TC *name,F_STATE *stat,F_LOCATE *locat,ファイル情報の取り出し
+nuclus,filmgr,fls_sts,TC *dev,FS_STATE *buff,ファイルシステムの管理情報取り出し
+nuclus,filmgr,fnd_lnk,W fd,W mode,LINK *lnk,UW subtype,LPTR recnum,リンクレコードの検索
+nuclus,filmgr,fnd_rec,W fd,W mode,ULONG typemask,UW subtype,LPTR recnum,レコードの検索
+nuclus,filmgr,gen_fil,LINK *lnk,F_LINK *ref,W opt,ファイルの直接生成
+nuclus,filmgr,get_dfm,DA_MODE *mode,デフォルト・アクセスモードの取り出し
+nuclus,filmgr,get_lnk,TC *path,LINK *lnk,W mode,ファイルへのリンクの取り出し
+nuclus,filmgr,get_nlk,LINK *lnk,リンクの順次取り出し
+nuclus,filmgr,ins_rec,W fd,B *buf,LONG size,W type,UW subtype,UW units,レコードの挿入
+nuclus,filmgr,lnk_sts,LINK *lnk,F_LINK *stat,リンクファイル情報の取り出し
+nuclus,filmgr,loc_rec,W fd,W mode,レコードのロック
+nuclus,filmgr,lst_fls,F_ATTACH *buff,W cnt,ファイルシステムのリストアップ
+nuclus,filmgr,ofl_sts,W fd,TC *name,F_STATE *stat,F_LOCATE *locat,ファイル情報の取り出し
+nuclus,filmgr,opn_fil,LINK *lnk,UW o_mode,TC *pwd,ファイルのオープン
+nuclus,filmgr,rea_rec,W fd,W offset,B *buf,LONG size,LPTR r_size,UW *subtype,レコードの読み込み
+nuclus,filmgr,see_rec,W fd,LONG offset,W mode,LPTR recnum,レコード位置の移動
+nuclus,filmgr,set_dfm,DA_MODE *mode,デフォルト・アクセスモードの設定
+nuclus,filmgr,syn_fls,void,ファイルシステムの同期
+nuclus,filmgr,syn_lnk,LINK *lnk,W opt,リンクファイルの同期
+nuclus,filmgr,trc_rec,W fd,LONG size,レコードのサイズ縮小
+nuclus,filmgr,wri_rec,W fd,LONG offset,B *buf,LONG size,LPTR r_size,UW *subtype,UW units,レコードの書き込み
+nuclus,filmgr,xch_fil,W fd_1,W fd_2,ファイルの内容交換
+nuclus,memmgr,apd_mem,LONG phaddr,LONG size,メモリ領域の追加
+nuclus,memmgr,cre_mpl,W mpl_id,LONG size,UW attr,メモリプールの生成
+nuclus,memmgr,del_mpl,W mpl_id,メモリプールの削除
+nuclus,memmgr,get_lmb,B **mptr,LONG size,UW opt,ローカルメモリブロックの獲得
+nuclus,memmgr,get_ptr,B *sptr,LONG offset,B **mptr,LONG size,メモリポインタの獲得
+nuclus,memmgr,get_sma,W akey,共有メモリブロック属性の取り出し
+nuclus,memmgr,get_smb,W mpl_id,LONG size,UW opt,共有メモリブロックの獲得
+nuclus,memmgr,get_smi,W akey,LPTR info,共有メモリブロックのユーザ情報の取り出し
+nuclus,memmgr,lmb_siz,B *mptr,LPTR size,ローカルメモリブロック・サイズの取り出し
+nuclus,memmgr,lmb_sts,LM_STATE *buff,ローカルメモリ領域の状態取り出し
+nuclus,memmgr,map_mem,LONG phaddr,B **logaddr,LONG size,UW opt,メモリ空間のマッピング
+nuclus,memmgr,mpl_sts,W mpl_id,MP_STATE *buff,共有メモリプール状態の取り出し
+nuclus,memmgr,rea_smb,W akey,B *buff,LONG offset,LONG size,LPTR a_size,共有メモリブロックの読み込み
+nuclus,memmgr,rel_lmb,B *mptr,ローカルメモリブロックの開放
+nuclus,memmgr,rel_ptr,B *mptr,メモリポインタの開放
+nuclus,memmgr,rel_smb,W akey,共有メモリブロックの削除
+nuclus,memmgr,rgt_smb,W akey,共有メモリブロックの再獲得
+nuclus,memmgr,rsz_lmb,B **n_mptr,B *mptr,LONG size,UW opt,ローカルメモリブロックのサイズ変更
+nuclus,memmgr,set_sma,W akey,UW attr,共有メモリブロック属性の設定
+nuclus,memmgr,set_smi,W akey,UW attr,共有メモリブロックのユーザ情報の設定
+nuclus,memmgr,smb_adr,W akey,B **maddr,共有メモリブロック・アドレスの取り出し
+nuclus,memmgr,smb_key,B *maddr,共有メモリブロック・アクセスキーの取り出し
+nuclus,memmgr,smb_sts,W akey,SM_STATE *buff,共有メモリブロック状態の取り出し
+nuclus,memmgr,ump_mem,B *logaddr,メモリ空間のマッピングの削除
+nuclus,memmgr,wri_smb,W akey,B *buff,LONG offset,LONG size,LPTR a_size,共有メモリブロックの書き込み
+nuclus,prcmgr,can_tmg,void,タイムアウトメッセージの取り消し
+nuclus,prcmgr,chg_pri,W pid,W new_pri,UW opt,プロセスの優先度変更
+nuclus,prcmgr,chg_usr,P_USER *buff,プロセスのユーザ情報の変更
+nuclus,prcmgr,clr_msg,LONG t_mask,LONG last_mask,メッセージのクリア
+nuclus,prcmgr,cre_nam,TC *name,LONG data,UW opt,グローバル名データの生成
+nuclus,prcmgr,cre_prc,LINK *lnk,W pri,MESSAGE *msg,プロセスの生成
+nuclus,prcmgr,cre_sem,W sem_id,W cnt,UW opt,セマフォの生成
+nuclus,prcmgr,def_msg,LONG t_mask,FUNCP msg_hdr,メッセージハンドラの定義
+nuclus,prcmgr,del_nam,TC *name,グローバル名データの削除
+nuclus,prcmgr,del_sem,W sem_id,セマフォの削除
+nuclus,prcmgr,ext_prc,W exit_code,自プロセスの終了
+nuclus,prcmgr,get_inf,W pid,P_INFO *buff,プロセスの統計情報の取り出し
+nuclus,prcmgr,get_nam,TC *name,LPTR data,グローバルデータ名の取り出し
+nuclus,prcmgr,get_usr,W pid,P_USER *buff,プロセスのユーザ情報の取り出し
+nuclus,prcmgr,ini_sem,W sem_id,W cnt,セマフォの再初期化
+nuclus,prcmgr,loc_prc,W onoff,プロセスのロック/アンロック
+nuclus,prcmgr,prc_sts,W pid,P_STATE *buff,TC *path,プロセス状態の取り出し
+nuclus,prcmgr,rcr_prc,LINK *lnk,MESSAGE *msg,プロセスの再生成
+nuclus,prcmgr,rcv_msg,W t_mask,MESSAGE *msg,W msgsz,UW opt,メッセージの受信
+nuclus,prcmgr,req_tmg,LONG time,W code,タイムアウトメッセージの要求
+nuclus,prcmgr,ret_msg,W ret,メッセージハンドラの終了
+nuclus,prcmgr,sig_sem,W sem_id,W cnt,セマフォの開放
+nuclus,prcmgr,snd_msg,W pid,MESSAGE *msg,UW opt,メッセージの送信
+nuclus,prcmgr,snr_msg,W pid,MESSAGE *s_msg,W t_mask,MESSAGE *r_msg,W msgsz,メッセージの送受信
+nuclus,prcmgr,ter_prc,W pid,W abort_code,UW opt,他プロセスの強制終了
+nuclus,prcmgr,wai_prc,LONG time,プロセスの時間待ち
+nuclus,prcmgr,wai_sem,W sem_id,セマフォの獲得
+nuclus,sysmgr,cre_dbg,LINK *lnk,W pri,MESSAGE arg,W dpid,デバッグ対象プロセスの生成
+nuclus,sysmgr,def_cup,FUNCP clup_hdr,クリーンアップハンドラの登録
+nuclus,sysmgr,def_exc,W exc_vec,FUNCP exc_hdr,例外処理ハンドラの定義
+nuclus,sysmgr,def_svc,UW svc_code,FUNCP *svc_hdrs,W opt,システムコールハンドラの定義
+nuclus,sysmgr,get_err,void,最新のエラーコードの取り出し
+nuclus,sysmgr,get_ver,T_VER *version,OSバージョン情報の取り出し
+nuclus,sysmgr,lod_spg,LINK *lnk,TC *arg,UW attr,LPTR info,システムプログラムのロード
+nuclus,sysmgr,prc_trc,TRACE trace,デバッグ対象プロセスの制御
+nuclus,sysmgr,ret_exc,W ret,例外処理ハンドラの終了
+nuclus,sysmgr,unl_spg,W prog_id,システムプログラムのアンロード
+nuclus,timmgr,get_tim,LPTR time,TIMEZONE *tz,システム時間の取り出し
+nuclus,timmgr,get_tod,DATE_TIM *date_tim,LPTR time,W local,日付時刻の取り出し/変換
+nuclus,timmgr,get_tod,DATE_TIM *date_tim,LONG time,W local,日付時刻の設定/変換
+nuclus,timmgr,set_tim,LONG time,TIMEZONE *tz,システム時間の設定
+shell,menmgr,mchg_atr,W mid,W selnum,UW mode,-
+shell,menmgr,mchg_dsp,MENUDISP *attr,W posattr,-
+shell,menmgr,mchg_dtm,W time,-
+shell,menmgr,mchg_gat,W mid,W num,UW mode,-
+shell,menmgr,mcre_gmn,GMENU *gm,-
+shell,menmgr,mcre_men,W nitem,MENUITEM *item,MENUDISP *attr,-
+shell,menmgr,mdel_gmn,W mid,-
+shell,menmgr,mdel_men,W mid,-
+shell,menmgr,mfnd_key,W mid,TCODE ch,-
+shell,menmgr,mget_itm,W mid,W pnum,MENUITEM *item,-
+shell,menmgr,mopn_gmn,W dnum,-
+shell,menmgr,mopn_men,W dnum,-
+shell,menmgr,msel_gmn,W mid,PNT pos,-
+shell,menmgr,msel_men,W mid,PNT pos,-
+shell,menmgr,mset_itm,W mid,W pnum,MENUITEM *item,-
+shell,winmgr,wchg_dck,W time,-
+shell,winmgr,wchg_dsp,WDDISP *atr,PAT *bgpat,-
+shell,winmgr,wchg_ful,void,-
+shell,winmgr,wchg_wnd,W wid,RPTR r,W mode,-
+shell,winmgr,wchk_dck,ULONG first,-
+shell,winmgr,wchk_dsp,W wid,-
+shell,winmgr,wcls_wnd,W wid,W opt,-
+shell,winmgr,wdef_fep,W onoff,-
+shell,winmgr,wend_drg,void,-
+shell,winmgr,wend_dsp,W wid,-
+shell,winmgr,wera_wnd,W wid,RPTR r,-
+shell,winmgr,wexe_dmn,W item,-
+shell,winmgr,wfnd_wnd,PPTR gpos,PPTR lpos,W *wid,-
+shell,winmgr,wget_act,W *pid,-
+shell,winmgr,wget_bar,W wid,W *rbar,W *bbar,W *lbar,-
+shell,winmgr,wget_bgp,W wid,PAT *pat,W size,-
+shell,winmgr,wget_dat,W wid,LPTR dat,-
+shell,winmgr,wget_dmn,TC **dmenu,-
+shell,winmgr,wget_drg,PPTR pos,WEVENT *evt,-
+shell,winmgr,wget_evt,WEVENT *evt,W mode,-
+shell,winmgr,wget_gid,W wid,-
+shell,winmgr,wget_org,W wid,W *parent,RPTR org,-
+shell,winmgr,wget_sts,W wid,WDSTAT *stat,WDDISP *atr,-
+shell,winmgr,wget_tit,W wid,W *pict,TC *title,-
+shell,winmgr,wget_wrk,W wid,RPTR r,-
+shell,winmgr,wlst_wnd,W wid,W size,W *wids,-
+shell,winmgr,wmov_drg,WEVENT *evt,RPTR new,-
+shell,winmgr,wmov_wnd,W wid,RPTR new,-
+shell,winmgr,wopn_iwd,W gid,-
+shell,winmgr,wopn_pwd,RPTR r,-
+shell,winmgr,wpas_evt,WEVENT *evt,-
+shell,winmgr,wreq_dsp,W wid,-
+shell,winmgr,wrsp_evt,WEVENT *evt,W nak,-
+shell,winmgr,wrsz_drg,WEVENT *evt,RPTR limit,RPTR new,-
+shell,winmgr,wrsz_wnd,W wid,RPTR new,-
+shell,winmgr,wscr_wnd,W wid,RPTR r,W dh,W dv,W mode,-
+shell,winmgr,wset_bgp,W wid,PAT *pat,-
+shell,winmgr,wset_dat,W wid,LONG dat,-
+shell,winmgr,wset_org,W wid,W parent,RPTR org,-
+shell,winmgr,wset_tit,W wid,W pict,TC *title,W mode,-
+shell,winmgr,wset_wrk,W wid,RPTR r,-
+shell,winmgr,wsnd_evt,WEVENT *evt,-
+shell,winmgr,wsta_drg,W wid,W lock,-
+shell,winmgr,wsta_dsp,W wid,RPTR r,RLPTR rlst,-
+shell,winmgr,wswi_wnd,W wid,WEVENT *evt,-
+shell,winmgr,wugt_evt,WEVENT *evt,-
+shell,winmgr,wwai_rsp,WEVENT *evt,W cmd,UW tmout,-

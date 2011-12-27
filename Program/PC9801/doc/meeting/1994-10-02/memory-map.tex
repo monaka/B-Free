@@ -1,0 +1,74 @@
+\documentstyle[note,epsf,a4j]{jarticle}
+
+\newcommand{\function}[1]{
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+   \stepcounter{subsection}
+   \addcontentsline{toc}{subsection}{#1}
+  \vspace{1cm}}
+
+
+\title{ITRON プロトタイプのメモリマップ}
+\author{内藤隆一}
+
+\begin{document}
+\notetitle
+
+
+\section{本ドキュメントの内容}
+
+本ドキュメントは、ITRON プロトタイプでの物理メモリおよび仮想メモリのマッ
+プを記述したものです。
+
+
+\section{物理メモリマップ}
+
+物理メモリマップを図 \ref{fig:physical-memory} に示します。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=physical-memory.eps}
+  \end{center}
+  \caption{物理メモリマップ}
+  \label{fig:physical-memory}
+\end{figure}
+
+
+\section{仮想メモリマップ}
+
+仮想メモリマップを図 \ref{fig:virtual-memory} に示します。
+
+なお、現在のところ ITRON プロトタイプでは ユーザモードは使用していま
+せん。
+そのため、ユーザ領域となっている部分については将来インプリメントすべき
+部分として書いてあります。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=virtual-memory.eps,height=15cm}
+  \end{center}
+  \caption{仮想メモリマップ}
+  \label{fig:virtual-memory}
+\end{figure}
+
+
+\section{謝辞}
+
+本ドキュメントの作成は、BBS シルバーミレニアムでの佐々木芳さん
+との議論がきっかけになっています。
+
+佐々木さん、どうもありがとうございました。
+
+%
+\end{document}
+
+
+% Local Variables: 
+% mode: tex
+% TeX-master: t
+% End: 

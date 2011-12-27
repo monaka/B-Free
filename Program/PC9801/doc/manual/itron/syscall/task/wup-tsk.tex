@@ -1,0 +1,43 @@
+
+\function{wup\_tsk  --- 指定されたタスクを起床する。}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER wup\_tsk (ID tskid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid}{起床させるタスクの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     タスク ID が正しくない
+\labitem {E\_OBJ}    タスク状態不正(すべての待ち状態が解除されていない)
+\end{lablist}
+
+
+\labitem{機能}
+
+指定したタスクを wakeu する。
+すなわち、タスクを TTS\_RDY 状態にする。
+
+待ち状態フラグ(tskwai)は、この関数を呼び出す時にリセットしていなければ
+いけない。
+もし待ち状態フラグがセットされていたならば、E\_OBJ のエラーとなる。
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: ../../itron.tex
+% End: 

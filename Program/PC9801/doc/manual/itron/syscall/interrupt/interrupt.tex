@@ -1,0 +1,91 @@
+
+\subsubsection{割り込み管理機能}
+
+
+\begin{table}[htbp]
+  \caption{割り込み関係のシステムコール}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l l} \hline
+      システムコール名 & \multicolumn{1}{c}{機能} \\ \hline\hline
+      dis\_int & 割り込みを禁止する \\
+      ena\_int & 割り込みを許可する \\ \hline
+    \end{tabular}
+  \end{center}
+  \label{tab:intr-syscall}
+\end{table}
+
+\renewcommand{\function}[1]{
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+%   \stepcounter{subsubsection}
+   \addcontentsline{toc}{paragraph}{#1}
+  \vspace{1cm}}
+
+\newpage
+  \function{dis\_int --- 割り込みを禁止する}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER dis\_int (VOID)}
+
+\labitem{引数}
+
+このシステムコールには、引数はない。
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+割り込みを禁止する。この場合、ソフトウェア割り込み/ ハードウェア割り込
+みの区別なく、すべての割り込みを禁止する。
+
+\labitem {Internal}
+このシステムコールは、i386 CPU の cli 命令を実行しているだけである。
+
+\end{lablist}
+
+\newpage
+  \function{ena\_int --- 割り込みを許可する}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ena\_int (VOID)}
+
+\labitem{引数}
+
+このシステムコールには、引数はない。
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+ena\_int システムコールは、dis\_int システムコールによって禁止した割り
+込みを再び許可する。
+
+\labitem {Internal}
+このシステムコールは、i386 CPU の sti 命令を実行しているだけである。
+
+\end{lablist}
+

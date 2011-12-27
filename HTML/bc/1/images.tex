@@ -1,0 +1,90 @@
+\batchmode
+\documentstyle[epsf,a4j,boxedminipage]{jarticle}
+\makeatletter
+
+%
+
+
+
+
+
+
+
+
+
+\title{B-Free プロジェクト概要}
+\author{内藤 隆一 (night@b-free.orient.co.jp)}
+\date{1997 年 2 月 1 日}
+
+
+
+\newcommand {\micro}{$\mu$}
+
+\newcommand {\BFree}{{\sf B$-$Free }}
+
+\newcommand {\BTRON}{{\sf BTRON }}
+
+\newcommand {\TRON}{{\sf TRON }}
+
+\newcommand {\ITRON}{{\sf ITRON }}
+
+\newcommand {\CTRON}{{\sf CTRON }}
+
+\newcommand {\microITRON}{\micro\ITRON}
+
+\makeatother
+\newenvironment{tex2html_wrap}{}{}
+\newwrite\lthtmlwrite
+\def\lthtmltypeout#1{{\let\protect\string\immediate\write\lthtmlwrite{#1}}}%
+\newbox\sizebox
+\begin{document}
+\pagestyle{empty}
+\stepcounter{section}
+{\newpage
+\clearpage
+\samepage \begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=target.eps,width=15cm}
+  \end{center}
+  
+\end{figure}
+}
+
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+{\newpage
+\clearpage
+\samepage \begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=plan.eps,width=15cm}
+  \end{center}
+  
+\end{figure}
+}
+
+\stepcounter{section}
+{\newpage
+\clearpage
+\samepage \begin{table}[htbp]
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{p{10cm} p{3cm}}            \hline
+   \multicolumn{1}{c}{内容}     & 発表月(予定) \\  \hline\hline
+   プロジェクト概要             & 2 月         \\ 
+   アーキテクチャの概要         & 4 月         \\ 
+   ITRON（中心核）解説          & 6 月         \\ 
+   外殻（周辺核）解説           & 8 月以降     \\  \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+}
+
+\stepcounter{section}
+
+\end{document}

@@ -1,0 +1,327 @@
+<html>
+<head>
+<title>無題ドキュメント</title>
+<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
+</head>
+
+<body bgcolor="#FFFFFF">
+<p><font size="7"><tt>時間管理</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="set_tim">set_tim</a></tt></font><font size="4"><tt>（システムクロック設定）</tt></font></p>
+<p><font size="4"><tt>・必要とするビット数を一度に処理できない環境にある場合はpk_timを構造体として扱う</tt></font></p>
+<p><font size="4"><tt>・システムクロックの初めは１９８５年１月１日０時（ＧＭＴ）を推奨（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>・システムクロックのビット数は４８bitを推奨（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>・システムクロック変更後に周期起動ハンドラやアラームハンドラが影響を受けるので処理が必要（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = set_tim( SYSTIME *pk_tim );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　SYSTEM*　　pk_tim　　 現在時刻を示すアドレス</tt></font></p>
+<p><font size="4"><tt>　　SYSTEM　 　systim　　 システム設定用の現在時刻</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_timが不正、設定時間が不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="get_tim">get_tim</a></tt></font><font size="4"><tt>（システムクロック参照）</tt></font></p>
+<p><font size="4"><tt>・必要とするビット数を一度に処理できない環境にある場合はpk_timを構造体として扱う</tt></font></p>
+<p><font size="4"><tt>・システムクロックの初めは１９８５年１月１日０時（ＧＭＴ）を推奨（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>・システムクロックのビット数は４８bitを推奨（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>・システムクロック変更後に周期起動ハンドラやアラームハンドラが影響を受けるので処理が必要（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = get_tim( SYSTIME *pk_tim );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　SYSTEM*　　pk_tim　　 現在時刻を示すアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　上記のpk_timの内容</tt></font></p>
+<p><font size="4"><tt>　　SYSTEM　 　systim　　 システム設定用の現在時刻</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_timが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="dly_tsk">dly_tsk</a></tt></font><font size="4"><tt>（タスク遅延）</tt></font></p>
+<p><tt><font size="4">・dlytimの間WAIT状態(時間経過待ち)になる</font></tt></p>
+<p><tt><font size="4">・WAIT-SUSPEND状態の間も時間は経過する</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = dly_tsk( DLYTIME dlytim );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　DLYTIME　　dlytim　　 遅延時間</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 メモリ不足</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 dly＜0</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="def_cyc">def_cyc</a></tt></font><font size="4"><tt>（周期起動ハンドラ定義）</tt></font></p>
+<p><tt><font size="4">・管理ブロックを確保する</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・同じcycnoの周期起動ハンドラを再定義することができる</font></tt></p>
+<p><tt><font size="4">・起動時に静的に定義できる</font></tt></p>
+<p><tt><font size="4">・exinfの情報はref_cycで取り出せる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = def_cyc( HNO cycno, T_DCYC *pk_dcyc );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　周期起動ハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_DCYC*　　pk_dcyc　　周期起動ハンドラ定義情報（NADR = -1（前回の定義解除)）</tt></font></p>
+<p><font size="4"><tt>　pk_dcycの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　cycatr　　 周期起動ハンドラ属性（TA_ASM(アセンブラ) or TA_HLNG(高級言語)）</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 cychdr　　 周期起動ハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 cycact　　 周期起動ハンドラ活性状態（TCY_OFF(死) or TCY_ON(生)）</tt></font></p>
+<p><font size="4"><tt>　　CYCTIME　　cyctim　　 周期起動時間間隔</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロック用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 cycatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cycno、pk_dcyc、cychdr、cycact、cyctim、が不正</tt></font></p>
+<p><font size="4"><tt>　</tt></font>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="act_cyc">act_cyc</a></tt></font><font size="4"><tt>（周期起動ハンドラ活性制御）</tt></font></p>
+<p><tt><font size="4">・def_cycで定義したcycactを変更する</font></tt></p>
+<p><tt><font size="4">・TCY_INIで経過時間を初期化する</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = act_cyc( HNO cycno, UINT cycact );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　周期起動ハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 cycact　　 周期起動ハンドラ活性状態（TCY_OFF(死) || TCY_ON(生) | 
+  TCY_INI(初期化)） </tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cycno、cycactが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 cycnoの周期起動ハンドラが定義されていない</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ref_cyc">ref_cyc</a></tt></font><font size="4"><tt>（周期起動ハンドラ状態参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_cyc( T_RCYC *pk_rcyc, HNO cycno );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　周期起動ハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_RCYC*　　pk_rcyc　　周期起動ハンドラ状態アドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rcycの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　CYCTIME　　lfttim　　 次のハンドラ起動までの時間</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 cycact　　 周期起動ハンドラ活性状態</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cycnopk_rcycが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 cycnoの周期起動ハンドラが定義されていない</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="def_alm">def_alm</a></tt></font><font size="4"><tt>（アラームハンドラ定義）</tt></font></p>
+<p><tt><font size="4">・管理ブロックを確保する</font></tt></p>
+<p><tt><font size="4">・同じcycnoのアラームハンドラを再定義することができる</font></tt></p>
+<p><tt><font size="4">・起動時に静的に定義できる</font></tt></p>
+<p><tt><font size="4">・exinfの情報をref_almで取り出せる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = def_alm( HNO almno, T_DALM *pk_dalm );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　cycno　　　アラームハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_DALM*　　pk_dalm　　アラームハンドラ情報（NADR = -1(前回定義の解除)）</tt></font></p>
+<p><font size="4"><tt>　pk_dalmの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　almatr　　 アラームハンドラ属性（TA_ASM(アセンブラ) || TA_HLNG(高級言語)）</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 almhdr　　 アラームハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 tmmode　　 起動時間選択（TTM_ABS(絶対時間) || TTM_REL(相対時間)）</tt></font></p>
+<p><font size="4"><tt>　　CYCTIME　　cyctim　　 周期起動時間間隔</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロック用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 almatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 almno、pk_dalm、almhdr、tmmode、almtimが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ref_alm">ref_alm</a></tt></font><font size="4"><tt>（アラームハンドラ状態参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_alm( T_RALM *pk_ralm, HNO almno );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　HNO　　　　almno　　　アラームハンドラ番号</tt></font></p>
+<p><font size="4"><tt>　T_RALM*　　pk_ralm　　アラームハンドラ状態アドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_ralmの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ALMTIME　　lfttim　　 ハンドラ起動までの残り時間</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 almno、pk_ralmが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 almnoのアラームハンドラ定義されていない</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ret_tmr">ret_tmr</a></tt></font><font size="4"><tt>（タイムハンドラから復帰）</tt></font></p>
+<p><tt><font size="4">・周期起動ハンドラかアラームハンドラを終了する</font></tt></p>
+<p><tt><font size="4">・レジスタの管理を行う（アセンブラ）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　void ret_tmr( );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タイマハンドラ以外から発行（インプリメント依存）</tt></font>　</p>
+<p>　</p>
+<p><font size="7"><tt>システム管理</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[R] get_ver</tt></font><font size="4"><tt>（バージョン参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = get_ver( T_VER *pk_ver );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　T_VER*　　 pk_ver　　 バージョン情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_verの中身</tt></font></p>
+<p><font size="4"><tt>　　UH　　　 　maker　　　OS製造メーカー</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 id　　　　 OS型式番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 spver　　　ITRON仕様バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prver　　　OS製品バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prno[4]　　製品番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 cpu　　　　CPU情報</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 var　　　　バリエーション</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_verが使用できない値</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ref_sys">ref_sys</a></tt></font><font size="4"><tt>（システム状態参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_sys( T_RSYS *pk_rsys );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　T_RSYS*　　pk_rsys　　システム情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　上記のpk_rsysの内容</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　sysstat　　システム状態（TSS_TSK(通常) || TSS_DDSP(ディスパッチ禁止) 
+  || TSS_LOC(割込みとディスパッチ禁止) || TSS_INDP(割込みハンドラ、タイマハンドラ実行中)）</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rsysが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="ref_cfg">ref_cfg</a></tt></font><font size="4"><tt>（コンフィグレーション情報参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_cfg( T_RCFG *pk_rcfg );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　T_RCFG*　　pk_rcfg　　コンフィグレーション情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rcfgの中身</tt></font></p>
+<p><font size="4"><tt>　　ハード依存の情報</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rcfgが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="def_svc">def_svc</a></tt></font><font size="4"><tt>（拡張SVCハンドラ定義）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = def_svc( FN s_fncd, T_DSVC *pk_dsvc );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　FN　　　　 s_fncd　　 拡張機能コード</tt></font></p>
+<p><font size="4"><tt>　T_DSVC*　　pk_dsvc　　拡張SVCハンドラ定義情報</tt></font></p>
+<p><font size="4"><tt>　pk_dsvcの中身</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　svcatr　　 拡張SVCハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 svchdr　　 拡張SVCハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロック用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 svcatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 s_fncd、pk_dsvc、svchdrが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="def_exc">def_exc</a></tt></font><font size="4"><tt>（例外ハンドラ定義）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = def_exc( UINT exvkind, T_DEXC *pk_dexc );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　INT　　　　exckind　　例外の種類</tt></font></p>
+<p><font size="4"><tt>　T_DEXC*　　pk_dexc　　例外ハンドラ定義情報</tt></font></p>
+<p><font size="4"><tt>　pk_dexcの中身</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　excatr　　 例外ハンドラ属性</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 exchdr　　 例外ハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロック用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 excatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 exckind、pk_dexc、exchdrが不正</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="7"><tt>ネットワークサポート管理</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="nrea_dat">nrea_dat</a></tt></font><font size="4"><tt>（他ノードからのデータ読み出し）</tt></font></p>
+<p><tt><font size="4">・途中までしか転送できなかったときdatsz＞reasz</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = nrea_dat( INT *p_reasz, VP dstadr, NODE srcnode, 
+  VP srcadr, INT datsz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 srcnode　　転送元のノード番号（<font size="4">TND_SELF</font> 
+  = 0(自ノード)、TND_OTHER = -1(デフォルトの他ノード)）</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 srcadr　　 転送元のアドレス</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 dstadr　　 転送先のアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　datsz　　　転送予定データの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　reasz　　　転送データの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了（途中終了でもエラーにならない）</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 dstadr、datszが不正</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでsrcadr、datszがサポートされていない</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="nwri_dat">nwri_dat</a></tt></font><font size="4"><tt>（他ノードへのデータ書き込み）</tt></font></p>
+<p><tt><font size="4">・途中までしか転送できなかったときdatsz＞wrisz</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = nwri_dat( INT *p_wrisz, NODE dstnode, VP dstadr, 
+  VP srcadr, INT datsz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 srcadr　　 転送元のアドレス</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 srcnode　　転送先のノード番号（<font size="4">TND_SELF</font> 
+  = 0(自ノード)、TND_OTHER = -1(デフォルトの他ノード)インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 dstadr　　 転送先のアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　datsz　　　転送予定データの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　reasz　　　送ったデータの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 srcadr、datszが不正</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでdstadr、datszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="nget_nod">nget_nod</a></tt></font><font size="4"><tt>（自ノード番号参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = nget_nod( NODE *p_node );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 node　　　 ノード番号</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="nget_ver">nget_ver</a></tt></font><font size="4"><tt>（他ノードのバージョン参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = nget_ver( T_VER *pk_ver, NODE node );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　NODE　　　 node　　　 ノード番号（<font size="4">TND_SELF</font> = 
+  0(自ノード)、TND_OTHER = -1(デフォルトの他ノード)インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　T_VER*　　 pk_ver　　 バージョン情報のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_verの中身</tt></font></p>
+<p><font size="4"><tt>　　UH　　　 　maker　　　OS製造メーカー</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 id　　　　 OS型式番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 spver　　　ITRON仕様バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prver　　　OS製品バージョン</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 prno[4]　　製品番号</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 cpu　　　　CPU情報</tt></font></p>
+<p><font size="4"><tt>　　UH　　　　 var　　　　バリエーション</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_verが不正</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+</body>
+</html>

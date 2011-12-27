@@ -1,0 +1,950 @@
+%!
+%%BoundingBox: 70 494 512 825
+%%Title: virtual-memory
+%%CreationDate: Mon Mar 27 02:33:27 1995
+%%Creator: Tgif-2.13J2-p2 by William Chia-Wei Cheng (william@cs.UCLA.edu)
+%%Pages: 1
+%%DocumentFonts: Times-Roman Helvetica Courier NewCenturySchlbk Symbol
+%%EndComments
+%%BeginProlog
+%
+%	Due to bugs in Transcript, the 'PS-Adobe-' stuff is omitted from line 1
+%
+
+/tgifdict 132 dict def
+tgifdict begin
+
+%
+%	Using a zero value radius for an ellipse or an arc would result
+%		in a non-invertible CTM matrix which causes problem when this
+%		when this PostScript is wrapped inside other routines, such as
+%		the multi.ps package from
+%		ftp.ucc.su.oz.au:/pub/ps_printing/multi.  You can overcome such
+%		error by uncommenting the sole line of the procedure below:
+%
+/tgif_min_radius
+ {
+%    dup 0.01 lt { pop 0.01 } if
+ } bind def
+
+/tgifellipsedict 6 dict def
+tgifellipsedict /mtrx matrix put
+
+/tgifellipse
+ { tgifellipsedict begin
+      /yrad exch def
+      /xrad exch def
+      /y exch def
+      /x exch def
+      /savematrix mtrx currentmatrix def
+      x y translate
+      xrad yrad scale
+      0 0 1 0 360 arc
+      savematrix setmatrix
+   end
+ } def
+
+/tgifarrowtipdict 8 dict def
+tgifarrowtipdict /mtrx matrix put
+
+/tgifarrowtip
+ { tgifarrowtipdict begin
+      /dy exch def
+      /dx exch def
+      /h exch def
+      /w exch def
+      /y exch def
+      /x exch def
+      /savematrix mtrx currentmatrix def
+      x y translate
+      dy dx atan rotate
+      0 0 moveto
+      w neg h lineto
+      w neg h neg lineto
+      savematrix setmatrix
+   end
+ } def
+
+/tgifarcdict 8 dict def
+tgifarcdict /mtrx matrix put
+
+/tgifarcn
+ { tgifarcdict begin
+      /endangle exch def
+      /startangle exch def
+      /yrad exch def
+      /xrad exch def
+      /y exch def
+      /x exch def
+      /savematrix mtrx currentmatrix def
+      x y translate
+      xrad yrad scale
+      0 0 1 startangle endangle arc
+      savematrix setmatrix
+   end
+ } def
+
+/tgifarc
+ { tgifarcdict begin
+      /endangle exch def
+      /startangle exch def
+      /yrad exch def
+      /xrad exch def
+      /y exch def
+      /x exch def
+      /savematrix mtrx currentmatrix def
+      x y translate
+      xrad yrad scale
+      0 0 1 startangle endangle arcn
+      savematrix setmatrix
+   end
+ } def
+
+/tgifsetuserscreendict 22 dict def
+tgifsetuserscreendict begin
+   /tempctm matrix def
+   /temprot matrix def
+   /tempscale matrix def
+
+   /concatprocs
+    { /proc2 exch cvlit def
+      /proc1 exch cvlit def
+      /newproc proc1 length proc2 length add array def
+      newproc 0 proc1 putinterval
+      newproc proc1 length proc2 putinterval
+      newproc cvx
+    } def
+   /resmatrix matrix def
+   /findresolution
+    { 72 0 resmatrix defaultmatrix dtransform
+      /yres exch def /xres exch def
+      xres dup mul yres dup mul add sqrt
+    } def
+end
+
+/tgifsetuserscreen
+ { tgifsetuserscreendict begin
+      /spotfunction exch def
+      /screenangle exch def
+      /cellsize exch def
+
+      /m tempctm currentmatrix def
+      /rm screenangle temprot rotate def
+      /sm cellsize dup tempscale scale def
+
+      sm rm m m concatmatrix m concatmatrix pop
+
+      1 0 m dtransform /y1 exch def /x1 exch def
+
+      /veclength x1 dup mul y1 dup mul add sqrt def
+      /frequency findresolution veclength div def
+
+      /newscreenangle y1 x1 atan def
+
+      m 2 get m 1 get mul m 0 get m 3 get mul sub 0 gt
+
+      {{neg} /spotfunction load concatprocs
+         /spotfunction exch def
+      } if
+
+      frequency newscreenangle /spotfunction load setscreen
+   end
+ } def
+
+/tgifsetpatterndict 18 dict def
+tgifsetpatterndict begin
+   /bitison
+    { /ybit exch def /xbit exch def
+      /bytevalue bstring ybit bwidth mul xbit 8 idiv add get def
+
+      /mask 1 7 xbit 8 mod sub bitshift def
+      bytevalue mask and 0 ne
+    } def
+end
+
+/tgifbitpatternspotfunction
+ { tgifsetpatterndict begin
+      /y exch def /x exch def
+
+      /xindex x 1 add 2 div bpside mul cvi def
+      /yindex y 1 add 2 div bpside mul cvi def
+
+      xindex yindex bitison
+       { /onbits onbits 1 add def 1 }
+       { /offbits offbits 1 add def 0 }
+       ifelse
+   end
+ } def
+
+/tgifsetpattern
+ { tgifsetpatterndict begin
+      /cellsz exch def
+      /angle exch def
+      /bwidth exch def
+      /bpside exch def
+      /bstring exch def
+
+      /onbits 0 def /offbits 0 def
+      cellsz angle /tgifbitpatternspotfunction load tgifsetuserscreen
+      {} settransfer
+      offbits offbits onbits add div setgray
+   end
+ } def
+
+/tgifxpmdict 4 dict def
+/tgifbwpicstr 1 string def
+/tgifcolorpicstr 3 string def
+
+/tgifsetpixels { tgifxpmdict begin /pixels exch def end } def
+
+/tgifsetpix { tgifxpmdict begin pixels 3 1 roll putinterval end } def
+
+/tgifbwspot
+ { tgifxpmdict begin
+      /index exch def
+      tgifbwpicstr 0
+      pixels index 3 mul 3 getinterval aload pop
+      255 mul .114 mul exch 255 mul .587 mul add exch 255 mul .299 mul add
+      cvi put
+      tgifbwpicstr
+   end
+ } def
+
+/tgifcolorspot
+ { tgifxpmdict begin
+      /index exch def
+      pixels index 3 mul 3 getinterval aload pop
+      255 mul cvi tgifcolorpicstr 2 3 -1 roll put
+      255 mul cvi tgifcolorpicstr 1 3 -1 roll put
+      255 mul cvi tgifcolorpicstr 0 3 -1 roll put
+      tgifcolorpicstr
+   end
+ } def
+
+/tgifnewcolorspot
+ { tgifxpmdict begin
+      /index exch def
+      pixels index 3 mul 3 getinterval aload pop setrgbcolor
+   end
+ } def
+
+/tgifcolordict 4 dict def
+
+/colorimage where
+ { pop }
+ { /colorimage
+   { tgifcolordict begin
+        pop pop pop pop pop
+        /ih exch def
+        /iw exch def
+        /x 0 def
+        /y 0 def
+        1 1 ih
+         { pop 1 1 iw
+            { pop currentfile
+              tgifbwpicstr readhexstring pop 0 get tgifnewcolorspot
+              x y moveto 1 0 rlineto 0 1 rlineto -1 0 rlineto
+              closepath fill
+              /x x 1 add def
+            } for
+           /y y 1 add def
+           /x 0 def
+         } for
+     end
+   } def
+ } ifelse
+
+/tgifpatdict 10 dict def
+
+/tgifpatbyte
+ { currentdict /retstr get exch
+   pat i cellsz mod get put
+ } def
+
+/tgifpatproc
+ { 0 1 widthlim {tgifpatbyte} for retstr
+   /i i 1 add def
+ } def
+
+/tgifpatfill
+ { tgifpatdict begin
+      /h exch def
+      /w exch def
+      /lty exch def
+      /ltx exch def
+      /cellsz exch def
+      /pat exch def
+
+      /widthlim w cellsz div cvi 1 sub def
+      /retstr widthlim 1 add string def
+      /i 0 def
+
+      ltx lty translate
+      w h true [1 0 0 1 0 0] {tgifpatproc} imagemask
+      ltx neg lty neg translate
+   end
+ } def
+
+/pat1 <ffffffffffffffff> def
+/pat2 <0000000000000000> def
+/pat3 <8000000008000000> def
+/pat4 <8800000022000000> def
+/pat5 <8800220088002200> def
+/pat6 <8822882288228822> def
+/pat7 <aa55aa55aa55aa55> def
+/pat8 <77dd77dd77dd77dd> def
+/pat9 <77ffddff77ffddff> def
+/pat10 <77ffffff77ffffff> def
+/pat11 <7fffffff7fffffff> def
+/pat12 <8040200002040800> def
+/pat13 <40a00000040a0000> def
+/pat14 <ff888888ff888888> def
+/pat15 <ff808080ff080808> def
+/pat16 <f87422478f172271> def
+/pat17 <038448300c020101> def
+/pat18 <081c22c180010204> def
+/pat19 <8080413e080814e3> def
+/pat20 <8040201008040201> def
+/pat21 <8844221188442211> def
+/pat22 <77bbddee77bbddee> def
+/pat23 <c1e070381c0e0783> def
+/pat24 <7fbfdfeff7fbfdfe> def
+/pat25 <3e1f8fc7e3f1f87c> def
+/pat26 <0102040810204080> def
+/pat27 <1122448811224488> def
+/pat28 <eeddbb77eeddbb77> def
+/pat29 <83070e1c3870e0c1> def
+/pat30 <fefdfbf7efdfbf7f> def
+/pat31 <7cf8f1e3c78f1f3e> def
+
+/tgifcentertext { dup stringwidth pop 2 div neg 0 rmoveto } def
+
+/tgifrighttext { dup stringwidth pop neg 0 rmoveto } def
+
+/tgifreencsmalldict 12 dict def
+/tgifReEncodeSmall
+ { tgifreencsmalldict begin
+      /newcodesandnames exch def
+      /newfontname exch def
+      /basefontname exch def
+
+      /basefontdict basefontname findfont def
+      /newfont basefontdict maxlength dict def
+
+      basefontdict
+      { exch dup /FID ne
+         { dup /Encoding eq
+            { exch dup length array copy newfont 3 1 roll put }
+            { exch newfont 3 1 roll put }
+            ifelse
+         }
+         { pop pop }
+         ifelse
+      }
+      forall
+
+      newfont /FontName newfontname put
+      newcodesandnames aload pop
+
+      newcodesandnames length 2 idiv
+      { newfont /Encoding get 3 1 roll put}
+      repeat
+
+      newfontname newfont definefont pop
+   end
+ } def
+
+/tgifgray { 8 1 0 72 300 32 div div tgifsetpattern } bind def
+
+/tgifboxdict 6 dict def
+/tgifboxstroke
+ { tgifboxdict begin
+      /pat def /w def /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+      1.415 setmiterlimit
+      w 1 eq { w setlinewidth } if
+      pat pat1 ne pat pat2 ne and { gsave pat tgifgray } if
+      newpath x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto closepath
+      pat pat2 eq { 1 setgray stroke 0 setgray } { stroke } ifelse
+      pat pat1 ne pat pat2 ne and { grestore } if
+      w 1 eq { 1 setlinewidth } if
+      1 setmiterlimit
+   end
+ } def
+/tgifboxfill
+ { tgifboxdict begin
+      /pat def /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+      pat pat1 ne pat pat2 ne and { gsave pat tgifgray } if
+      newpath x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto closepath
+      pat pat2 eq { 1 setgray fill 0 setgray } { fill } ifelse
+      pat pat1 ne pat pat2 ne and { grestore } if
+   end
+ } def
+
+%%Title: eucfont.ps
+%%Creator: shikida@cs.titech.ac.jp, ueno@cs.titech.ac.jp
+%%CreationDate: 1991-2-27
+%%EndComments
+
+% <font> copyfont <font>
+/copyfont {
+    dup maxlength 1 add dict begin
+    {
+	1 index /FID ne 2 index /UniqueID ne and
+	{def} {pop pop} ifelse
+    } forall
+    currentdict
+    end
+} bind def
+
+% <newfont> <asciifont> <kanjifont> eucfont
+/eucfont {
+    12 dict begin
+	dup type /nametype eq { findfont } if
+	dup /WMode known {
+	    dup /WMode get /WMode exch def
+	    WMode 1 eq {
+		[0.0 1.0 -1.0 0.0 0.0 0.3] makefont
+	    } if
+	} if
+	copyfont dup begin
+	    /Encoding Encoding
+	    FMapType dup 2 eq {
+		pop 128 128
+	    } { 5 eq {
+		256 256
+	    } {
+		/compositefont errordict /invalidfont get exec
+	    } ifelse
+	    } ifelse
+	    getinterval def
+	end
+	/kanjifont exch definefont
+	exch
+
+	dup type /nametype eq { findfont } if
+	exch
+
+	/FDepVector [ 4 2 roll ] def
+	/FontType 0 def
+	/FMapType 4 def
+	/FontMatrix matrix def
+	/Encoding [ 0 1 ] def
+	/FontBBox {0 0 0 0} def
+	dup /FontName exch def
+	currentdict
+    end
+    definefont pop
+} def
+
+end
+
+%%EndProlog
+%%Page: 1 1
+
+%%PageBoundingBox: 70 494 512 825
+tgifdict begin
+/tgifsavedpage save def
+
+1 setmiterlimit
+1 setlinewidth
+
+72 0 mul 72 11.7 mul translate
+72 128 div 100 mul 100 div dup neg scale
+
+gsave
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 320 moveto
+      384 320 lineto
+   stroke
+grestore
+
+% BOX
+gsave
+   1.415 setmiterlimit
+   newpath
+      128 192 moveto 384 192 lineto 384 576 lineto 128 576 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 224 moveto
+      384 224 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 256 moveto
+      384 256 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 288 moveto
+      384 288 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 352 moveto
+      384 352 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 384 moveto
+      384 384 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 416 moveto
+      384 416 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 448 moveto
+      384 448 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 480 moveto
+      384 480 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 512 moveto
+      384 512 lineto
+   stroke
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      128 544 moveto
+      384 544 lineto
+   stroke
+grestore
+
+% TEXT
+0 setgray
+/Courier-Ryumin-Light-EUC-H /Courier /Ryumin-Light-EUC-H eucfont
+/Courier-Ryumin-Light-EUC-H findfont [18 0 0 -18 0 0] makefont setfont
+   gsave
+      176 172 moveto (\245\242\245\327\245\352\245\261\241\274\245\267\245\347\245\363 A) show
+   grestore
+
+% BOX
+gsave
+   pat3 8 1 0 72 300 32 div div tgifsetpattern
+   newpath
+      128 224 moveto 384 224 lineto 384 256 lineto 128 256 lineto
+   closepath fill
+grestore
+gsave
+   1.415 setmiterlimit
+   newpath
+      128 224 moveto 384 224 lineto 384 256 lineto 128 256 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+gsave
+   pat3 8 1 0 72 300 32 div div tgifsetpattern
+   newpath
+      128 384 moveto 384 384 lineto 384 416 lineto 128 416 lineto
+   closepath fill
+grestore
+gsave
+   1.415 setmiterlimit
+   newpath
+      128 384 moveto 384 384 lineto 384 416 lineto 128 416 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+gsave
+   pat3 8 1 0 72 300 32 div div tgifsetpattern
+   newpath
+      128 544 moveto 384 544 lineto 384 576 lineto 128 576 lineto
+   closepath fill
+grestore
+gsave
+   1.415 setmiterlimit
+   newpath
+      128 544 moveto 384 544 lineto 384 576 lineto 128 576 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+gsave
+   pat3 8 1 0 72 300 32 div div tgifsetpattern
+   newpath
+      128 288 moveto 384 288 lineto 384 320 lineto 128 320 lineto
+   closepath fill
+grestore
+gsave
+   1.415 setmiterlimit
+   newpath
+      128 288 moveto 384 288 lineto 384 320 lineto 128 320 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+gsave
+   pat3 8 1 0 72 300 32 div div tgifsetpattern
+   newpath
+      512 32 moveto 640 32 lineto 640 64 lineto 512 64 lineto
+   closepath fill
+grestore
+gsave
+   1.415 setmiterlimit
+   newpath
+      512 32 moveto 640 32 lineto 640 64 lineto 512 64 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   512 96 moveto 640 96 lineto 640 128 lineto 512 128 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      512 96 moveto 640 96 lineto 640 128 lineto 512 128 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 192 moveto 704 192 lineto 704 224 lineto 576 224 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 192 moveto 704 192 lineto 704 224 lineto 576 224 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 224 moveto 704 224 lineto 704 256 lineto 576 256 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 224 moveto 704 224 lineto 704 256 lineto 576 256 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 256 moveto 704 256 lineto 704 288 lineto 576 288 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 256 moveto 704 256 lineto 704 288 lineto 576 288 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 288 moveto 704 288 lineto 704 320 lineto 576 320 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 288 moveto 704 288 lineto 704 320 lineto 576 320 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 320 moveto 704 320 lineto 704 352 lineto 576 352 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 320 moveto 704 320 lineto 704 352 lineto 576 352 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 352 moveto 704 352 lineto 704 384 lineto 576 384 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 352 moveto 704 352 lineto 704 384 lineto 576 384 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 384 moveto 704 384 lineto 704 416 lineto 576 416 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 384 moveto 704 384 lineto 704 416 lineto 576 416 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 416 moveto 704 416 lineto 704 448 lineto 576 448 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 416 moveto 704 416 lineto 704 448 lineto 576 448 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 448 moveto 704 448 lineto 704 480 lineto 576 480 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 448 moveto 704 448 lineto 704 480 lineto 576 480 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 480 moveto 704 480 lineto 704 512 lineto 576 512 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 480 moveto 704 480 lineto 704 512 lineto 576 512 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+newpath
+   576 512 moveto 704 512 lineto 704 544 lineto 576 544 lineto
+closepath 1 setgray fill
+0 setgray
+gsave
+   1.415 setmiterlimit
+   newpath
+      576 512 moveto 704 512 lineto 704 544 lineto 576 544 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% BOX
+gsave
+   pat3 8 1 0 72 300 32 div div tgifsetpattern
+   newpath
+      448 160 moveto 488 160 lineto 488 616 lineto 448 616 lineto
+   closepath fill
+grestore
+gsave
+   1.415 setmiterlimit
+   newpath
+      448 160 moveto 488 160 lineto 488 616 lineto 448 616 lineto
+   closepath stroke
+   1 setmiterlimit
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      256 240 moveto
+      0 192 atan dup cos 8 mul 448 exch sub
+      exch sin 8 mul 240 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      448 240 8 3 192 0 tgifarrowtip
+   closepath fill
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      488 240 moveto
+      520 240 lineto
+      528 304 lineto
+      0 48 atan dup cos 8 mul 576 exch sub
+      exch sin 8 mul 304 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      576 304 8 3 48 0 tgifarrowtip
+   closepath fill
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      256 304 moveto
+      0 192 atan dup cos 8 mul 448 exch sub
+      exch sin 8 mul 304 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      448 304 8 3 192 0 tgifarrowtip
+   closepath fill
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      488 304 moveto
+      520 304 lineto
+      528 208 lineto
+      0 48 atan dup cos 8 mul 576 exch sub
+      exch sin 8 mul 208 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      576 208 8 3 48 0 tgifarrowtip
+   closepath fill
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      256 400 moveto
+      0 192 atan dup cos 8 mul 448 exch sub
+      exch sin 8 mul 400 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      448 400 8 3 192 0 tgifarrowtip
+   closepath fill
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      488 560 moveto
+      520 560 lineto
+      528 368 lineto
+      0 48 atan dup cos 8 mul 576 exch sub
+      exch sin 8 mul 368 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      576 368 8 3 48 0 tgifarrowtip
+   closepath fill
+grestore
+
+% POLY/OPEN-SPLINE
+gsave
+   newpath
+      256 560 moveto
+      0 192 atan dup cos 8 mul 448 exch sub
+      exch sin 8 mul 560 exch sub lineto
+   stroke
+grestore
+gsave
+   newpath
+      448 560 8 3 192 0 tgifarrowtip
+   closepath fill
+grestore
+
+% TEXT
+0 setgray
+/Courier-Ryumin-Light-EUC-H findfont [12 0 0 -12 0 0] makefont setfont
+   gsave
+      656 51 moveto (\312\252\315\375\245\341\245\342\245\352\244\313\245\336\245\303\245\324\245\363\245\260\244\267\244\306\244\244\244\353\262\276\301\333\245\332\241\274\245\270) show
+   grestore
+
+% TEXT
+0 setgray
+/Courier-Ryumin-Light-EUC-H findfont [12 0 0 -12 0 0] makefont setfont
+   gsave
+      656 115 moveto (\312\252\315\375\245\341\245\342\245\352\244\313\245\336\245\303\245\324\245\363\245\260\244\267\244\306\244\244\244\312\244\244\262\276\301\333\245\332\241\274\245\270) show
+   grestore
+
+% TEXT
+0 setgray
+/Courier-Ryumin-Light-EUC-H findfont [18 0 0 -18 0 0] makefont setfont
+   gsave
+      592 176 moveto (\312\252\315\375\245\341\245\342\245\352) show
+   grestore
+
+% TEXT
+0 setgray
+newpath
+   459 222 moveto 477 222 lineto 477 477 lineto 459 477 lineto
+closepath 1 setgray fill
+0 setgray
+/Courier-Ryumin-Light-EUC-V /Courier /Ryumin-Light-EUC-V eucfont
+/Courier-Ryumin-Light-EUC-V findfont [12 0 0 -12 0 0] makefont setfont
+   gsave
+      465 224 moveto 90 rotate (\262\276\301\333\245\341\245\342\245\352\244\310\312\252\315\375\245\341\245\342\245\352\244\316\302\320\261\376\244\362\244\310\244\353\245\306\241\274\245\326\245\353) show
+      -90 rotate 
+   grestore
+
+grestore
+tgifsavedpage restore
+end
+%%Trailer
+%MatchingCreationDate: Mon Mar 27 02:33:27 1995
+%%EOF

@@ -1,0 +1,306 @@
+\subsection{ライブラリ}
+
+高水準ライブラリでは、ITRON 上に載るアプリケーションを作成しやすくする
+ための ITRON システムコールを基にした関数です。
+
+高水準ライブラリの一覧を次に示します。
+
+\begin{table}[htbp]
+  \caption{高水準ライブラリ一覧}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l p{10cm}} \hline
+      関数名      & \multicolumn{1}{c}{機能} \\ \hline\hline
+      alloc\_port  & データを読み書きするためのポートを取得する \\
+      delloc\_port & データを読み書きするためのポートを削除する \\
+      send\_port   & ポートにデータを書き込む \\
+      receive\_port & ポートからデータを読み込む \\
+%
+      dbg\_open    & デバッグ用のコンソール(入出力)をオープンする \\
+      dbg\_close   & コンソール(入出力)をクローズする \\
+      dbg\_getc    & コンソールから一文字入力 \\
+      dbg\_putc    & コンソールへ一文字出力 \\
+      dbg\_printf  & コンソールに printf の書式で書き込む \\ 
+      \hline
+    \end{tabular}
+  \end{center}
+  \label{tab:higher-lib}
+\end{table}
+
+\newpage
+
+\function{alloc\_port --- データを読み書きするためのポートを取得する}
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt PORT *alloc\_port (ID portid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {portid}{ポートを取得するときに指定する ID (任意)}
+\end{lablist}
+
+\labitem{返り値}
+
+\begin{tabular}[h]{p{2cm} p{10cm}}
+  成功時  &  新しく取得したポートへのポインタ \\
+  失敗時  &  NULL
+\end{tabular}
+
+
+\labitem{機能}
+
+他のタスクと通信するためのポートをひとつ取得する。
+
+\end{lablist}
+
+\newpage
+\function{delloc\_port --- データを読み書きするためのポートを削除する}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER dealloc\_port (ID port)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {port}{削除するポートの ID }
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     指定した ID に相当するポートは存在していない。
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+
+\newpage
+\function{send\_port --- ポートにデータを書き込む}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+\newpage
+\function{receive\_port --- ポートからデータを読み込む}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+\newpage
+\function{dbg\_open --- デバッグ用のコンソール(入出力)をオープンする}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+\newpage
+\function{dbg\_close --- コンソール(入出力)をクローズする}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+\newpage
+\function{dbg\_getc --- コンソールから一文字入力}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+\newpage
+\function{dbg\_putc --- コンソールへ一文字出力}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+\newpage
+\function{dbg\_printf --- コンソールに printf の書式で書き込む}
+
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt }
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {引数名}{意味}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\end{lablist}
+
+
+\labitem{機能}
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "../itron"
+% End: 

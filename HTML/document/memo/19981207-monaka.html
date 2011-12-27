@@ -1,0 +1,125 @@
+<HTML>
+<head>
+	<meta http-equiv="Content-Type"content="text/html; charset=x-euc-jp">
+	<title>B-Free Project Official Home Page</title>
+</head>
+
+<body background="bcg_111.gif" bgcolor="#FFFFFF">
+
+<DIV ALIGN=RIGHT>
+MEMO 19981207-monaka.html
+</DIV>
+<P>
+<H1>first preview?? Mitten scripting language</H1>
+<P>
+<HR>
+From: <A href="mailto:m.muranaka@inforcom.co.jp">"邑中 雅樹" &lt;m.muranaka@inforcom.co.jp&gt;</A><BR>
+Date: Mon, 7 Dec 1998 11:47:09 +0900<BR>
+<HR>
+<P>
+
+<PRE>
+こんにちは。
+
+とりあえず、件のスクリプト言語について、
+ファーストプレビューができる程度まで漕ぎ付けました。
+
+
+従来の init 用のコマンドを用いてドライバ等のデバッグを
+なさる予定の方がいらっしゃいましたら ML にてご連絡ください。
+反応が無い場合、12/8 の午前中にコードを commit します。
+
+以下、思い付くままに箇条書きします。
+
+
+&lt;スクリプト環境の名称&gt;
+
+Mitten と書き(みとん)と読みます。
+
+
+&lt;Mitten と init の関係&gt;
+
+init は、スクリプトインタープリタとして Mitten を
+利用しているという関係になります。
+tclsh が Tcl のスクリプトインタープリタを実装している
+というのと同じ関係です。
+
+Mitten は可能な限り init と分離可能なように実装されています。
+
+スクリプティング環境の分離は、「全てのユーザが自分が望む
+環境を実現する」という HMI自動チューニングの思想にも
+則った実装であると考えます。
+
+
+&lt;今後のコマンドラインインターフェースについて&gt;
+
+コマンドラインの文法は大幅に変更されます。
+
+基本的には逆ポーランド記法です。
+PostScript と可能な限り共通の文法を採用しました。
+たとえば、実行可能オブジェクトをオペレータと呼び、
+文字列は ( ) で囲みます。
+また、First Preview では実現されていませんが、
+ベクトルは [ ] で囲みプロシージャは{ } で囲みます。
+
+コマンドラインの評価は、逆ポーランド記法であることに
+注意してください。多くのプログラミング言語と異なり、演算子や
+関数に相当する要素(オペレータ)は引数の後に記述します。
+例えば、Hello world は
+(Hello world\n) ==
+と表記します。
+1 と 3 の和を計算し、印字するには
+1 3 add ==
+と表記します。
+まず、1 3 add が計算され、結果の 4 が == によって印字されます。
+
+
+&lt;今後の組み込みコマンドの書き方&gt;
+
+なお、C 言語による組み込みコマンドの書き方ですが、
+従来の組み込みコマンドの書き方( cmd(W ac, B** av) の形)でも
+大丈夫なような proxy をつけてあります。
+パフォーマンス的には、新しい形式を用いたほうがいいと思いますし、
+新しい形式では型チェックの機能をつけることもできます。
+
+
+&lt;First Preview で不足していること&gt;
+
+文書がありません。
+  正式リリースまでには書こうと思います。
+
+構文解析がいい加減です。
+  言語が持っている型チェック機能が使えません。
+
+オペレータが貧弱です。
+  ファイルシステムと連携ができません。
+  描画系オペレータが貧弱です。
+
+プロシージャが実装されていません。
+  条件分岐系オペレータが実装されていません。
+
+ベクトルが実装されていません。
+  現在のところ、描画系オペレータが貧弱なので
+  それほど深刻な問題ではありません。
+
+辞書機能が貧弱です。
+  オペレータが多数登録されたとき性能低下が予想されます。
+  ユーザオペレータの定義も利用もできません。
+
+--
+from もなか
+
+</PRE>
+<HR>
+オリジナルのメッセージは、こちら <A HREF="http://tnet/B-Free/mail-archive/kernel/msg00114.html">
+http://tnet/B-Free/mail-archive/kernel/msg00114.html</A>
+<HR>
+<DIV ALIGN=RIGHT>
+B-Free Projectについての質問・感想などは、<BR>
+<a href="mailto:bfree-webmaster@tron-net.gr.jp">
+bfree-webmaster@tron-net.gr.jp</a>までお寄せください。<br>
+Copyright (C) 1996-1998 B-Free Project
+</DIV>
+
+</body>
+</HTML>

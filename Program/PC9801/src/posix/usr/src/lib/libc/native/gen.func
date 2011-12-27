@@ -1,0 +1,13 @@
+#!/bin/sh
+
+FUNC=`awk '{ print $1 }'`
+
+for i in $FUNC
+do
+	echo $i
+	cat Head > $i.c
+	echo $i '()' >>	$i.c
+	echo '{' >>	$i.c
+	echo '  ' >>	$i.c
+	echo '}' >>	$i.c
+done

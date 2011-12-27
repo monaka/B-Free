@@ -1,0 +1,54 @@
+
+  \function{ref\_tsk  --- タスク状態の参照}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ref\_tsk (T\_RTSK *pk\_rtsk, ID tskid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {pk\_rtsk}{返り値：タスク情報を入れる領域へのポインタ}
+  \labitem {tskid}{タスク情報を取得するタスクの ID}l
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     タスク ID が不正
+\labitem {E\_NOEXS}  タスク ID で指定したタスクは存在しない
+\end{lablist}
+
+
+\labitem{機能}
+
+引数で指定したタスクの状態を返す。
+
+タスク状態は、次の構造体の情報として返す。
+
+\begin{quote}
+\begin{verbatim}
+typedef struct t_rtsk
+{
+  VP    exinf;
+  PRI   tskpri;                 /* タスクの優先順位      */
+  UINT  tskstat;                /* タスク状態            */
+  W     total_time;             /* タスクの総使用時間    */
+} T_RTSK;
+\end{verbatim}
+\end{quote}
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

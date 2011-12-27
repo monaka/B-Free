@@ -1,0 +1,1058 @@
+<html>
+<head>
+    <META http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+    <META http-equiv="Keywords" content="BTRON,TRON,B-Free,bfree,¥È¥í¥ó,¥Þ¥¤¥¯¥í¥«¡¼¥Í¥ë">
+</head>
+<body>
+
+<pre>
+\Sec{¥·¥¹¥Æ¥à¥³¡¼¥ë¥ê¥Õ¥¡¥ì¥ó¥¹}
+\label{Sec:syscall-refer}
+
+¤³¤Î¾Ï¤Ç¤Ï¡¢¥á¥â¥ê´ÉÍý¥Þ¥Í¡¼¥¸¥ã¤Ë´Ø·¸¤¹¤ë¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ë¤Ä¤¤¤Æ¡¢
+¸Æ¤Ó½Ð¤·ÊýË¡¤È¥·¥¹¥Æ¥à¥³¡¼¥ë¤Î¤â¤Äµ¡Ç½¤Ë¤Ä¤¤¤ÆÀâÌÀ¤ò¹Ô¤¤¤Þ¤¹¡£
+
+
+<H2>ËÞÎã</H2>
+
+³Æ¥·¥¹¥Æ¥à¥³¡¼¥ë¤ÎÀâÌÀ¤ÎÆâÍÆ¤Ï²¼¤Î¿Þ¤Î¤è¤¦¤Ë¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£
+
+\vspace{1cm}
+
+\begin{shadebox}
+  \leavevmode
+  \epsfile{file=systemcall-sample.eps,width=14cm}
+\end{shadebox}
+
+
+\Func{get_lmb} {¥í¡¼¥«¥ë¥á¥â¥ê¤ò¼èÆÀ¤¹¤ë}{syscall}
+
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  {\tt ER get_lmb(VP *mptr, W size, UW opt))}
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    mptr & ¼èÆÀ¤·¤¿¥í¡¼¥«¥ë¥á¥â¥êÎÎ°è¤Ø¤Î¥¢¥É¥ì¥¹¤¬Æþ¤ë¡£\\
+    size & ¼èÆÀ¤·¤¿¤¤¥í¡¼¥«¥ë¥á¥â¥êÎÎ°è¤Î¥µ¥¤¥º¡£\\
+    opt  & ¥ª¥×¥·¥ç¥ó¡£\\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  °Ê²¼¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR   & mptr ¤Î»Ø¤¹¥¢¥É¥ì¥¹¤Ï¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¡£ \\
+    E_NOMEM & ¥á¥â¥êÎÎ°èÉÔÂ­¤Î¤¿¤á¥¢¥í¥±¡¼¥È¤Ç¤­¤Ê¤¤¡£\\
+    E_NOSPC & ¥·¥¹¥Æ¥à¤Î¥á¥â¥êÎÎ°è¤¬ÉÔÂ­¤·¤¿¡£\\
+    E_PAR   & ¥Ñ¥é¥á¡¼¥¿¤¬ÉÔÀµ¡£\\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô size ¤Ç»ØÄê¤·¤¿¥µ¥¤¥º¤Î¥í¡¼¥«¥ë¥á¥â¥ê¤ò³ÍÆÀ¤·¤Þ¤¹¡£
+
+  ³ÍÆÀ¤·¤¿¥á¥â¥êÎÎ°è¤ÎÀèÆ¬¥¢¥É¥ì¥¹¤Ï¡¢*mptr ¤ËÆþ¤ì¤Þ¤¹¡£¤â¤·¡¢¥á¥â¥ê¤¬
+  ¼èÆÀ¤Ç¤­¤Ê¤«¤Ã¤¿¾ì¹ç¤Ë¤Ï¡¢*mptr ¤ÎÃÍ¤Ï NULL ¤È¤Ê¤ê¤Þ¤¹¡£
+
+  ¥ª¥×¥·¥ç¥ó¤È¤·¤Æ¼¡¤ÎÃÍ¤¬»ØÄê¤Ç¤­¤Þ¤¹¡£
+
+  \begin{lablist}
+    \labitem{\tt CLR}{¼èÆÀ¤·¤¿¥á¥â¥êÎÎ°è¤Ï NULL ¥¯¥ê¥¢¤¹¤ë}
+    \labitem{\tt NOCLR}{¼èÆÀ¤·¤¿¥á¥â¥êÎÎ°è¤Ï NULL ¥¯¥ê¥¢¤·¤Ê¤¤}
+  \end{lablist}
+
+  ¤¿¤À¤·¡¢¥ª¥×¥·¥ç¥ó¤Ë {\tt NOCLR} ¤ò»ØÄê¤·¤¿¾ì¹ç¤Ç¤â¡¢¼ÂºÝ¤Ë¤Ï NULL 
+  ¥¯¥ê¥¢¤ò¹Ô¤¤¤Þ¤¹¡£
+
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¾ì¹ç¡¢°ú¿ô size ¤ÎÃÍ¤Ï¥Ú¡¼¥¸¥µ¥¤¥º (4KB) 
+  ¤ËÀÚ¾å¤²¤µ¤ì¤Þ¤¹¡£¤¿¤È¤¨¤Ð¡¢°ú¿ô size ¤Ë 1025 ¤ò»ØÄê¤·¤¿¾ì¹ç¡¢4096 
+  ¥Ð¥¤¥È¤Î¥µ¥¤¥º¤ò»ØÄê¤·¤¿¤³¤È¤Ë¤Ê¤ê¤Þ¤¹¡£
+}
+
+\Entry{¼ÂÁõ¤Ë¤Ä¤¤¤Æ¤Î¥á¥â}{
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¾ì¹ç¡¢NULL ¥Ú¡¼¥¸¤ÎÂ°À­¤ò¤â¤Ä²¾ÁÛ¥Ú¡¼¥¸
+  ¤ò¥¢¥í¥±¡¼¥È¤·¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-64 »²¾È
+}
+
+
+\Func{rsz_lmb} {¼èÆÀ¤·¤¿¥í¡¼¥«¥ë¥á¥â¥ê¤Î¥µ¥¤¥º¤òÊÑ¹¹¤¹¤ë}{syscall}
+
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER rsz_lmb(VP *n_mptr, mptr, W size, UW opt);
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    n_mptr & ¥µ¥¤¥º¤òÊÑ¹¹¤·¤¿¸å¤ÎÎÎ°è¤ÎÀèÆ¬¥¢¥É¥ì¥¹¤¬Æþ¤ë¡£\\
+    mptr    & ¥µ¥¤¥º¤òÊÑ¹¹¤¹¤ëÁ°¤ÎÎÎ°è¤ÎÀèÆ¬¥¢¥É¥ì¥¹¤¬Æþ¤ë¡£ËÜ¥·¥¹¥Æ¥à
+              ¥³¡¼¥ë¤ò¼Â¹Ô¸å¤Ï¡¢¤³¤ÎÊÑ¿ô¤ÎÃæ¤ËÆþ¤Ã¤Æ¤¤¤ë¥¢¥É¥ì¥¹¤Ø¤Î¥¢
+              ¥¯¥»¥¹¤ÏÊÝ¾Ú¤·¤Ê¤¤¡£\\
+    size    & ÊÑ¹¹¸å¤Î¥µ¥¤¥º»ØÄê¡£\\
+    opt     & ¥ª¥×¥·¥ç¥ó \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR   & n_mptr ¤Î»Ø¤¹¥¢¥É¥ì¥¹¤Ï¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¡£ \\
+    E_MPTR  & µì¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥Ý¥¤¥ó¥¿({\tt mptr})¤¬ÉÔÀµ¤Ç¤¢¤ë¡£\\
+    E_NOMEM & ¥á¥â¥êÎÎ°èÉÔÂ­¤Î¤¿¤á¥¢¥í¥±¡¼¥È¤Ç¤­¤Ê¤¤¡£\\
+    E_NOSPC & ¥·¥¹¥Æ¥à¤Î¥á¥â¥êÎÎ°è¤¬ÉÔÂ­¤·¤¿¡£\\
+    E_PAR   & ¥Ñ¥é¥á¡¼¥¿¤¬ÉÔÀµ¡£\\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  {\tt rsz_lmb()} ¤Ï¡¢{\tt get_lmb()} ¤Ç¼èÆÀ¤·¤¿¥í¡¼¥«¥ë¥á¥â¥êÎÎ°è¤Î
+  ¥µ¥¤¥º¤òÊÑ¹¹¤·¤Þ¤¹¡£
+
+  ¥µ¥¤¥ºÊÑ¹¹¤Ï³ÈÂç¤À¤±¤Ç¤Ï¤Ê¤¯¡¢½Ì¾®¤¹¤ë¤³¤È¤â¤Ç¤­¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ç»ØÄê¤·¤¿¥µ¥¤¥º¤Ï¡¢¥Ú¡¼¥¸Ã±°Ì (4KB) ¤ËÀÚ¾å¤²¤é¤ì¤Þ¤¹¡£
+}
+
+\Func{rel_lmb} {¥í¡¼¥«¥ë¥á¥â¥ê¤ò²òÊü¤¹¤ë}{syscall}
+
+
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER rel_lmb(VP mptr)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    mptr & ²òÊü¤·¤¿¤¤¥í¡¼¥«¥ë¥á¥â¥ê \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK(=0) & Àµ¾ï½ªÎ»¡£ \\
+    E_MPTR   & µì¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥Ý¥¤¥ó¥¿({\tt mptr})¤¬ÉÔÀµ¤Ç¤¢¤ë¡£ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  {\tt rel_lmb()} ¤Ï¡¢{\tt get_lmb()} ¤Ç¼èÆÀ¤·¤¿¥í¡¼¥«¥ë¥á¥â¥ê¤ò
+  ¥·¥¹¥Æ¥à¤ËÊÖµÑ¤·¤Þ¤¹¡£
+
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¸å¡¢¥í¡¼¥«¥ë¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ø¤Ï¥¢¥¯¥»¥¹¤Ç¤­¤Ê
+  ¤¯¤Ê¤ê¤Þ¤¹¡£
+  ÌµÍý¤Ë¥¢¥¯¥»¥¹¤·¤¿¾ì¹ç¡¢¥á¥â¥ê¥Õ¥©¡¼¥ë¥È¤¬È¯À¸¤·¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢²¾ÁÛ¥Ú¡¼¥¸¤òÇË´þ¤¹¤ë¤â¤Î¤Ç¤¹¡£
+}
+
+\Func{lmb_siz} {¥í¡¼¥«¥ë¥á¥â¥ê¤Î¥µ¥¤¥º¤òÂ¬Äê¤¹¤ë}{syscall}
+
+
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  lmb_siz(VP mptr, W *size)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    mptr & ¥Ö¥í¥Ã¥¯¥µ¥¤¥º¤ò¼è¤ê½Ð¤·¤¿¤¤¥á¥â¥ê¥Ö¥í¥Ã¥¯ÎÎ°è¡£\\
+    size & ¥µ¥¤¥ºÃÍ¤¬Æþ¤ëÎÎ°è¤Ø¤Î¥Ý¥¤¥ó¥¿  \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR   & n_mptr ¤Î»Ø¤¹¥¢¥É¥ì¥¹¤Ï¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¡£ \\
+    E_MPTR  & ¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥Ý¥¤¥ó¥¿({\tt mptr})¤¬ÉÔÀµ¤Ç¤¢¤ë¡£l\\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô¤Ç»ØÄê¤·¤¿¥Ý¥¤¥ó¥¿¤ò´Þ¤à¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥µ¥¤¥º¤ò¼è¤ê½Ð¤·¤Þ¤¹¡£
+}
+
+%}
+
+\Func{lmb_sts} {¥í¡¼¥«¥ë¥á¥â¥ê¤Ë´Ø¤¹¤ë¾ðÊó¤ò¼èÆÀ¤¹¤ë}{syscall}
+
+
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER lmb_sts(LM_STATE *buff);
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    buff & ¥í¡¼¥«¥ë¥á¥â¥ê¤Ë¤Ä¤¤¤Æ¤Î¾ðÊó¤òÆþ¤ì¤ëÎÎ°è¡£\\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR   & n_mptr ¤Î»Ø¤¹¥¢¥É¥ì¥¹¤Ï¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¡£ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô {\tt buff} ¤Ç»ØÄê¤·¤¿ÎÎ°è¤Ë¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¥×¥í¥»¥¹¤Î¥í¡¼
+  ¥«¥ë¥á¥â¥ê¤Î¾õÂÖ¤òÆþ¤ì¤Þ¤¹¡£
+
+  °ú¿ô {\tt buff} ¤Ï¡¢¼¡¤Î¹½Â¤ÂÎ¤Î¥Ý¥¤¥ó¥¿¤È¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£
+
+  \vspace{1em}
+  \begin{tabular}[h]{@{\hspace{1cm}} l}
+    {\tt typedef struct}\\
+    {\tt \{ }\\
+    {\tt \hspace{1cm}W\hspace{1cm}lm_tsize;\hspace{1cm}/* ¥í¡¼¥«¥ë¥á
+      ¥â¥ê¤ÎÁ´ÂÎ¥µ¥¤¥º */ } \\
+    {\tt \hspace{1cm}W\hspace{1cm}lm_fsize;\hspace{1cm}/* ¥í¡¼¥«¥ë¥á
+      ¥â¥ê¤ÎÌ¤»ÈÍÑ¥µ¥¤¥º */} \\
+    {\tt \hspace{1cm}W\hspace{1cm}lm_msize;\hspace{1cm}/* ³ÍÆÀ²ÄÇ½ºÇ
+      Âç¥µ¥¤¥º */ }\\
+    {\tt \hspace{1cm}W\hspace{1cm}lm_nblk; \hspace{1cm}/* ³ÍÆÀºÑ¤ß¥Ö
+      ¥í¥Ã¥¯¿ô */} \\
+    {\tt \} LM_STATE;} \\
+  \end{tabular}
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-68 »²¾È
+}
+
+%\Func{cre_mpl}{¥á¥â¥ê¥×¡¼¥ë¤ÎÀ¸À®}{system call}
+%
+%\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+%  ER cre_mpl(W mpl_id, W size, UW attr)
+%}
+%
+%\Entry{°ú¿ô}{
+%  \begin{tabular}[h]{p{3cm} p{10cm}}
+%    mpl_id & ºîÀ®¤¹¤ë¥á¥â¥ê¥×¡¼¥ë¤Î ID \\
+%    size    & ¥á¥â¥ê¥×¡¼¥ë¤Î¥µ¥¤¥º      \\
+%    attr    & ¥á¥â¥ê¥×¡¼¥ë¤ÎÂ°À­        \\
+%  \end{tabular}
+%}
+%
+%\Entry{ÊÖ¤êÃÍ}{
+%  0 °Ê¾å¤Î¼ : Àµ¾ï½ªÎ» (À¸À®¤·¤¿¥á¥â¥ê¥×¡¼¥ë ID)
+%
+%  0 °Ê²¼¤Î¼ ¡§¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤Î¤¤¤º¤ì¤«¤ÎÃÍ¤¬ÊÖ¤ê¤Þ¤¹¡£
+%
+%  \begin{tabular}[h]{p{3cm} p{10cm}}
+%    E_EXS & »ØÄê¤·¤¿ ID ¤ò¤â¤Ä¥á¥â¥ê¥×¡¼¥ë¤Ï¤¹¤Ç¤ËÂ¸ºß¤·¤Æ¤¤¤ë \\
+%    E_ID  & °ú¿ô ID ¤Î¿ôÃÍ¤¬¤ª¤«¤·¤¤ \\
+%    E_NOMEM & ¥æ¡¼¥¶¥á¥â¥êÎÎ°è¤¬ÉÔÂ­¤·¤Æ¤¤¤ë \\
+%    E_PAR & ¥Ñ¥é¥á¡¼¥¿ÉÔÀµ \\
+%  \end{tabular}
+%}
+%
+%\Entry{µ¡Ç½}{
+%  °ú¿ô¤Ç»ØÄê¤·¤¿¥µ¥¤¥º¤ò¤â¤Ä¥á¥â¥ê¥×¡¼¥ë¤òÀ¸À®¤·¤Þ¤¹¡£
+%
+%  ¥á¥â¥ê¥×¡¼¥ë¤Ï¡¢À¸À®¼ ¤Ë°ú¿ô mpl_id ¤Ç»ØÄê¤·¤¿ ID ¤Ç¼±ÊÌ¤·¤Þ¤¹¡£
+%  ID ¤ÎÈÏ°Ï¤Ï¡¢¥·¥¹¥Æ¥à¥³¥ó¥Õ¥£¥°¥ì¡¼¥·¥ç¥ó¼ ¤Ë»ØÄê¤·¤¿¤â¤Î¤Ç¤¹¡£
+%
+%  ¥á¥â¥ê¥×¡¼¥ë¤Î¥µ¥¤¥º¤È¤·¤Æ°ú¿ô size ¤Ë 0 ¤ò»ØÄê¤·¤¿¾ì¹ç¡¢
+%  ¥µ¥¤¥º¤¬ÉÔÄê¤Î¥á¥â¥ê¥×¡¼¥ë¤òÀ¸À®¤·¤Þ¤¹¡£
+%
+%  °ú¿ô attr ¤Ï¡¢¥á¥â¥ê¥×¡¼¥ë¤ÎÂ°À­¤ò»ØÄê¤·¤Þ¤¹¡£Â°À­¤È¤·¤Æ¤Ï¡¢¼¡¤ÎÃÍ¤¬
+%  »ØÄê¤Ç¤­¤Þ¤¹¡£
+%
+%  \begin{tabular}[h]{p{3cm} p{10cm}}
+%    MPL_LOCK   & ¥á¥â¥ê¾ïÃó¤Î»ØÄê¡£¤³¤Î»ØÄê¤ò¹Ô¤¦¤È¡¢¥á¥â¥ê¥×¡¼¥ëÎÎ°è
+%                  ¤Ï¥¹¥ï¥Ã¥×¥¨¥ê¥¢¤ËÂàÈò¤¹¤ë¾ì¹ç¤¬¤¢¤ë¡£ \\
+%    MPL_UNLOCK & ¥á¥â¥ê¤Î¾ïÃó¤ÏÆÃ¤Ë»ØÄê¤·¤Ê¤¤ \\
+%    MPL_SELF   & ¥á¥â¥ê¥×¡¼¥ë¤òÀ¸À®¤·¤¿ÊÝ¸î¥ì¥Ù¥ë°Ê¾å¤ò¤â¤Ä¥×¥í¥»¥¹¤«
+%                  ¤é¤Î¤ß¡¢¥¢¥¯¥»¥¹²ÄÇ½¤È¤¹¤ë \\
+%    MPL_ANY    & ¤É¤ÎÊÝ¸î¥ì¥Ù¥ë¤ò¤â¤Ä¥×¥í¥»¥¹¤«¤é¤â¥¢¥¯¥»¥¹¤Ç¤­¤ë \\
+%    DELEXIT     & À¸À®¤·¤¿¥×¥í¥»¥¹¤¬½ªÎ»¤·¤¿¾ì¹ç¡¢¥á¥â¥ê¥×¡¼¥ë¤ò¼«Æ°Åª
+%                  ¤Ëºï½ü¤¹¤ë¡£¤³¤ÎÂ°À­¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¡¢ÌÀ¼¨Åª¤ËÇË´þ¤·
+%                  ¤Ê¤¤¸Â¤ê¡¢¥á¥â¥ê¥×¡¼¥ë¤ÏÂ¸ºß¤·Â³¤±¤ë \\
+%  \end{tabular}
+%
+%  ³ÆÂ°À­¤Ï½ÅÊ£¤·¤Æ»ØÄê¤¹¤ë¤³¤È¤â¤Ç¤­¤Þ¤¹¡£¤¿¤À¤·¡¢¼¡¤Î½ÅÊ£»ØÄê¤Ï¤Ç¤­¤Þ
+%  ¤»¤ó¡£
+%
+%  \begin{itemize}
+%  \item {\tt MPL_LOCK ¤È MPL_UNLOCK} ¤ÎÆ±¼ »ØÄê¡£
+%  \item {\tt MPL_SELF ¤È MPL_ANY} ¤ÎÆ±¼ »ØÄê¡£
+%  \end{itemize}
+%}
+%
+%\Entry{È÷¹Í}{
+%  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ç¤Ï¡¢¤¹¤Ù¤Æ¤Î¥µ¥¤¥º¤Ï¥Ð¥¤¥È¤Ç»ØÄê¤·¤Þ¤¹¡£
+%
+%  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-75 »²¾È
+%}
+%
+%
+%\Func{del_mpl}{¥á¥â¥ê¥×¡¼¥ë¤Îºï½ü}{system call}
+%
+%\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+%  ER del_mpl(W mpl_id);
+%}
+%
+%\Entry{°ú¿ô}{
+%  \begin{tabular}[h]{p{3cm} p{10cm}}
+%    mpl_id & ºï½ü¤¹¤ë¥á¥â¥ê¥×¡¼¥ë¤Î ID \\
+%  \end{tabular}
+%}
+%
+%\Entry{ÊÖ¤êÃÍ}{
+%  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+%
+%  \begin{tabular}[h]{p{3cm} p{10cm}}
+%    E_OK    & Àµ¾ï¼  \\
+%    E_ADR   & ¥·¥¹¥Æ¥à¥³¡¼¥ë¤òÈ¯¹Ô¤·¤¿¥×¥í¥»¥¹¤Ï¡¢¥á¥â¥ê¥×¡¼¥ë¤Ë¥¢¥¯¥»
+%               ¥¹¤Ç¤­¤Ê¤¤ (ÊÝ¸î¥ì¥Ù¥ë¤¬Äã¤¤) \\
+%    E_ID    & ¥á¥â¥ê¥×¡¼¥ë¤Î ID ¤¬ÈÏ°Ï³° \\
+%    E_NOEXS & »ØÄê¤·¤¿ ID ¤ò¤â¤Ä¥á¥â¥ê¥×¡¼¥ë¤ÏÂ¸ºß¤·¤Æ¤¤¤Ê¤¤ \\
+%  \end{tabular}
+%}
+%
+%\Entry{µ¡Ç½}{
+%  {\tt del_mpl()} ¤Ï¡¢{\tt cre_mpl()} ¤Ë¤è¤Ã¤ÆºîÀ®¤·¤¿¥á¥â¥ê¥×¡¼¥ë¤ò
+%  ºï½ü¤·¤Þ¤¹¡£
+%
+%  ¥á¥â¥ê¥×¡¼¥ë¤Îºï½ü¤Ï¡¢ÊÝ¸î¥ì¥Ù¥ë¤¬¥á¥â¥ê¥×¡¼¥ë¤òÀ¸À®¤·¤¿¥×¥í¥»¥¹¤è
+%  ¤ê¹â¤±¤ì¤Ð¡¢¤É¤Î¥×¥í¥»¥¹¤«¤é¤âºï½ü¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£
+%
+%  ÊÝ¸î¥ì¥Ù¥ë¤Î¥Á¥§¥Ã¥¯¤¬»ØÄê¤·¤Æ¤¢¤ê (Â°À­¤È¤·¤Æ MPL_SELF ¤¬»ØÄê¤·¤Æ
+%  ¤¢¤Ã¤¿¾ì¹ç)¡¢¤«¤ÄÊÝ¸î¥ì¥Ù¥ë¤¬¥á¥â¥ê¥×¡¼¥ë¤òÀ¸À®¤·¤¿¥×¥í¥»¥¹¤è¤ê¤âÄã
+%  ¤¤¾ì¹ç¤Ë¤Ï¡¢E_ADR ¤Î¥¨¥é¡¼¤È¤Ê¤ê¤Þ¤¹¡£
+%}
+%
+%\Entry{È÷¹Í}{
+%  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-76 »²¾È
+%}
+
+
+\Func{get_smb}{¶¦Í­¥á¥â¥ê¤Î¥Ö¥í¥Ã¥¯¤ò¼èÆÀ¤¹¤ë}{system call}
+
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER get_smb(W mpl_id, W size, UW opt)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    mpl_id & ¥á¥â¥ê¥×¡¼¥ë ID \\
+    size    & ¼èÆÀ¤·¤¿¤¤¶¦Í­¥á¥â¥ê¤Î¥Ö¥í¥Ã¥¯¤Î¥µ¥¤¥º \\
+    opt     & Â°À­ \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ÎÊÖ¤êÃÍ¤È¤·¤Æ 0 °Ê¾å¤ÎÃÍ¤¬ÊÖ¤Ã¤Æ¤­¤¿¾ì¹ç¡¢
+  ¤½¤ÎÃÍ¤Ï¡¢³ÍÆÀ¤·¤¿¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤òÁàºî¤¹¤ë¤¿¤á¤Î¥­¡¼(¥¢¥¯¥»¥¹¥­¡¼)
+  ¤òÉ½¤·¤Þ¤¹¡£
+  ¥¢¥¹¥»¥¹¥­¡¼¤Ï¡¢¥·¥¹¥Æ¥àÆâ¤Ç¥æ¥Ë¡¼¥¯¤ÊÃÍ¤È¤Ê¤ê¤Þ¤¹¡£
+
+  ¤³¤Î¾ì¹ç¡¢½èÍý¤ÏÀµ¾ï¤Ë½ªÎ»¤·¤¿¤³¤È¤òÉ½¤·¤Þ¤¹¡£
+
+  0 °Ê³°¤ÎÃÍ¤Î¾ì¹ç¡¢¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+  
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR & »ØÄê¤·¤¿¥á¥â¥ê¥×¡¼¥ë¤Ø¥¢¥¯¥»¥¹¤¹¤ë¤³¤È¤Ïµö¤µ¤ì¤Æ¤¤¤Ê¤¤ \\
+    E_ID  & ID ¤ÎÃÍ¤¬ÈÏ°Ï³° \\
+    E_NOEXS & »ØÄê¤·¤¿ ID ¤ò¤â¤Ä¥á¥â¥ê¥×¡¼¥ë¤ÏÂ¸ºß¤·¤Æ¤¤¤Ê¤¤({\tt NO EXiSt}) \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢¥á¥â¥ê¥×¡¼¥ë¤«¤é¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò³ÍÆÀ¤·¤Þ¤¹¡£
+
+  ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥É¥ì¥¹¤Ï¡¢¤³¤Î´Ø¿ô¤Ç¤ÏÊÖ¤·¤Þ¤»¤ó¡£
+  ¤½¤Î¤¿¤á¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤ò¥¢¥¯¥»¥¹¤¹¤ë¤¿¤á¤Ë¤Ï¡¢¶¦Í­¥á¥â¥ê
+  ¥Ö¥í¥Ã¥¯¤òÁàºî¤¹¤ë¤¿¤á¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò»ÈÍÑ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+
+  ¶¦Í­¥á¥â¥ê¤ò¥¢¥¯¥»¥¹¤¹¤ë¤¿¤á¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤È¤·¤Æ¼¡¤Î¤â¤Î¤¬»ÈÍÑ¤Ç¤­
+  ¤Þ¤¹¡£
+
+  \begin{description}
+  \item[{\tt rea_smb}] ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤òÆÉ¤ß¼è¤ë¡£
+  \item[{\tt wri_smb}] ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ËÇ¤°Õ¤Î¥Ç¡¼¥¿¤ò½ñ¤­º ¤à¡£
+  \item[{\tt smb_adr}] ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥É¥ì¥¹¤ò³ÍÆÀ¤¹¤ë¡£³ÍÆÀ¤·
+                        ¤¿¥¢¥É¥ì¥¹¤ò»È¤Ã¤Æ¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤ò
+                        Ä¾ÀÜ¥¢¥¯¥»¥¹¤¹¤ë¤³¤È¤¬¤Ç¤­¤ë¡£
+  \item[{\tt smb_key}] ¥¢¥¯¥»¥¹¥­¡¼¤ò¼èÆÀ¤¹¤ë¡£
+  \end{description}
+
+  ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÂ°À­¤È¤·¤Æ°Ê²¼¤Î¤â¤Î¤¬»ØÄê¤Ç¤­¤Þ¤¹¡£
+  
+  \vspace{1em}
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    CLR         & ³ÍÆÀ¤·¤¿¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤ò 0 ¥¯¥ê¥¢¤¹¤ë \\
+    NOCLR       & ³ÍÆÀ¤·¤¿¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤ò 0 ¥¯¥ê¥¢¤·¤Ê¤¤ \\
+    M_LOCK     & ³ÍÆÀ¤·¤¿¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤òºÆÇÛÃÖ¶Ø»ß¤È¤¹¤ë¡£
+                  ¤Þ¤¿¡¢¤³¤Î»ØÄê¤ò¹Ô¤¦¤È¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ï¾ïÃó¤·¡¢¥Ú¡¼¥¸
+                  ¥¢¥¦¥È¤·¤Ê¤¤¡£\\
+    M_UNLOCK   & ³ÍÆÀ¤·¤¿¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤òºÆÇÛÃÖ¶Ø»ß¤È¤·¤Ê¤¤¡£\\
+    DELEXIT     & À¸À®¤·¤¿¥×¥í¥»¥¹¤¬½ªÎ»¤·¤¿¾ì¹ç¡¢¥á¥â¥ê¥×¡¼¥ë¤ò¼«Æ°Åª
+                  ¤Ëºï½ü¤¹¤ë¡£¤³¤ÎÂ°À­¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¡¢ÌÀ¼¨Åª¤ËÇË´þ¤·
+                  ¤Ê¤¤¸Â¤ê¡¢¥á¥â¥ê¥×¡¼¥ë¤ÏÂ¸ºß¤·Â³¤±¤ë \\
+  \end{tabular}
+  \vspace{1em}
+
+  BTRON1 ¤È°Û¤Ê¤ê¡¢{\tt M_LOCK} ¤Ï¡¢¥á¥â¥ê¾ïÃó¤Î»ØÄê¤â¹Ô¤¤¤Þ¤¹¡£  
+
+%  ¤¿¤À¤·¡¢Â°À­¤È¤·¤Æ {\tt NOCLR} ¤ò»ØÄê¤·¤¿¾ì¹ç¤Ç¤â¡¢¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î
+%  ÆâÍÆ¤Ï 0 ¥¯¥ê¥¢¤·¤Þ¤¹¡£{\tt NOCLR} ¤Ï¡¢BTRON1 ¤È¤Î¸ß´¹À­¤Î¤¿¤á¤ËÂ¸ºß
+%  ¤·¤Þ¤¹¡£
+
+%  ¤¿¤À¤·¡¢¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤Ï 0 ¥¯¥ê¥¢¤¹¤ë¤³¤È¤ò´üÂÔ¤·¤Æ¥³¡¼¥Ç¥£¥ó¥°¤¹
+%  ¤ë¤Ù¤­¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó¡£0 ¥¯¥ê¥¢¤¹¤ë¤³¤È¤¬É¬Í×¤Ê¾ì¹ç¤Ë¤Ï¡¢Â°À­ CLR ¤ò
+%  ÌÀ¼¨Åª¤Ë»ØÄê¤¹¤ë¤è¤¦¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£
+}
+
+\Entry{È÷¹Í}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ç»ØÄê¤¹¤ë¥µ¥¤¥ºÃÍ¤ÎÃ±°Ì¤Ï¥Ð¥¤¥È¤Ç¤¹¡£
+
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-76 »²¾È
+}
+
+\Func{rel_smb}{¶¦Í­¥á¥â¥ê¤Î¥Ö¥í¥Ã¥¯¤ò²òÊü¤¹¤ë¡£}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER rel_smb(W akey)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ²òÊü¤¹¤ë¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î ID \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \vspace{1em}
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK   & Àµ¾ï½ªÎ» \\
+    E_ADR  & ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¸Æ¤Ó½Ð¤·¤¿¥×¥í¥»¥¹¤Ï¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã
+              ¥¯¤Ø¤Î¥¢¥¯¥»¥¹¤¬µö¤µ¤ì¤Æ¤¤¤Ê¤¤ÆÃ¸¢¥ì¥Ù¥ë¤À¤Ã¤¿ \\
+    E_AKEY & ¥¢¥¯¥»¥¹¥­¡¼¤¬ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô¤Ç»ØÄê¤·¤¿¥¢¥¯¥»¥¹¥­¡¼¤ò¤â¤Ä¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤òºï½ü¤·¤Þ¤¹¡£
+
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤Î¼Â¹Ô¸å¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ø¥¢¥¯¥»¥¹¤·¤¿¾ì¹ç¤ÎÆ°
+  ºî¤ÏÊÝ¾Ú¤·¤Þ¤»¤ó¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-79 »²¾È
+}
+
+
+\Func{rea_smb}{¶¦Í­¥á¥â¥ê¤Î¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤òÆÉ¤ß¼è¤ë }{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER rea_smb(W akey, BPTR buff, W offset, size, VP a_size);
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ÆâÍÆ¤òÆÉ¤ß¤È¤ê¤¿¤¤¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+    buff & ÆÉ¤ß¼è¤Ã¤¿ÆâÍÆ¤¬Æþ¤ëÎÎ°è \\
+    offset & ÆÉ¤ß¼è¤ê³«»Ï°ÌÃÖ (offset) \\
+    size   & ÆÉ¤ß¼è¤ëÆâÍÆ¤Î¥µ¥¤¥º \\
+    a_size & ¼ÂºÝ¤ËÆÉ¤ß¼è¤Ã¤¿ÆâÍÆ¤Î¥µ¥¤¥º\\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK   & Àµ¾ï½ªÎ» \\
+    E_ADR  & °ú¿ô buff ¤ª¤è¤Ó a_size ¤Î¥¢¥É¥ì¥¹¤¬¥æ¡¼¥¶ÎÎ°è¤ÎÈÏ°Ï³°¡£ 
+              \par
+              ¤Þ¤¿¤Ï¡¢¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤¬Äã
+              ¤¤¤¿¤á¡¢¥á¥â¥ê¥×¡¼¥ë¤òÆÉ¤ß¼è¤ë¤³¤È¤¬¤Ç¤­¤Ê¤¤ \\
+    E_AKEY & ¥¢¥¯¥»¥¹¥­¡¼¤¬ÉÔÀµ \\
+    E_MPURG & ¶¦Í­¥á¥â¥êÎÎ°è¤¬¥Ñ¡¼¥¸¤µ¤ì¤Æ¤¤¤ë \\
+    E-MPAR   & ¥Ñ¥é¥á¡¼¥¿ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô {\tt akey} ¤Ç»ØÄê¤·¤¿¥¢¥¯¥»¥¹¥­¡¼¤ò¤â¤Ä¤¦¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâ
+  ÍÆ¤òÆÉ¤ß¼è¤ê¤Þ¤¹¡£
+
+  ÆÉ¤ß¼è¤Ã¤¿ÆâÍÆ¤Ï¡¢°ú¿ô {\tt buff} ¤¬¥Ý¥¤¥ó¥È¤¹¤ëÎÎ°è¤Ë¥³¥Ô¡¼¤µ¤ì¤Þ¤¹¡£
+  
+}
+
+\Entry{È÷¹Í}{
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ËÂÐ¤¹¤ëÂ¾¤Î¥×¥í¥»¥¹¤Î¥¢¥¯¥»
+  ¥¹¤òÇÓÂ¾¤·¤Þ¤¹¡£¤Ä¤Þ¤ê¡¢¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤¬¼Â¹ÔÃæ¤Î¼ ¡¢Â¾¤Î¥×¥í¥»
+  ¥¹¤¬³ºÅö¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥Ç¡¼¥¿¤òÊÑ¹¹¤·¤è¤¦¤È¤·¤¿¾ì¹ç¡¢¤³¤Î¥·¥¹¥Æ
+  ¥à¥³¡¼¥ë¤Î½èÍý¤¬½ª¤ë¤Þ¤ÇÂÔ¤¿¤µ¤ì¤Þ¤¹¡£
+
+  ¤³¤Î¤È¤­¡¢ÊÑ¹¹¤·¤è¤¦¤È¤·¤¿¥×¥í¥»¥¹¤Ï¼«Ê¬¤¬ÂÔ¤¿¤µ¤ì¤¿¤³¤È¤Ëµ¤¤Å¤­¤Þ¤»
+  ¤ó¡£¤½¤Î¤¿¤á¡¢¶¦Í­¥á¥â¥ê¤Î»ÈÍÑÊýË¡¤Ë¤è¤Ã¤Æ¤Ï¡¢¥×¥í¥»¥¹¤Î½èÍý¤¬ÃÙ±ä¤¹
+  ¤ë¾ì¹ç¤¬¤¢¤ê¤Þ¤¹¡£¥ê¥¢¥ë¥¿¥¤¥à½èÍý¤ò¹Ô¤¦¥×¥í¥»¥¹¤Î¾ì¹ç¤Ë¤Ï¡¢½½Ê¬¤ËÃí
+  °Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+}
+
+
+\Func{wri_smb}{¶¦Í­¥á¥â¥ê¤Î¥Ö¥í¥Ã¥¯¤Ë½ñ¤­º ¤à }{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER wri_smb(W akey, BPTR buff, W offset, size, VP a_size)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ÆâÍÆ¤òÊÑ¹¹¤·¤¿¤¤¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+    buff & ½ñ¤­º ¤àÆâÍÆ¤¬Æþ¤ëÎÎ°è \\
+    offset & ½ñ¤­º ¤ß³«»Ï°ÌÃÖ (offset) \\
+    size   & ½ñ¤­º ¤àÆâÍÆ¤Î¥µ¥¤¥º \\
+    a_size & ¼ÂºÝ¤Ë½ñ¤­º ¤ó¤À¥Ç¡¼¥¿¤Î¥µ¥¤¥º\\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK   & Àµ¾ï½ªÎ» \\
+    E_ADR  & °ú¿ô buff ¤ª¤è¤Ó a_size ¤Î¥¢¥É¥ì¥¹¤¬¥æ¡¼¥¶ÎÎ°è¤ÎÈÏ°Ï³°¡£ 
+              \par
+              ¤Þ¤¿¤Ï¡¢¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤¬Äã
+              ¤¤¤¿¤á¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤òÊÑ¹¹¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ê¤¤ \\
+    E_AKEY & ¥¢¥¯¥»¥¹¥­¡¼¤¬ÉÔÀµ \\
+    E_MPURG & ¶¦Í­¥á¥â¥êÎÎ°è¤¬¥Ñ¡¼¥¸¤µ¤ì¤Æ¤¤¤ë \\
+    E-MPAR   & ¥Ñ¥é¥á¡¼¥¿ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô {\tt akey} ¤Ç»ØÄê¤·¤¿¥¢¥¯¥»¥¹¥­¡¼¤ò¤â¤Ä¤¦¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâ
+  ÍÆ¤òÊÑ¹¹¤·¤Þ¤¹¡£
+
+  ½ñ¤­º ¤àÆâÍÆ¤Ï¡¢°ú¿ô {\tt buff} ¤¬¥Ý¥¤¥ó¥È¤¹¤ëÎÎ°è¤ËÆþ¤Ã¤Æ¤¤¤Þ¤¹¡£
+  
+}
+
+\Entry{È÷¹Í}{
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ËÂÐ¤¹¤ëÂ¾¤Î¥×¥í¥»¥¹¤Î¥¢¥¯¥»
+  ¥¹¤òÇÓÂ¾¤·¤Þ¤¹¡£¤Ä¤Þ¤ê¡¢¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤¬¼Â¹ÔÃæ¤Î¼ ¡¢Â¾¤Î¥×¥í¥»
+  ¥¹¤¬³ºÅö¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥Ç¡¼¥¿¤òÊÑ¹¹/»²¾È¤·¤è¤¦¤È¤·¤¿¾ì¹ç¡¢¤³¤Î
+  ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Î½èÍý¤¬½ª¤ë¤Þ¤ÇÂÔ¤¿¤µ¤ì¤Þ¤¹¡£
+
+  ¤³¤Î¤È¤­¡¢ÊÑ¹¹/»²¾È¤·¤è¤¦¤È¤·¤¿¥×¥í¥»¥¹¤Ï¼«Ê¬¤¬ÂÔ¤¿¤µ¤ì¤¿¤³¤È¤Ëµ¤¤Å¤­¤Þ¤»
+  ¤ó¡£¤½¤Î¤¿¤á¡¢¶¦Í­¥á¥â¥ê¤Î»ÈÍÑÊýË¡¤Ë¤è¤Ã¤Æ¤Ï¡¢¥×¥í¥»¥¹¤Î½èÍý¤¬ÃÙ±ä¤¹
+  ¤ë¾ì¹ç¤¬¤¢¤ê¤Þ¤¹¡£¥ê¥¢¥ë¥¿¥¤¥à½èÍý¤ò¹Ô¤¦¥×¥í¥»¥¹¤Î¾ì¹ç¤Ë¤Ï¡¢½½Ê¬¤ËÃí
+  °Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-82 »²¾È
+}
+
+\Func{smb_adr}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥É¥ì¥¹¤Î¼èÆÀ}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  smb_adr(W akey, BPTR *maddr);
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey    & ¥¢¥É¥ì¥¹¤ò¼èÆÀ¤·¤¿¤¤¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò¼¨¤¹¥¢¥¯¥»¥¹¥­¡¼ \\
+    maddr   & ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÀèÆ¬¥¢¥É¥ì¥¹¤¬Æþ¤ëÎÎ°è¤ÎÀèÆ¬¥¢¥É¥ì¥¹ \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK   & Àµ¾ï½ªÎ» \\
+    E_ADR  & °ú¿ô maddr ¤Î¥¢¥É¥ì¥¹¤Ï¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤ÎÎ°è¤À¤Ã¤¿¡£
+              ¤Þ¤¿¤Ï¡¢¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤Ï¡¢
+              ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ë¥¢¥¯¥»¥¹¤¹¤ë¤³¤È¤¬µö¤µ¤ì¤Ê¤¤¤â¤Î¤À¤Ã
+              ¤¿ \\
+    E_AKEY & ¥¢¥¯¥»¥¹¥­¡¼ÉÔÀµ \\
+    E_MPURG & ¶¦Í­¥á¥â¥ê¤Ï¥Ñ¡¼¥¸¤µ¤ì¤Æ¤¤¤ë \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÀèÆ¬¥¢¥É¥ì¥¹¤ò¼èÆÀ¤¹¤ë¤¿¤á
+  ¤Ë»ÈÍÑ¤·¤Þ¤¹¡£
+
+  ¤³¤Î¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò»È¤Ã¤ÆÆÀ¤¿¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÀèÆ¬¥¢¥É¥ì¥¹¤ò»È¤Ã¤Æ¡¢
+  Ä¾ÀÜ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÆâÍÆ¤Ë¥¢¥¯¥»¥¹¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£
+
+  ¤¿¤À¤·¡¢Ä¾ÀÜ¥¢¥É¥ì¥¹¤ò»È¤Ã¤Æ¥¢¥¯¥»¥¹¤·¤¿¾ì¹ç¤Ï¡¢{\tt rea_smb()}¡¢{\tt
+    wri_smb()} ¤ò»ÈÍÑ¤·¤¿¾ì¹ç¤È°Û¤Ê¤ê¡¢ÇÓÂ¾½èÍý¤ò¹Ô¤¤¤Þ¤»¤ó¡£
+  ¤½¤Î¤¿¤á¡¢É¬Í×¤Ë² ¤¸¤Æ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¤ËÂÐ¤·¤ÆÇÓÂ¾½èÍý¤ò
+  ¹Ô¤¦É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-83 »²¾È
+}
+
+
+\Func{smb_key}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼¤ò¼èÆÀ¤¹¤ë}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  smb_key(BPTR maddr)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    maddr & ¥¢¥¯¥»¥¹¥­¡¼¤ò¼èÆÀ¤·¤¿¤¤¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥É¥ì¥¹ \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¤³¤Î´Ø¿ô¤Ï¡¢ÊÖ¤êÃÍ¤È¤·¤Æ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼¤òÊÖ¤·¤Þ¤¹¡£
+  
+  ÊÖ¤êÃÍ¤¬Éé¤Î¾ì¹ç¡¢¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR & ¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ø¤Î¥¢¥¯¥»¥¹¸¢¸Â¤¬¤Ê¤¤ \\
+    E_MPTR & °ú¿ô {\tt maddr} ¤Î¥¢¥É¥ì¥¹¤¬ÉÔÀµ¡£
+              ¤¢¤ë¤¤¤Ï¡¢¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ïºï½ü¤µ¤ì¤Æ¤¤¤ë \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô¤Ç»ØÄê¤µ¤ì¤¿ÀèÆ¬¥¢¥É¥ì¥¹¤ò¤â¤Ä¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ø¤Î¥¢¥¯¥»¥¹¥­¡¼
+  ¤ò¼èÆÀ¤·¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-84 »²¾È
+}
+
+
+\Func{get_sma}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÂ°À­¾ðÊó¤ò¼èÆÀ¤¹¤ë}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  get_sma(W akey)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò»ØÄê¤¹¤ë¤¿¤á¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÂ°À­ÃÍ¡£
+
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_ADR & ¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Ø¤Î¥¢¥¯¥»¥¹¸¢¸Â¤¬¤Ê¤¤ \\
+    E_AKEY & ¥¢¥¯¥»¥¹¥­¡¼ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢°ú¿ô¤Ç»ØÄê¤·¤¿¥¢¥¯¥»¥¹¥­¡¼¤ò¤â¤Ä¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã
+  ¥¯¤ÎÂ°À­¾ðÊó¤ò¼è¤ê½Ð¤·¤Þ¤¹¡£
+  
+  Â°À­¾ðÊó¤Ï¡¢1¤Ä¤Î¥ï¡¼¥ÉÃÍ¤È¤·¤ÆÊÖ¤ê¤Þ¤¹¡£¤³¤Î¥ï¡¼¥É¤ÎÃæ¿È¤Ï¡¢¼¡¤Î¤è
+  ¤¦¤ËÄêµÁ¤·¤Æ¤¤¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{5cm} p{8cm}}
+    M_LOCK  (¥Ó¥Ã¥È 0)  & ºÆÇÛÃÖµö²Ä/ÉÔµö²Ä¤Î»ØÄê \\
+    M_RELOC (¥Ó¥Ã¥È 1)  & ºÆÇÛÃÖ¤µ¤ì¤¿/¤µ¤ì¤Æ¤¤¤Ê¤¤¾õÂÖ¤ò¼¨¤¹ \\
+    M_PURGE (¥Ó¥Ã¥È 2)  & ¥Ñ¡¼¥¸¶Ø»ß/µö²Ä¤Î»ØÄê \\
+    M_PURGED (¥Ó¥Ã¥È 3) & ¥Ú¡¼¥¸¤µ¤ì¤¿/¤µ¤ì¤Æ¤¤¤Ê¤¤¾õÂÖ¤ò¼¨¤¹ \\
+  \end{tabular}
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-85 »²¾È
+}
+
+
+\Func{set_sma}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÂ°À­¾ðÊó¤òÀßÄê¤¹¤ë}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  set_sma(W akey, UW attr)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & Â°À­¤òÀßÄê¤·¤¿¤¤¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò»ØÄê¤¹¤ë¤¿¤á¤Î¥¢¥¯¥»¥¹
+    ¥­¡¼ \\
+    attr & ÀßÄê¤·¤¿¤¤Â°À­ \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_AKEY  & ¥¢¥¯¥»¥¹¥­¡¼ÉÔÀµ \\
+    E_MPURG & ¶¦Í­¥á¥â¥ê¤Ï¡¢ºï½ü¤µ¤ì¤Æ¤¤¤ë \\
+    E_PAR   & °ú¿ô¤ÎÆâÍÆ¤¬Àµ¤·¤¯¤Ê¤¤ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢{\tt get_sma()} ¤È¤ÏµÕ¤ÎÆ¯¤­¤ò¤·¤Þ¤¹¡£¤¹¤Ê¤ï¤Á¡¢
+  »ØÄê¤·¤¿¥¢¥¯¥»¥¹¥­¡¼¤ò¤â¤Ä¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ÎÂ°À­ÃÍ¤òÀßÄê¤·¤Þ¤¹¡£
+
+  Â°À­ÃÍ¤Ï¡¢°Ê²¼¤Î¤â¤Î¤¬»ØÄê¤Ç¤­¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    M_LOCK      & ºÆÇÛÃÖµö²Ä¤Î»ØÄê¡£¥á¥â¥ê¾ïÃó»ØÄê¤â·ó¤Í¤ë \\
+    M_UNLOCK    & ºÆÇÛÃÖÉÔµö²Ä¤Î»ØÄê \\
+    M_PURGE     & ¥Ñ¡¼¥¸¶Ø»ß¤Î»ØÄê \\
+    M_PURGE     & ¥Ñ¡¼¥¸µö²Ä¤Î»ØÄê \\
+  \end{tabular}
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-86 »²¾È
+}
+
+
+\Func{get_smi}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥æ¡¼¥¶¾ðÊó¤Î¤È¤ê¤À¤·}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  get_smi(W akey, VP info)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+    info & ¼è¤ê½Ð¤·¤¿¥æ¡¼¥¶¾ðÊó¤òÆþ¤ì¤ë¤¿¤á¤ÎÎÎ°è \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_ADR   & °ú¿ô info ¤Î¥¢¥É¥ì¥¹¤¬¤ª¤«¤·¤¤(¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤)¡¢¤Þ¤¿
+               ¤ÏËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¸Æ¤Ó½Ð¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤¬¡¢
+               ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¤â¤Î¤À¤Ã¤¿ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ¶¦Í­¥á¥â¥ê¤ò»ÈÍÑ¤·¤Æ¤¤¤ë¥æ¡¼¥¶¾ðÊó¤ò¼è¤ê½Ð¤·¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-87 »²¾È
+}
+
+
+\Func{set_smi}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥æ¡¼¥¶¾ðÊó¤ÎÀßÄê}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  set_smi(W akey, W info)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ¥æ¡¼¥¶¾ðÊó¤òÊÑ¹¹¤·¤¿¤¤¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+    info & ÀßÄê¤·¤¿¤¤¥æ¡¼¥¶¾ðÊó \\
+  \end{tabular}
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+    info & ÀßÄê¤·¤¿¤¤¥æ¡¼¥¶¾ðÊó¤òÆþ¤ì¤ë¤¿¤á¤ÎÎÎ°è \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_ADR   & °ú¿ô info ¤Î¥¢¥É¥ì¥¹¤¬¤ª¤«¤·¤¤(¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤)¡¢¤Þ¤¿
+               ¤ÏËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¸Æ¤Ó½Ð¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤¬¡¢
+               ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¤â¤Î¤À¤Ã¤¿ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ¶¦Í­¥á¥â¥ê¤ò»ÈÍÑ¤·¤Æ¤¤¤ë¥æ¡¼¥¶¾ðÊó¤òÀßÄê¤·¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-88 »²¾È
+}
+
+\Func{smb_sts}{¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¾ðÊó¤Î¼èÆÀ}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER smb_sts(W akey, SM_STATE *buff)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    akey & ¾ðÊó¤ò¼èÆÀ¤·¤¿¤¤¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¥¢¥¯¥»¥¹¥­¡¼ \\
+    buff & ¾õÂÖ¤òÆþ¤ì¤ë¤¿¤á¤ÎÎÎ°è¤ÎÀèÆ¬¥¢¥É¥ì¥¹  \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_ADR   & °ú¿ô info ¤Î¥¢¥É¥ì¥¹¤¬¤ª¤«¤·¤¤(¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤)¡¢¤Þ¤¿
+               ¤ÏËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¸Æ¤Ó½Ð¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤¬¡¢
+               ¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤ò¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤¤â¤Î¤À¤Ã¤¿ \\
+    E_AKEY  & ¥¢¥¯¥»¥¹¥­¡¼¤¬ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô akey ¤Ç»ØÄê¤·¤¿¶¦Í­¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¾õÂÖ¾ðÊó¤ò¼è¤ê½Ð¤¹¡£
+
+  ¼èÆÀ¤·¤¿¾õÂÖ¾ðÊó¤Ï¡¢°ú¿ô buff ¤Ç»ØÄê¤·¤¿ÎÎ°è¤Ø½ñ¤­º ¤à¡£
+
+  ¥á¥â¥ê¥Ö¥í¥Ã¥¯¤Î¾õÂÖ¤Ï {\tt SM_STATE} ¹½Â¤ÂÎ¤Î·Á¼°¤È¤Ê¤ë¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-89 »²¾È
+}
+
+\Func{mpl_sts}{¶¦Í­¥á¥â¥ê¥×¡¼¥ë¾õÂÖ¤Î¼èÆÀ}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  mpl_sts(W mpl_id, MP_STATE *buff)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    mpl_id  & ¾ðÊó¤ò¼èÆÀ¤·¤¿¤¤¶¦Í­¥á¥â¥ê¥×¡¼¥ë¤ò»ØÄê¤¹¤ë ID \\
+    buff     & ¾õÂÖ¤ò¼èÆÀ¤·¤¿¤È¤­¤Ë¾ðÊó¤òÆþ¤ì¤ë¤¿¤á¤ÎÎÎ°è¤ÎÀèÆ¬¥¢¥É¥ì¥¹ \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK     & Àµ¾ï½ªÎ» \\
+    E_ADR    & °ú¿ô buff ¤Ï¥¢¥¯¥»¥¹ÉÔÀµ¤È¤Ê¤ë¥¢¥É¥ì¥¹¤À¤Ã¤¿¡£¤Þ¤¿¤Ï¡¢
+                ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤ò¼Â¹Ô¤·¤¿¥×¥í¥»¥¹¤ÎÆÃ¸¢¥ì¥Ù¥ë¤¬¶¦Í­¥á
+                ¥â¥ê¥×¡¼¥ë¤ò¥¢¥¯¥»¥¹¤Ç¤­¤Ê¤¤ÃÍ¤À¤Ã¤¿ \\
+    E_ID     & »ØÄê¤·¤¿¥á¥â¥ê¥×¡¼¥ë¤Î ID ¤¬ÉÔÀµ¤ÊÃÍ¤À¤Ã¤¿ \\
+    E_NOEXS  & »ØÄê¤·¤¿ ID ¤ò¤â¤Ä¥á¥â¥ê¥×¡¼¥ë¤ÏÂ¸ºß¤·¤Æ¤¤¤Ê¤¤ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  °ú¿ô {\tt mpl_id} ¤Ç»ØÄê¤·¤¿¶¦Í­¥á¥â¥ê¥×¡¼¥ë¤Î¾õÂÖ¤ò¼è¤ê½Ð¤·¡¢°ú¿ô 
+  buff ¤Ç»ØÄê¤·¤Æ¤¤¤ëÎÎ°è¤ØÆþ¤ì¤ë¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-90 »²¾È
+}
+
+
+
+\Func{map_mem}{Ç¤°Õ¤ÎÊªÍý¥¢¥É¥ì¥¹ÎÎ°è¤ò²¾ÁÛ¶õ´Ö¤Ë¥Þ¥Ã¥×¤¹¤ë}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER map_mem(W phaddr, BPTR *logaddr, W size, UW opt)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    phaddr   & ¥Þ¥Ã¥×¤·¤¿¤¤¼Â¥¢¥É¥ì¥¹   \\
+    logaddr  & ¥Þ¥Ã¥×¤·¤¿¤¤²¾ÁÛ¥¢¥É¥ì¥¹ \\
+    size     & ¥Þ¥Ã¥×¤·¤¿¤¤¥µ¥¤¥º       \\
+    opt      & ¥ª¥×¥·¥ç¥ó¾ðÊó           \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK  & Àµ¾ï½ªÎ» \\
+    E_ADR & ¼Â¥¢¥É¥ì¥¹¤ò¼¨¤¹ {\tt phaddr} ¤ÎÃÍ¤¬¤ª¤«¤·¤¤ \\
+    E_EXS & °ú¿ô {\tt logaddr} ¤Ç»ØÄê¤·¤¿²¾ÁÛ¥¢¥É¥ì¥¹¤Ï»ÈÍÑ¤Ç¤­¤Ê¤¤
+             (¤¹¤Ç¤Ë»ÈÍÑ¤µ¤ì¤Æ¤¤¤ë) \\
+    E_NOSPC & ¥·¥¹¥Æ¥à¤Î¥á¥â¥êÎÎ°è¤¬ÉÔÂ­¤·¤¿ \\
+    E_PAR & ¥Ñ¥é¥á¡¼¥¿ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢ OS ¤¬´ÉÍý¤·¤Æ¤¤¤Ê¤¤¼Â¥¢¥É¥ì¥¹ÎÎ°è¤òÇ¤°Õ¤Î¥æ¡¼¥¶
+  ¤Î²¾ÁÛ¥¢¥É¥ì¥¹¤Ë¥Þ¥Ã¥Ô¥ó¥°¤¹¤ë¤¿¤á¤Ë»ÈÍÑ¤·¤Þ¤¹¡£ 
+
+  OS ¤¬´ÉÍý¤·¤Æ¤¤¤Ê¤¤¼Â¥¢¥É¥ì¥¹ÎÎ°è¤È¤Ï¡¢°Ê²¼¤Î¤â¤Î¤ò»Ø¤·¤Þ¤¹¡£
+
+  \begin{itemize}
+  \item ¥°¥é¥Õ¥£¥Ã¥¯¥á¥â¥êÎÎ°è ({\tt VRAM})
+  \item I/O ÍÑ¶õ´Ö
+  \end{itemize}
+
+  ¥Þ¥Ã¥Ô¥ó¥°¤¹¤ëÎÎ°è¤Ë¤Ä¤¤¤Æ¤Ï¡¢°ú¿ô opt ¤Ç¼ïÎà¤ò»ØÄê¤·¤Þ¤¹¡£
+
+  °ú¿ô opt ¤Ç»ØÄê¤Ç¤­¤ëÃÍ¤Ï¼¡¤Î¤È¤ª¤ê¤Ç¤¹¡£
+
+  \begin{quote}
+  \begin{description}
+  \item[MAP_LM] ¥×¥í¥»¥¹¤Î¥í¡¼¥«¥ë¤Ê¥á¥â¥êÎÎ°è¤Ë¥Þ¥Ã¥×¤¹¤ë
+  \item[MAP_SM] ¥×¥í¥»¥¹¤Î¶¦Í­¥á¥â¥êÎÎ°è¤Ë¥Þ¥Ã¥×¤¹¤ë
+  \item[MAP_SPEC] °ú¿ô logaddr ¤Ç»ØÄê¤·¤¿²¾ÁÛ¥¢¥É¥ì¥¹¤Ë¥Þ¥Ã¥×¤¹¤ë
+  \item[MAP_ANY] Å¬Åö¤Ê²¾ÁÛ¥¢¥É¥ì¥¹¤Ë¥Þ¥Ã¥×¤¹¤ë
+  \item[MAP_RW] ÆÉ¤ßº ¤ß/½ñ¤­º ¤ß²ÄÇ½¤Ê¥á¥â¥êÎÎ°è¤È¤·¤Æ¥Þ¥Ã¥×¤¹¤ë
+  \item[MAP_RONLY] ÆÉ¤ßº ¤ß¤Î¤ß²ÄÇ½¤Ê¥á¥â¥êÎÎ°è¤È¤·¤Æ¥Þ¥Ã¥×¤¹¤ë
+  \end{description}
+  \end{quote}
+
+  ¥ª¥×¥·¥ç¥ó¤Î»ØÄê¤È¤·¤Æ¡¢MAP_LM ¤È MAP_SM ¡¢MAP_SPEC ¤È MAP_ANY ¡¢
+  MAP_RW ¤È MAP_RONLY ¤Ï¡¢ÆâÍÆ¤¬Ì·½â¤¹¤ë¤¿¤áÆ±¼ ¤Ë»ØÄê¤¹¤ë¤³¤È¤Ï¤Ç¤­
+  ¤Þ¤»¤ó¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-97 »²¾È
+}
+
+
+\Func{ump_mem}{map_mem ¤Ç¥Þ¥Ã¥×¤·¤¿ÎÎ°è¤ò²òÊü¤¹¤ë}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER ump_mem(BPTR logaddr)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    logaddr & ²òÊü¤·¤¿¤¤²¾ÁÛ¥¢¥É¥ì¥¹ÎÎ°è¤ò»ØÄê¤¹¤ë \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_MPTR  & °ú¿ô {\tt logaddr} ¤Ç»ØÄê¤·¤Æ¤¤¤ë¥Þ¥Ã¥Ô¥ó¥°¤ò²ò½ü¤·¤¿¤¤
+               ÏÀÍý¥¢¥É¥ì¥¹¤¬ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢{\tt map_mem()} ¤Ë¤è¤Ã¤Æ¥Þ¥Ã¥Ô¥ó¥°¤·¤¿²¾ÁÛ¥¢¥É
+  ¥ì¥¹¤ò²òÊü¤·¤Þ¤¹¡£
+}
+
+\Entry{È÷¹Í}{
+  \tt BTRON1 ¥×¥í¥°¥é¥ß¥ó¥°¥Ï¥ó¥É¥Ö¥Ã¥¯ 1-99 »²¾È
+}
+
+
+\Func{add_swap}{¥¹¥ï¥Ã¥×¥Ç¥Ð¥¤¥¹/¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER ump_mem(SWAP_INFO info)
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    info & ÄÉ²Ã¤·¤¿¤¤¥¹¥ï¥Ã¥×¤Î¥Ç¥Ð¥¤¥¹/¥Õ¥¡¥¤¥ë¤Î¾ðÊó \\
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ÊÖ¤êÃÍ¤¬ 0 °Ê¾å¡§¥¹¥ï¥Ã¥×¥Ç¥Ð¥¤¥¹¤Î¥¨¥ó¥È¥êÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  ÊÖ¤êÃÍ¤¬ 0 ¤è¤ê¾®¤µ¤¤¡§¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_MPTR  & °ú¿ô {\tt info} ¤Ç»ØÄê¤·¤Æ¤¤¤ë¥Þ¥Ã¥Ô¥ó¥°¤ò²ò½ü¤·¤¿¤¤
+               ÏÀÍý¥¢¥É¥ì¥¹¤¬ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢¥¹¥ï¥Ã¥×¥Ç¥Ð¥¤¥¹¤Þ¤¿¤Ï¥¹¥ï¥Ã¥×¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã¤ò¹Ô¤¤¤Þ¤¹¡£
+
+  ¥¹¥ï¥Ã¥×¥Ç¥Ð¥¤¥¹/¥Õ¥¡¥¤¥ë¤Î»ØÄê¤Ï¡¢SWAP_INFO ¹½Â¤ÂÎ¤ËÆþ¤Ã¤Æ¤¤¤ë¾ðÊó¤Ë¤è¤Ã¤Æ
+  ¹Ô¤¤¤Þ¤¹¡£
+
+  SWAP_INFO ¹½Â¤ÂÎ¤Ï¡¢¼¡¤Î·Á¼°¤Ë¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£
+
+  \vspace{1em}
+  \begin{boxedminipage}[h]{13cm}
+    \vspace{1em}
+    \begin{quote}
+{\tt
+typedef struct swap_info \\
+\{ \\
+  W\hspace{2cm}swaptype; \\
+  TCODE\hspace{1cm}name[MAXPATHLEN]; \\
+\} SWAP_INFO; \\
+}
+    \end{quote}
+    \vspace{1em}
+  \end{boxedminipage}
+
+  \vspace{1em}
+
+  swaptype ¤Ï¡¢¥¹¥ï¥Ã¥×¤ò¹Ô¤¦ÂÐ¾Ý¤Î¼ïÎà¤ò»ØÄê¤·¤Þ¤¹¡£
+
+  ¼¡¤Î¤É¤Á¤é¤«¤ÎÃÍ¤¬Æþ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{{p{4cm} p{10cm}}}
+    {\bf SWAP_FILE (= 1)}   & ¥¹¥ï¥Ã¥×¥¢¥¦¥È¤ò¥Õ¥¡¥¤¥ë¤ËÂÐ¤·¤Æ¹Ô¤¦¡£ \\
+    {\bf SWAP_DEVICE (= 2)} & ¥¹¥ï¥Ã¥×¥¢¥¦¥È¤ò¥Ç¥Ð¥¤¥¹¤ËÂÐ¤·¤Æ¹Ô¤¦¡£ \\
+  \end{tabular}
+}
+
+\Entry{È÷¹Í}{
+  ¥¹¥ï¥Ã¥×ÂÐ¾Ý¤È¤·¤Æ»ØÄê¤·¤¿¥Õ¥¡¥¤¥ë¤Þ¤¿¤Ï¥Ç¥Ð¥¤¥¹¤Ï¡¢¥á¥â¥ê´ÉÍý¥Þ¥Í¡¼
+  ¥¸¥ã¤Ë¤è¤Ã¤ÆÇÓÂ¾¥â¡¼¥É¤Ç¥ª¡¼¥×¥ó¤µ¤ì¤Þ¤¹¡£
+  ¤½¤Î¤¿¤á¡¢¥æ¡¼¥¶¥×¥í¥»¥¹¤¬¥¹¥ï¥Ã¥×¥Õ¥¡¥¤¥ë¤Þ¤¿¤Ï¥Ç¥Ð¥¤¥¹¤ò¥ª¡¼¥×¥ó
+  ¤¹¤ë¤³¤È¤Ï¤Ç¤­¤Þ¤»¤ó¡£  
+}
+
+
+\Func{del_swap}{add_swap ¤ÇÄÉ²Ã¤·¤¿¥¹¥ï¥Ã¥×¤ò²òÊü¤¹¤ë}{system call}
+\Entry{¸Æ¤Ó½Ð¤··Á¼°}{
+  ER del_swap (W index);
+}
+
+\Entry{°ú¿ô}{
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    index & {\tt add_swap} ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ë¤è¤Ã¤ÆÄÉ²Ã¤·¤¿¥¹¥ï¥Ã¥×¤ò¼¨
+    ¤¹ÃÍ ({\tt add_swap} ¤ÎÊÖ¤êÃÍ)¡£
+  \end{tabular}
+}
+
+\Entry{ÊÖ¤êÃÍ}{
+  ¼¡¤Î¥¨¥é¡¼ÈÖ¹æ¤¬ÊÖ¤ê¤Þ¤¹¡£
+
+  \begin{tabular}[h]{p{3cm} p{10cm}}
+    E_OK    & Àµ¾ï½ªÎ» \\
+    E_MPTR  & °ú¿ô {\tt logaddr} ¤Ç»ØÄê¤·¤Æ¤¤¤ë¥Þ¥Ã¥Ô¥ó¥°¤ò²ò½ü¤·¤¿¤¤
+               ÏÀÍý¥¢¥É¥ì¥¹¤¬ÉÔÀµ \\
+  \end{tabular}
+}
+
+\Entry{µ¡Ç½}{
+  ËÜ¥·¥¹¥Æ¥à¥³¡¼¥ë¤Ï¡¢{\tt add_swap()} ¤Ë¤è¤Ã¤ÆÄÉ²Ã¤·¤¿¥¹¥ï¥Ã¥×¥Ç¥Ð¥¤
+  ¥¹¤Þ¤¿¤Ï¥Õ¥¡¥¤¥ë¤ò¥¹¥ï¥Ã¥×¥Ç¥Ð¥¤¥¹¥Æ¡¼¥Ö¥ë¤«¤éºï½ü¤·¤Þ¤¹¡£
+}
+
+</pre>
+</body>
+</html>

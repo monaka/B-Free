@@ -1,0 +1,11 @@
+io.o: ../i386/io.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+locore.o: ../i386/locore.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+interrupt.o: ../i386/interrupt.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+startup.o: ../i386/startup.S
+	$(CC) $(CFLAGS) -c $< -o $@

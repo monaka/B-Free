@@ -1,0 +1,40 @@
+キーコードテーブル(keybord_def.h)に関する考察
+   適宜気がついた人が更新してください。         2000.01.30 kishida0
+
+memo:
+   key_table_xxx 上の CTRL、ALT、SHIFTの意味が良くわからない
+   テーブルのnormal shift control alt 各々が２５５であることから、
+   次の配列に移る為にあるようだ。
+
+   us101 にて control alt code-2B は NOK となっている
+   control-\ は入力が無いようにしてあるのか？
+
+   us86 keyboard  
+     BTC社製 コンパクトキーボードにてキーコードの重複を見つける
+     NUM-LOCK 後に重複が起こる。
+     今の所キーボード固有の問題として未対策とする
+         (note-pc mebiusでは発生しない)
+     
+     pause   -> 45
+     numlock -> 45
+     
+     insert  -> 52
+     0+numlick -> 52
+
+
+jp106:
+   missing keycode
+     2D: CTL と定義があるが、キーボード上見つけられなかった。
+     38: ALT  -- 同上 --
+
+us101:
+   missing keycode
+     38: ALT  -- 同上 --
+
+   
+
+
+
+
+
+

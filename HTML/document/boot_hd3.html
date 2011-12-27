@@ -1,0 +1,251 @@
+
+
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<TITLE>B-Free/HD boot instruction.</TITLE>
+</HEAD>
+
+<BODY bgcolor="#FFFFFF">
+
+<H1>FDからbootしてHDからbfree起動する方法</H1>
+<HR>
+<P>
+　　　打ち間違いを避ける為、カットアンドペーストをお薦めします。
+</P>
+<P>
+<FONT color="#FF0000">　　　注意　：ｒｏｏｔ権限でアクセスしてください。</FONT>
+</P>
+<OL>
+  <LI>B-Free OS をインストールするパーティションを確保します。
+  <P>
+LinuxとＢｔｒｏｎを一つのハードディスクにインストールする例を紹介します。
+  </P>
+  <P>
+Linuxをインストールする途中にパーティションを編集する場面(fdisk)で以下のように確保します。<BR>
+インストールした後はfdiskで起動してください。<BR>
+パーティションの大きさはB-FreeOS Sfsが１Ｍ（最低）２０Ｍ以上（推奨）.
+  </P>
+  <P>
+パーティション　システム　　　　　　　ＩＤ<BR>
+/hda1　　　　　　LinuxOS native　　８３<BR>
+/hda2　　　　　　LinuxOS swap　　　８２<BR>
+/hda3　　　　　　B-FreeOS sfs　　　７１
+  </P>
+  <P>
+これは一つの例であって強制ではありません、例えばLinuxOS　swapなしでもできますし、<BR>
+１と２と３を入れ替えた設定もできます。<BR>
+しかし、このマニュアルでは上の設定に従って説明しますので、 違った環境でインストール<BR>
+する方はその都度応用をきかせてください。<BR>
+&nbsp;
+  </P>
+  <LI>B-Free OS のソースを落とします。<BR>
+URL: ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/ の下に、b-free-pc.xx.yy.zz.tar.gz
+という名前で入っています。<BR>
+<BR>
+<FONT color="#FF0000">注意　３</FONT>：０．４０以下のバージョンはハードディスクにインストール出来ません。修正パッチをあてるか<BR>
+それ以降のバージョンを使ってください。<BR>
+<BR>
+(xx.yy.zz はバージョンです。値の大きいものが新しいバージョンです)<BR>
+&nbsp;
+  <LI>落としたファイル (tar + gzip ファイル) を適当なディレクトリで展開します。
+  <BLOCKQUOTE>
+
+  <P>
+tar xvzf b-free-pc.xx.yy.zz.tar.gz
+  </P>
+  </BLOCKQUOTE>
+  <LI>ブートイメージを作ります。 boot ディレクトリに入り、make を実行します。<BR>
+  <BLOCKQUOTE>
+cd boot<BR>
+make
+  </BLOCKQUOTE>
+boot ディレクトリに bootimageというファイルができます。<BR>
+&nbsp;
+  <LI>boot プログラム をフロッピーディスクに書き込みます。<BR>
+<BR>
+<FONT color="#FF6666">注意:dd(cp)コマンドはroot権限がないと実行できません。</FONT><BR>
+<BR>
+  <BLOCKQUOTE>
+dd if=bootimage of=/dev/fd0　または　cp bootimage /dev/fd0
+  </BLOCKQUOTE>
+  <LI>kernel を make します。<BR>
+<BR>
+kernel/BTRON/make ディレクトリに移動し、make コマンドを実行します。<BR>
+  <BLOCKQUOTE>
+cd kernel/BTRON/make<BR>
+make
+  </BLOCKQUOTE>
+  <P>
+kernel/BTRON/make ディレクトリの下に btron というファイルができます。
+  </P>
+  <LI>ファイルシステム作成用のツールを makeします。<BR>
+<BR>
+kernel/POSIX/mkfs にあるファイルシステム作成用のツールを make します。
+  <BLOCKQUOTE>
+
+  <P>
+cd kernel/POSIX/mkfs<BR>
+make
+  </P>
+  </BLOCKQUOTE>
+  <P>
+kernel/POSIX/mkfs ディレクトリに mkfs と statfs というファイルがで きます。<BR>
+<BR>
+statfsはよく使うコマンドなので/sbinにコピーします。
+  </P>
+  <BLOCKQUOTE>
+cp statfs /sbin
+  </BLOCKQUOTE>
+  <LI>ファイルシステムの作成。<BR>
+<BR>
+準備しておいたB-FreeOS sfsに B-Free OS のファイルシステムを構築します。<BR>
+<BR>
+mkfs を実行します。<BR>
+<BR>
+<FONT color="#FF6666">注意:mkfsコマンドはroot権限がないと実行できません。</FONT><BR>
+&nbsp;
+  <P>
+ｍｋｆｓ（ＢＴＲＯＮ用)はすでに/sbinに同じ名前のmkfs(Ｌｉｎｕｘ用)があるため<BR>
+間違いやすいので注意が必要です。
+  </P>
+  <P>
+kernel/POSIX/mkfs を実行して、パーティションをフォーマットします。
+  </P>
+  <BLOCKQUOTE>
+./mkfs /dev/HDのパーティション ブロック数 ブロックサイズ I-node数
+  </BLOCKQUOTE>
+  <P>
+I-node数はそのパーティションのファイルの最大数です。<BR>
+ブロックサイズは無条件に５１２バイトを指定してください。<BR>
+ブロック数はパーティションのサイズ÷５１２で計算してください。<BR>
+ｆｄｉｓｋを起動してｐコマンドで情報が見れます。<BR>
+そこに書いてあるBlock数は1024バイトで計算してあるのでB-Freeではこれの２倍の数字を設定してください。
+  </P>
+  <BLOCKQUOTE>
+例 ./mkfs /def/hda4 604800 512 1000
+  </BLOCKQUOTE>
+  <P>
+ここは３００ＭＢ（かなり大きい）の例です。
+  </P>
+  <P>
+実行すると、superblock = 数字, bitmap block = 数字, inode block = 数字と一行だけ表示されます。<BR>
+５行表示されているとＬｉｎｕｘ用のmkfsが実行されていますのでコマンドを正確に打ち直してください<BR>
+&nbsp;
+  </P>
+  <LI>mkfs が成功したかを確認します。<BR>
+<BR>
+statfs を実行してファイルシステムの中を覗いてみます。<BR>
+<FONT color="#FF6666">注意:statfsコマンドはroot権限がないと実行できません。</FONT><BR>
+  <BLOCKQUOTE>
+
+  <P>
+statfs /dev/hda4 dir /
+  </P>
+  </BLOCKQUOTE>
+  <P>
+実行すると
+  </P>
+  <P>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; .&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+60byte<BR>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; ..&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+60byte<BR>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; lost+found&nbsp;&nbsp;&nbsp;40byte
+  </P>
+  <P>
+lost+foundがあれば成功です。<BR>
+&nbsp;
+  </P>
+  <LI>/systemディレクトリの制作
+  <P>
+ファイルシステムを入れるためのディレクトリを制作します。<BR>
+<FONT color="#FF6666">注意:statfsコマンドはroot権限がないと実行できません。</FONT>
+  </P>
+  <BLOCKQUOTE>
+statfs /dev/hda4 mkdir /system
+  </BLOCKQUOTE>
+  <P>
+なにも表示されなければ成功です。次のコマンドで確かめてください。
+  </P>
+  <BLOCKQUOTE>
+statfs /dev/hda4 dir /
+  </BLOCKQUOTE>
+  <P>
+6&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; .&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+80byte<BR>
+6&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; ..&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+80byte<BR>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; lost+found&nbsp;&nbsp;&nbsp;40byte<BR>
+3&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; system&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60byte
+  </P>
+  <P>
+systemがあれば成功です。<BR>
+&nbsp;<BR>
+&nbsp;
+  </P>
+  <LI>B-Free OS をファイルシステムに入れます。<BR>
+<BR>
+<FONT color="#FF6666">注意:statfsコマンドはroot権限がないと実行できません。</FONT><BR>
+8. で作成した B-Free OS を新しく作ったファイルシステムの中にコピー します。<BR>
+/system/btron386 という名前でコピーする必要があります。
+  <BLOCKQUOTE>
+
+  <P>
+cd kernel/BTRON/make<BR>
+statfs /dev/hda4 write /system/btron386 btron
+  </P>
+  </BLOCKQUOTE>
+  <P>
+これで、/system ディレクトリの下に btron386 というファイルが作られ ます。
+  </P>
+  <BLOCKQUOTE>
+statfs /dev/hda4 dir /system
+  </BLOCKQUOTE>
+  <P>
+3&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; .&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+80byte<BR>
+6&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; ..&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+80byte<BR>
+1&nbsp;&nbsp; 0666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp; btron386&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;323584byte
+  </P>
+  <P>
+btron386 というファイルがあれば成功です。
+  </P>
+  <LI>boot します。<BR>
+<BR>
+ブートフロッピーを入れてマシンを再起動します。
+  <P>
+ブートプログラムが起動すると、boot&gt; というプロンプトを表示します。<BR>
+&nbsp;
+  </P>
+  <LI>BTRON OS が起動させます。<BR>
+<BR>
+&gt;boot ハードディスクから起動　ハードディスクの位置　パーティーションの位置
+  <P>
+&gt;boot hd 0 2
+  </P>
+  <P>
+init&gt;と表示されれば成功です。
+  </P>
+</OL>
+<HR>
+<P>
+<A href="../index.html">B-Free オフィシャルホームページへ戻る</A><BR>
+</P>
+<HR>
+<P>
+<FONT size="3">Copyright (C) 1996,1997 B-Free Project</FONT>
+</P>
+</BODY>
+</HTML>

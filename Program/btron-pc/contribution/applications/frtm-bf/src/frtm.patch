@@ -1,0 +1,72 @@
+*** commands.inc.orig	Mon Mar 15 17:41:26 1999
+--- commands.inc	Sun May  9 13:12:22 1999
+***************
+*** 82,87 ****
+--- 82,90 ----
+  MITN_OPERATOR("==",  PopAndPrint,  1)
+  MITN_OPERATOR("stack-status", MitnStack_Status, 0)
+  TRAD_OPERATOR("echo", echo, 1)
++ 
++ MITN_OPERATOR("frtm", frtm, 0)
++ 
+  #ifndef _DEBUG_ON_UNIX
+  MITN_OPERATOR("gc", MitnStack_GarbageCollect, 0)
+  
+*** Makefile.orig	Sun May  9 13:10:33 1999
+--- Makefile	Sun May  9 13:10:47 1999
+***************
+*** 14,24 ****
+  CMDOBJ=../libMittenCmd/command.o \
+  	../libMittenCmd/graphic.o ../libMittenCmd/GraphicOp.o \
+  	../libMittenCmd/posix-misc.o ../libMittenCmd/posix-file.o
+  
+  #all: libMitten.a
+  
+! libMitten.a: $(OBJS) $(STACKOBJS) $(CMDOBJ)
+! 	ar rv libMitten.a $(OBJS) $(STACKOBJS) $(CMDOBJ)
+  	ranlib libMitten.a
+  
+  CellPool.o: CellMemory.h
+--- 14,25 ----
+  CMDOBJ=../libMittenCmd/command.o \
+  	../libMittenCmd/graphic.o ../libMittenCmd/GraphicOp.o \
+  	../libMittenCmd/posix-misc.o ../libMittenCmd/posix-file.o
++ FTMOBJ=frtm.o stack.o interp.o funcs.o dict.o demos.o fgraph.o
+  
+  #all: libMitten.a
+  
+! libMitten.a: $(OBJS) $(STACKOBJS) $(CMDOBJ) $(FTMOBJ)
+! 	ar rv libMitten.a $(OBJS) $(STACKOBJS) $(CMDOBJ) $(FTMOBJ)
+  	ranlib libMitten.a
+  
+  CellPool.o: CellMemory.h
+***************
+*** 33,38 ****
+--- 34,47 ----
+  
+  command.o: commands.inc
+  
++ frtm.o: frtm.c frtm.h errmes.h
++ stack.o: stack.c frtm.h
++ interp.o: interp.c frtm.h funcs.h
++ funcs.o: funcs.c frtm.h
++ dict.o: dict.c frtm.h
++ demos.o: demos.c frtm.h
++ fgraph.o: fgraph.c frtm.h
++ 
+  includes:
+  	grep "^ER" CellPool.c | gawk '{ printf "extern "; print; print ";"}' > CellPool.h
+  	grep "^ER" GarbageCollect.c | gawk '{ printf "extern "; print; print ";"}' > GarbageCollect.h
+***************
+*** 47,51 ****
+  	
+  clean:
+  	rm -f libMitten.a
+! 	rm -f $(OBJS) $(STACKOBJS) $(CMDOBJ)
+  	rm -f *~
+--- 56,60 ----
+  	
+  clean:
+  	rm -f libMitten.a
+! 	rm -f $(OBJS) $(STACKOBJS) $(CMDOBJ) $(FTMOBJ)
+  	rm -f *~

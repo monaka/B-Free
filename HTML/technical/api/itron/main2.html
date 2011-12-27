@@ -1,0 +1,506 @@
+<html>
+<head>
+<title>無題ドキュメント</title>
+<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
+</head>
+
+<body bgcolor="#FFFFFF">
+<p><font size="7"><tt>同期・通信</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="cre_sem">cre_sem</a></tt></font><font size="4"><tt>（セマフォ生成）</tt></font></p>
+<p><tt><font size="4">・管理ブロックを確保</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・拡張情報はref_semで利用可</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_sem( ID semid, T_CSEM *pk_csem );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CSEM*　　pk_csem　　セマフォ生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_csemの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　sematr　　 セマフォ情報（TA_TFIFO(FIFO) || TA_TPRI(優先度)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　isemcnt　　セマフォ初期値（レベルＸ）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxsem　　 セマフォ最大値（レベルＸ）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックの領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 sematrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_csemが不正、isemcnt、maxsemが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが-4～0あるいは範囲外</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 semidのセマフォが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のセマフォは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでexinf、sematr、isemcnt、maxsemがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="del_sem">del_sem</a></tt></font><font size="4"><tt>（セマフォ削除）</tt></font></p>
+<p><tt><font size="4">・管理ブロックを解放</font></tt></p>
+<p><tt><font size="4">・削除後の同優先度の順番はインプリメント依存</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_sem( ID semid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 semidのセマフォが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のセマフォは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[RN] </tt></font><font size="6"><tt><a name="sig_sem">sig_sem</a></tt></font><font size="4"><tt>（セマフォ資源返却）</tt></font></p>
+<p><tt><font size="4">・セマフォが先頭に確保しているタスクをREADYにする</font></tt></p>
+<p><tt><font size="4">・セマフォにタスクがないときは返却要求数(semcnt)を増やす</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = sig_sem( ID semid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが(-4)～0あるいは範囲</tt></font><font size="4"><tt>外</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 semidのセマフォが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜(-4)のセマフォは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_QOVR　　　semcnt(現在値)がmaxsem(最高値)を越えた[レベルＸ]</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[RN] </tt></font><font size="6"><tt><a name="wai_sem">wai_sem</a></tt></font><font size="4"><tt>（セマフォ資源獲得）</tt></font></p>
+<p><tt><font size="4">・セマフォの資源に余裕がある(semcnt≧1)ときsemcntを減らして自タスクが実行される</font></tt></p>
+<p><tt><font size="4">・セマフォの資源に余裕がない(semcnt＝0)とき<tt>セマフォ資源獲得</tt>待ち</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = wai_sem( ID semid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 semidのセマフォが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のセマフォは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象セマフォが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[RN] </tt></font><font size="6"><tt><a name="preq_sem">preq_sem</a></tt></font><font size="4"><tt>（セマフォ資源獲得（ポーリング））</tt></font></p>
+<p><tt><font size="4">・セマフォの資源に余裕がある(semcnt≧1)ときsemcntを減らして自タスクが実行される</font></tt></p>
+<p><tt><font size="4">・セマフォの資源に余裕がない(semcnt＝0)とき自タスクはE_TMOUT</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = preq_sem( ID semid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 semidのセマフォが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のセマフォは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象セマフォが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="twai_sem">twai_sem</a></tt></font><font size="4"><tt>（セマフォ資源獲得（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・セマフォの資源に余裕がある(semcnt≧1)とき、semcntを減らして自タスクが実行される</font></tt></p>
+<p><tt><font size="4">・セマフォの資源に余裕がない(semcnt＝0)ときセマフォ資源獲得待ち、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならpreq_sem、TMO_FEVRならwai_sem</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = twai_sem( ID semid, TMO tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><tt><font size="4">　TMO　　　　tmout　　　タイムアウト指定（TMO_POL = 0(0)、TMO_FEVR = 0(∞)）</font></tt></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 semidのセマフォが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のセマフォは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象セマフォが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでtmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="ref_sem">ref_sem</a></tt></font><font size="4"><tt>（セマフォ状態参照）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_sem( T_RSEM *pk_rsem, ID semid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 semid　　　セマフォＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RSEM*　　pk_rsem　　セマフォ状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rsemの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　wtsk　　　 待機タスクの有無（FALSE＝0(無し)、0以外の場合タスクのID(レベルＸ)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　semcnt　　 現在のセマフォカウント値</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rsemが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 semidのセマフォが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のセマフォが利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのsemidのセマフォが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたexinf、wtsk、semcntが不正</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのセマフォを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="cre_flg">cre_flg</a></tt></font><font size="4"><tt>（イベントフラグ生成）</tt></font></p>
+<p><tt><font size="4">・管理ブロックを確保（1word単位）</font></tt></p>
+<p><tt><font size="4">・拡張情報はref_flgで利用可</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_flg( ID flgid, T_CFLG *pk_cflg );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CFLG*　　pk_cflg　　イベント生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cflgの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　flgatr　　 イベントフラグ情報（TA_WMUL(複数タスクの待機許可)(レベルＸ) || 
+  TA_WSGL(複数タスクの待機不許可)）</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 isemcnt　　イベントフラグ初期値</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロック用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 flgatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_cflgが不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 flgidのタスクが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードにflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでexinf、flgatr、iflgptnがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのイベントフラグを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="del_flg">del_flg</a></tt></font><font size="4"><tt>（イベントフラグ削除）</tt></font></p>
+<p><tt><font size="4">・管理ブロック解放</font></tt></p>
+<p><tt><font size="4">・複数のタスクを管理するフラグを削除後の優先度はインプリメント依存</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_flg( ID flgid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのイベントフラグを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="set_flg">set_flg</a></tt></font><font size="4"><tt>（イベントフラグのセット） 
+  </tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・イベントフラグの状態値とsetptnの論理和をとる</font></tt></p>
+<p><tt><font size="4">・複数のタスクが一斉に待機解除されたときの優先度はインプリメント依存（属性がTA_WMULの場合）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = set_flg( ID flgid, UINT setptn );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 setptn　　 セットするビットパターン</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでexinf、flgatr、iflgptnがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのイベントフラグを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="clr_flg">clr_flg</a></tt></font><font size="4"><tt>（イベントフラグのクリア）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・イベントフラグの状態値とsetptnの論理積をとる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = clr_flg( ID flgid, UINT clrtn );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 clrptn　　 クリアするビットパターン</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでexinf、flgatr、iflgptnがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのイベントフラグを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="wai_flg">wai_flg</a></tt></font><font size="4"><tt>（イベントフラグ待ち）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・<tt>iflgptn(初期値)をwaiptn</tt>が満たさないときイベントフラグ待ち、flgatrがTA_WMULなら複数待機できる</font></tt></p>
+<p><tt><font size="4">・<tt>iflgptn(初期値)をwaiptnがTWF_ANDW(すべて満たす)、TWF_ORW<font size="4"><tt>(一つでも満たす)とき待機解除</tt></font></tt></font></tt></p>
+<p><tt><font size="4">・<tt>TWF_</tt>CLRが指定してあるとき待機解除後にイベントフラグの状態値をクリア</font></tt></p>
+<p><tt><font size="4">・待機解除前の状態値をリターン</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = wai_flg( UINT *p_flgptn, ID flgid, UINT waiptn, 
+  UINT wfmode );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 waiptn　　 待機ビットパターン</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 wfmode　　 待機モード（TWF_ANDW(0) || TWF_ORW(2) | TWF_CLR(1)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 flgptn　　 待機解除時のビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　semidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 waiptn=0、wfmodeが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 TA_WSGL属性のイベントフラグに対する複数タスクの待ち</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象セマフォが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたflgptnが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[SN] </tt></font><font size="6"><tt><a name="pol_flg">pol_flg</a></tt></font><font size="4"><tt>（イベントフラグ待ち（ポーリング））</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4"><tt>・<font size="4"><tt>iflgptn(初期値)</tt></font>をwaiptnが満たさないときE_TMOUT</tt></font></tt></p>
+<p><tt><font size="4">・<tt><font size="4"><tt>iflgptn(初期値)</tt></font>をwaiptnがTWF_ANDW(すべて満たす)、TWF_ORW<font size="4"><tt>(一つでも満たす)とき待機解除</tt></font></tt></font></tt></p>
+<p><tt><font size="4">・<tt>TWF_</tt>CLRが指定してあるとき待機解除後にイベントフラグの状態値をクリア</font></tt></p>
+<p><tt><font size="4">・待機解除前の状態値をリターン</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = pol_flg( UINT *p_flgptn, ID flgid, UINT waiptn, 
+  UINT wfmode );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 waiptn　　 待機ビットパターン</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 wfmode　　 待機モード（TWF_ANDW(0) or TWF_ORW(2) + TWF_CLR(1)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 flgptn　　 待機解除のビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 waiptn=0、wfmodeが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 TA_WSGL属性のイベントフラグに対する複数タスクの待ち</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象イベントフラグが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 flgptnが要求ノードで表現できる値の範囲外</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="twai_flg">twai_flg</a></tt></font><font size="4"><tt>（イベントフラグ待ち（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLのときpol_flg、TMO_FEVRのときwai_flg</font></tt></p>
+<p><tt><font size="4">・<tt><font size="4"><tt><font size="4"><tt>iflgptn(初期値)</tt></font></tt></font>をwaiptnが満たさないときイベントフラグ待ち<font size="4">、tmout経過後E_TMOUT</font></tt></font></tt></p>
+<p><tt><font size="4">・<tt><font size="4"><tt><font size="4"><tt>iflgptn(初期値)</tt></font></tt></font>をwaiptnがTWF_ANDW(すべて満たす)、TWF_ORW<font size="4"><tt>(一つでも満たす)とき待機解除</tt></font></tt></font></tt></p>
+<p><tt><font size="4">・<tt>TWF_</tt>CLRが指定してあるとき待機解除後にイベントフラグの状態値をクリア</font></tt></p>
+<p><tt><font size="4">・待機解除前の状態値をリターン</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = wai_flg( UINT *p_flgptn, ID flgid, UINT waiptn, 
+  UINT wfmode, TMO tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 waiptn　　 待機ビットパターン</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 wfmode　　 待機モード（TWF_ANDW(0) || TWF_ORW(2) | TWF_CLR(1)）</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 flgptn　　 待機解除のビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 waiptn=0、wfmodeが不正、tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 TA_WSGL属性のイベントフラグに対する複数タスクの待ち</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象イベントフラグが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでtmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたflgptnが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="ref_flg">ref_flg</a></tt></font><font size="4"><tt>（イベントフラグ状態参照）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_flg( T_RFLG *pk_rflg, ID flgid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 flgid　　　イベントフラグＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CFLG*　　pk_rflg　　イベントフラグ状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rflgの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無（FALSE = 0(無し)、0以外の場合タスクのID(レベルＸ)）</tt></font></p>
+<p><font size="4"><tt>　　UINT　　　 flgptn　　 イベントフラグのビットパターン</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　flgidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rflgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 flgidのイベントフラグが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 TA_WSGL属性のイベントフラグに対する複数タスクの待ち</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のイベントフラグは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのflgidのイベントフラグが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたflgptnが不正</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのイベントフラグを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="cre_mbx">cre_mbx</a></tt></font><font size="4"><tt>（メイルボックス生成）</tt></font></p>
+<p><tt><font size="4">・拡張情報はref_mbxで利用可</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_mbx( ID mbxid, T_CMBX *pk_msg );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMBX*　　pk_cmbx　　メイルボックス生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmbxの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　mbxatr　　 mbxatr　　 メイルボックス属性（TA_TFIFO(タスクはFIFO) || TA_TPRI(タスクは優先度順) 
+  | TA_MFIFO(メッセージはFIFO) || TA_MPRI(メッセージは優先度順)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　bufcnt　　 メッセージの数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　</tt></font><font size="4"><tt>正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックやバッファ用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 mbxatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_cmbxが不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 mbxidのメイルボックスが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメイルボックスは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="del_mbx">del_mbx</a></tt></font><font size="4"><tt>（メイルボックス削除）</tt></font></p>
+<p><tt><font size="4">・管理ブロックとバッファ領域の解放</font></tt></p>
+<p><tt><font size="4">・複数のタスクを管理するメイルボックスを削除したとき同優先度の順序はインプリメント依存</font></tt></p>
+<p><tt><font size="4">・削除後の待機中のタスクにはE_DLT、メッセージは破棄</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_mbx( ID mbxid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbxidのメイルボックスが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4メイルボックスは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="snd_msg">snd_msg</a></tt></font><font size="4"><tt>（メイルボックスへ送信）</tt></font></p>
+<p><tt><font size="4">・受信待ちのタスクがないときメッセージキューにメッセージ(pk_msg)を送信</font></tt></p>
+<p><tt><font size="4">・受信待ちのタスクがあるときタスクにメッセージ(pk_msg)を送信</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = snd_mbx( ID mbxid, T_MSG *pk_msg );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_MSG　　　pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 メッセージボックスが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメッセージボックスは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_QOVR　　　メッセージキューのオーバーフロー</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="rcv_msg">rcv_msg</a></tt></font><font size="4"><tt>（メイルボックスから受信）</tt></font></p>
+<p><tt><font size="4">・メッセージがメッセージキューに有るなら受信(pk_msgをリターン)</font></tt></p>
+<p><tt><font size="4">・メッセージがメッセージキューに無いなら受信待ち</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = rcv_msg( T_MSG **ppk_msg, ID mbxid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　T_MSG*　　 pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbxidのメイルボックスが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメイルボックスは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメイルボックスが削除</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[S] </tt></font><font size="6"><tt><a name="prcv_msg">prcv_msg</a></tt></font><font size="4"><tt>（メイルボックスから受信（ポーリング））</tt></font></p>
+<p><tt><font size="4">・メッセージがメッセージキューに有るなら受信(pk_msgをリターン)</font></tt></p>
+<p><tt><font size="4">・メッセージがメッセージキューに無いならE_TMOUT</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = prcv_msg( T_MSG **ppk_msg, ID mbxid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　T_MSG*　　 pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbxidのメイルボックスが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメッセージボックスは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="trcv_msg">trcv_msg</a></tt></font><font size="4"><tt>（メイルボックスから受信（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・メッセージがメッセージキューに有るなら受信(pk_msgをリターン)</font></tt></p>
+<p><tt><font size="4">・メッセージがメッセージキューに無いなら受信待ち、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならprcv_msg、TMO_FEVRならtrcv_msg</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = trcv_msg( T_MSG **ppk_msg, ID mbxid, TMO tmout 
+  );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　T_MSG*　　 pk_msg　　 メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbxidのメイルボックスが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメイルボックスは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に相手が削除</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ref_mbx">ref_mbx</a></tt></font><font size="4"><tt>（メイルボックス状態参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_mbx( T_RMBX *pk_rmbx, ID mbxid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メイルボックスＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RMBX*　　pk_rmbx　　メイルボックス状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmbxの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無</tt></font></p>
+<p><font size="4"><tt>　　T_MSG　　　pk_msg　　 次に受信されるメッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbxidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rmbxのアドレスが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbxidのメイルボックスが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメイルボックスは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+</body>
+</html>

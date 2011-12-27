@@ -1,0 +1,27 @@
+/usr/products/btron/note/doc --- btron-protocol.txt	-*- text -*-
+
+
+
+
+
+
+
+		       BTRON/386 プロトコル定義
+		       ========================
+
+
+		   BTRON/386 protocol specification
+
+
+			    Version 0.1.0
+
+
+
+
+		     +--------------------------+
+		     | F i r s t      D r a f t |
+		     +--------------------------+
+
+
+
+

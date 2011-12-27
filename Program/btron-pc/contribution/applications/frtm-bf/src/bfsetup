@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#mv -f Makefile Makefile.frtm
+patch -p1 < bf.patch

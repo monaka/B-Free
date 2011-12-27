@@ -1,0 +1,52 @@
+\function{vio\_rquest -- デバイスに対して入出力要求を送る}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER io\_request (ID device, T\_IO\_REQUEST *req, T\_IO\_RESPONSE *res, W mode)}
+
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem{device}      要求を送るデバイスのＩＤ
+  \labitem{req}         要求パケット
+  \labitem{res}         応答パケット (非同期モードのときには使用しない)
+  \labitem{mode}        同期/非同期モードの指定
+  \begin{lablist}
+    \labitem{IO\_SYNC}          同期モード
+    \labitem{IO\_ASYNC}         非同期モード
+  \end{lablist}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した。
+  \begin{quote}
+    このエラー番号はデバイスに要求の送受信ができた
+    かどうかだけを知らせるもので、Ｉ／Ｏ処理自体が
+    うまくできたかどうかは受信パケットの中を見るし
+    かない。
+  \end{quote}
+\end{lablist}
+
+
+\labitem{機能}
+
+要求パケットに指定されたデバイスに対して、入出力要求を送ります。
+
+送信したメッセージに対する返答は、引数 res に入ります。
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: "itron"
+% End: 

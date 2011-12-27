@@ -1,0 +1,10 @@
+frtm
+debug.o
+demos.o
+dict.o
+fgraph.o
+frtm.o
+funcs.o
+interp.o
+posix.o
+stack.o

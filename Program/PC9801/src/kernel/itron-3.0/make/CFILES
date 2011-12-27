@@ -1,0 +1,160 @@
+devconfig.o:	../common/devconfig.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+console.o:	../common/console.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+	
+dummy.o:	../common/dummy.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+error.o:	../common/error.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+itron_memory.o:	../common/itron_memory.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+kalloc.o:	../common/kalloc.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+main.o:	../common/main.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+memory.o:	../common/memory.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+misc.o:	../common/misc.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+pmemory.o:	../common/pmemory.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+printf.o:	../common/printf.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+syscall.o:	../common/syscall.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+task.o:	../common/task.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+version.o:	../common/version.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+virtual_memory.o:	../i386/virtual_memory.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+gdt.o:	../i386/gdt.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+tss.o:	../i386/tss.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+fault.o:	../i386/fault.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+semaphore.o:	../common/semaphore.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+	
+timer.o:	../pc9801/timer.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+task2.o:	../common/task2.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+message.o:	../common/message.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+eventflag.o:	../common/eventflag.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+keyboard.o:	../pc9801/keyboard.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+dbg_functions.o:	../common/dbg_functions.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+debug.o:	../common/debug.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+device.o:	../io/device.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+rs232c.o:	../io/rs232c.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+echo.o:	../io/echo.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+gdc7220.o:	../pc9801/gdc7220.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+syscall-if.o: ../common/syscall-if.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+
+system.o: ../common/system.c
+	kp -input $< -output kptmp.c
+	$(CC) $(CFLAGS) -c kptmp.c -o $@
+	rm -f kptmp.c
+	

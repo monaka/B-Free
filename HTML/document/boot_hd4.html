@@ -1,0 +1,184 @@
+
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<TITLE>B-Free/HD boot instruction.</TITLE>
+</HEAD>
+
+<BODY bgcolor="#FFFFFF">
+
+<H1>フロッピーからbootとbfree起動の方法</H1>
+<HR>
+<P>
+　　　打ち間違いを避ける為、カットアンドペーストをお薦めします。
+</P>
+<P>
+<FONT color="#FF0000">　　　注意　：ｒｏｏｔ権限でアクセスしてください。</FONT>
+</P>
+<OL>
+  <LI>フロッピーディスクを３枚用意します。<BR>
+一枚目は起動用<BR>
+二枚目はシステム本体<BR>
+三枚目はPOSIX
+</OL>
+<OL>
+  <LI>B-Free OS のソースを落とします。<BR>
+URL: ftp://www.sccs.chukyo-u.ac.jp/pub4/B-Free/pub/IBM-PC/ の下に、b-free-pc.xx.yy.zz.tar.gz
+という名前で入っています。<BR>
+<BR>
+(xx.yy.zz はバージョンです。値の大きいものが新しいバージョンです)<BR>
+&nbsp;
+  <LI>落としたファイル (tar + gzip ファイル) を適当なディレクトリで展開します。
+  <BLOCKQUOTE>
+
+  <P>
+tar xvzf b-free-pc.xx.yy.zz.tar.gz
+  </P>
+  </BLOCKQUOTE>
+  <LI>Make します。 boot ディレクトリに入り、make を実行します。<BR>
+  <BLOCKQUOTE>
+
+  <P>
+cd boot<BR>
+make
+  </P>
+  </BLOCKQUOTE>
+  <P>
+boot ディレクトリに bootimageというファイルができます。<BR>
+  </P>
+  <LI>bootimageを一枚目のフロッピーディスクに書き込みます。<BR>
+<BR>
+<FONT color="#FF6666">注意:dd(cp)コマンドはroot権限がないと実行できません。</FONT><BR>
+  <BLOCKQUOTE>
+
+  <P>
+dd if=bootimage of=/dev/fd0　または　cp bootimage /dev/fd0
+  </P>
+  </BLOCKQUOTE>
+  <LI>kernel を make します。<BR>
+<BR>
+kernel/BTRON/make ディレクトリに移動し、make コマンドを実行します。<BR>
+  <BLOCKQUOTE>
+
+  <P>
+cd kernel/BTRON/make<BR>
+make
+  </P>
+  </BLOCKQUOTE>
+  <P>
+kernel/BTRON/make ディレクトリの下に btron というファイルができます。<BR>
+  </P>
+  <LI>btronを二枚目のフロッピーディスクに書き込みます。<BR>
+<BR>
+<FONT color="#FF6666">注意:dd(cp)コマンドはroot権限がないと実行できません。</FONT>
+  <BLOCKQUOTE>
+
+  <P>
+dd if=btron of=/dev/fd0　または　cp btron /dev/fd0
+  </P>
+  </BLOCKQUOTE>
+  <LI>ファイルシステム作成用のツールを make。<BR>
+<BR>
+kernel/POSIX/mkfs にあるファイルシステム作成用のツールを make します。<BR>
+  <BLOCKQUOTE>
+
+  <P>
+cd kernel/POSIX/mkfs<BR>
+make
+  </P>
+  </BLOCKQUOTE>
+  <P>
+kernel/POSIX/mkfs ディレクトリに mkfs と statfs というファイルがで きます。<BR>
+<BR>
+statfsはよく使うコマンドなので/sbinにコピーします。
+  </P>
+  <BLOCKQUOTE>
+cp statfs /sbin
+  </BLOCKQUOTE>
+  <LI>三枚目のフロッピーディスクにファイルシステムの作成。<BR>
+<BR>
+kernel/POSIX/mkfs を実行します。<BR>
+<BR>
+<FONT color="#FF6666">注意:mkfsコマンドはroot権限がないと実行できません。</FONT><BR>
+&nbsp;
+  <P>
+ｍｋｆｓ（ＢＴＲＯＮ用)はすでに/sbinに同じ名前のmkfs(Ｌｉｎｕｘ用)があるため<BR>
+間違いやすいので注意が必要です。
+  </P>
+  <BLOCKQUOTE>
+./mkfs /dev/HDのパーティション ブロック数 ブロックサイズ I-node数
+  </BLOCKQUOTE>
+  <P>
+]ブロック数はフロッピーで1880になります。<BR>
+ブロックサイズは512で固定です。<BR>
+I-node数はそのパーティションのファイルの最大数です。
+  </P>
+  <BLOCKQUOTE>
+
+  <P>
+./mkfs /def/fd0 1880 512 1000
+  </P>
+  </BLOCKQUOTE>
+  <P>
+実行すると、superblock = 数字, bitmap block = 数字, inode block = 数字と一行だけ表示されます。<BR>
+５行表示されているとＬｉｎｕｘ用のmkfsが実行されていますのでコマンドを正確に打ち直してください&nbsp;
+  </P>
+  <LI>mkfs が成功したかを確認します。<BR>
+<BR>
+statfs を実行してファイルシステムの中を覗いてみます。<BR>
+<FONT color="#FF6666">注意:statfsコマンドはroot権限がないと実行できません。</FONT>
+  <BLOCKQUOTE>
+
+  <P>
+./statfs /dev/fd0 dir /
+  </P>
+  </BLOCKQUOTE>
+  <P>
+実行すると
+  </P>
+  <P>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; .　　　　　　　60byte<BR>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; ..　　　　　　　60byte<BR>
+2&nbsp;&nbsp; 20666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp;
+0000&nbsp;&nbsp;&nbsp; lost+found　40byte
+  </P>
+  <P>
+lost+foundがあれば成功です。
+  </P>
+  <LI>boot します。<BR>
+<BR>
+一枚目の　ブートフロッピーを入れてマシンを再起動します。
+  <P>
+ブートプログラムが起動すると、boot&gt; というプロンプトを表示します。
+  </P>
+  <LI>BTRON OS を起動させます。<BR>
+<BR>
+二枚目のシステム本体が入ったディスクと入れ替えます。<BR>
+<BR>
+&gt;fdboot<BR>
+<BR>
+  <LI>三枚目のフロッピーディスクのファイルシステムを認識させる。<BR>
+<BR>
+１１,からしばらくすると<BR>
+<BR>
+Root file system is... [fd]/hd:<BR>
+<BR>
+と表示されるので三枚目のフロッピーデスクと入れ替えてＥｎｔｅｒを押します。<BR>
+<BR>
+init&gt;と表示されれば成功です。
+</OL>
+<HR>
+<P>
+<A href="../index.html">B-Free オフィシャルホームページへ戻る</A><BR>
+</P>
+<HR>
+<P>
+<FONT size="3">Copyright (C) 1996,1997 B-Free Project</FONT>
+</P>
+<P>
+　　
+</P>
+</BODY>
+</HTML>

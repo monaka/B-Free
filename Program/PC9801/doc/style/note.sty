@@ -1,0 +1,23 @@
+%
+%
+%
+\def\notetitle{%
+  \def\@maketitle{\newpage\null\vskip .5em%
+    \@ifundefined{@author}{{\LARGE\@title}\hfill*\@date)\par\vskip.5em}%
+    {\begin{flushleft}{\LARGE \@title} \end{flushleft}%
+      \begin{flushright} \@author~*\@date) \end{flushright}}%
+      \par\vskip 1em}%
+    \maketitle \let\notetitle\relax}
+
+\setlength{\headsep}{20pt}
+\setlength{\textheight}{24cm}
+\setlength{\textwidth}{13cm}
+
+\newcommand{\Section}[1]
+{ \hrule width \textwidth
+  \vskip 1em 
+  \section{#1}%
+  \vskip 1em
+}
+
+\pagestyle{empty}

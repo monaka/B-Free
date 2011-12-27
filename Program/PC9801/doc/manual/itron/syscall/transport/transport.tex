@@ -1,0 +1,1144 @@
+
+\subsubsection{同期・通信機構}
+
+\renewcommand{\function}[1]{
+  \begin{flushleft}
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+%   \stepcounter{subsubsection}
+   \addcontentsline{toc}{subparagraph}{#1}
+  \vspace{1cm}
+  \end{flushleft}}
+
+
+\paragraph{本 ITRON でサポートしている同期・通信機能} \hfill \\
+  本来の ITRON 規約では、セマフォ、イベントフラグ、メイルボックス、メ
+ッセージバッファ、ランデブなどが使用できる。しかし、これらの機能をすべ
+てをサポートすることは、B-Free OS を動かすためだけには必要ないと思われ
+るので、本 ITRON では、セマフォ、イベントフラグ、メッセージしかサポー
+トしていない。
+  各 IPC 機能は、次の用途を目的としてサポートした。
+
+  \begin{description}
+  \item[1) セマフォ]  \hfill \\
+     タスク間の同期をとる。タスク間で共有している情報をアクセスすると
+     きなどに使用する。
+
+   \item[2) イベントフラグ]  \hfill \\
+     タスク間で待ち状態を指定するときなどに使用する。
+     ドライバタスクとそのタスクに対応したドライバ割り込みハンドラとで
+     データのやりとりをするときに使用する。この機能は、セマフォでも代
+     用できるので、ドライバによっては使用しない場合もありえる。
+
+   \item[3) メッセージ]  \hfill \\
+     ユーザプロセスと各サーバプロセスとの通信に使用する。
+     各サーバプロセスは、システムで決められたメッセージ ID をもつ。そ
+     のメッセージ ID を使用してユーザプロセスは、サーバプロセスに対し
+     て要求メッセージを送ることができる。
+     ユーザプロセスは主にこの IPC 機能を使用するだろう。
+  \end{description}
+
+
+  μITRON 3.0 の仕様では、この他にも IPC 機能として次の機能を定義して
+います。しかし、本 ITRON では、これ以上の IPC 機能は必要ないと考えサポー
+トしていません。各 IPC をサポートしない理由についても付記します。
+
+\vspace{5mm}
+
+\begin{tabular}[h]{l p{10cm}}
+  メイルボックス機能 &  メッセージ機能で代用できるため。また、メイルボ
+                        ックス機能では、基本的にアドレス空間を各タスク
+                        ごとに共有する必要がある。アドレス空間を基本的
+                        に分離している B-Free OS では、特にユーザプロ
+                        セスが使いにくいのではないかと考え、サポートし
+                        ないことにした。\\
+
+  ランデブ機能 &        メッセージ機能で代用できるため削除した。ランデ
+                        ブは、ランデブを呼び出したタスクが、呼び出され
+                        たタスクからの返事が帰ってくるまで待つことにな
+                        っている。しかし、そうするとメッセージを送信し
+                        が後に他の処理を行うことができなくなる。
+                        B-Free OS では、サーバが他のサーバを呼び出す場
+                        合があり、そうした場合にランデブを使用すると、
+                        並列処理ができなるくなるため、効率が悪くなると
+                        思われた(処理によってランデブとメッセージを使
+                        いわけるというのも考えられるが、そうすると、要
+                        求処理が複雑になる)。\\
+\end{tabular}
+
+\vspace{5mm}
+
+  これらの IPC 機能については、ユーザプログラムによっては、必要となる
+場合もあるが、そういった場合には、ユーザプログラム自身でこれらの機能を
+エミュレートする必要がある。
+
+\newpage
+\paragraph{セマフォ}
+
+セマフォ関連のシステムコールは、表 \ref{tab:semaphore-syscall} のと
+おりです。
+
+\begin{table}[htbp]
+  \caption{セマフォ関係のシステムコール}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l l} \hline
+      システムコール名 & \multicolumn{1}{c}{機能} \\ \hline\hline
+      cre\_sem  & セマフォ生成 \\
+      del\_sem  & セマフォ削除 \\
+      preq\_sem & セマフォ資源獲得 (ポーリング)   \\
+      ref\_sem  & セマフォ状態参照 \\
+      sig\_sem  & セマフォ資源返却 \\
+      twai\_sem & セマフォ資源獲得 (タイムアウト有) \\
+      wai\_sem  & セマフォ資源獲得 \\ \hline
+    \end{tabular}
+  \end{center}
+  \label{tab:semaphore-syscall}
+\end{table}
+
+\newpage
+\function{cre\_sem  --- セマフォ生成}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER cre\_sem (ID semid, T\_CSEM *pkcsem)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {semid}{生成するセマフォの ID}
+  \labitem {pkcsem} { 生成するセマフォの情報 }
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     引数 semid で指定したセマフォの ID が間違っている
+\labitem {E\_OBJ}    引数 semid で指定したセマフォはすでに生成している
+\labitem {E\_PAR}    パラメータ不正
+\end{lablist}
+
+
+\labitem{機能}
+  セマフォを新しく生成する。
+  
+\end{lablist}
+
+\newpage
+  \function{del\_sem  --- セマフォ削除}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER del\_sem (ID semid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {semid}{セマフォ ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     セマフォ ID が異常
+\labitem {E\_OBJ}    指定された ID のセマフォは存在しない (生成されていない)。
+\end{lablist}
+
+
+\labitem{機能}
+{\tt cre\_sem } によって生成したセマフォを削除する。
+もし、セマフォを使用しているタスクがあった場合、待ち状態を解除する。
+
+\end{lablist}
+
+\newpage
+  \function{preq\_sem --- セマフォ資源獲得 (ポーリング)  }
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER preq\_sem (ID semid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {semid}{獲得したいセマフォの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     セマフォ ID が異常
+\labitem {E\_OBJ}    指定された ID のセマフォは存在しない (生成されていない)。
+\labitem {E\_TMOUT}  すでに,指定したセマフォは使われている。
+\end{lablist}
+
+
+\labitem{機能}
+
+Polling 機能付きでセマフォを獲得する。すでに他のタスク
+がセマフォを獲得していた場合、エラー(E\_TMOUT)を返す。
+この関数を実行したタスクは、待ち状態には入らない。
+
+
+\end{lablist}
+
+\newpage
+  \function{ref\_sem  --- セマフォ状態参照}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ref\_sem (T\_RSEM *pk\_rsem, ID semid)
+}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {pk\_rsem}{セマフォの状態(返り値)}
+  \labitem {semid}{セマフォの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     セマフォ ID が異常
+\labitem {E\_OBJ}    指定された ID のセマフォは存在しない (生成されていない)。
+\end{lablist}
+
+
+\labitem{機能}
+
+今、セマフォがどういう状態にあるか参照する。
+
+ref\_sem() は、セマフォ状態として、次の情報を返す。
+
+\begin{quote}
+  \begin{tabular}[h]{l l p{10cm}}
+    VP          & exinf   &  拡張情報 \\
+    BOOL\_ID    & wtsk    &  待ちタスクの有無 \\
+    INT         & semcnt  &  現在のセマフォのカウント値 \\
+  \end{tabular}
+\end{quote}
+
+        
+\labitem {\it Implementation}
+
+  ITRON で管理するセマフォ管理構造体には、次の情報が含まれている。  
+
+  \begin{quote}
+    \begin{tabular}[h]{l p{10cm}}
+    ID &        セマフォ ID \\
+    Counter &   現在のセマフォカウント値 \\
+    next &      次のセマフォへのポインタ(内部管理情報) \\
+    before &    前のセマフォへのポインタ(内部管理情報) \\
+    \end{tabular}
+  \end{quote}
+\end{lablist}
+
+\newpage
+\function{sig\_sem  --- セマフォ資源返却}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER sig\_sem (ID semid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {semid}{返却するセマフォの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     セマフォ ID が異常
+\labitem {E\_OBJ}    指定された ID のセマフォは存在しない (生成されていない)
+\end{lablist}
+
+\labitem{機能}
+
+  獲得したセマフォを解放する場合、sig\_sem() を使用する。セマフォの解放
+は、セマフォの削除と同一の機能ではない。セマフォの削除の場合、他にセマ
+フォの獲得を待っていたタスクは、セマフォを獲得することができず、エラー
+が返る。しかし、セマフォを解放した場合には、セマフォの獲得を待っていた
+プロセスは、正常にセマフォを獲得することができる。
+
+もし、セマフォを待っているタスクがあった場合には、そのタスクを 
+{\tt wup\_up ()}によって起床する。
+
+セマフォの取得待ちタスクは、リストとして 各セマフォに附属している。
+
+この機能は、いわゆるセマフォの V 操作に対応する。
+
+  
+\end{lablist}
+
+\newpage
+  \function{twai\_sem --- セマフォ資源獲得 (タイムアウト有)}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER twai\_sem (ID semid, TMO tmout)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {semid}{セマフォ ID}
+  \labitem {tmout}{タイムアウト時間}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     セマフォ ID が範囲外
+\labitem {E\_OBJ}    指定された ID のセマフォは存在しない (生成されていない)
+\end{lablist}
+
+
+\labitem{機能}
+
+この機能は、いわゆるセマフォの P 操作に対応する。
+
+タイムアウト機能付きでセマフォを獲得する。
+すでに他のタスクがセマフォを獲得していた場合、引数 tmout で指定した時
+間だけ待ち、それまでにセマフォを獲得できなかった場合、エラー(E\_TMOUT)
+を返す。
+
+タイムアウト時間を示す引数 tmout の単位は、ハードウェアクロック割り込
+みの間隔である(1 ms)。 
+
+
+\end{lablist}
+
+\newpage
+  \function{wai\_sem  --- セマフォ資源獲得}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER wai\_sem (ID semid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {semid}{セマフォ ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     セマフォ ID が範囲外
+\labitem {E\_OBJ}    指定された ID のセマフォは存在しない (生成されていない)
+\labitem {E\_TMOUT}  セマフォが削除された
+\end{lablist}
+
+
+\labitem{機能}
+
+この機能は、いわゆるセマフォの P 操作に対応する。
+
+指定したセマフォを獲得する。
+すでに他のタスクがセマフォを獲得していた場合、解放するまで待つ。
+
+ただし、{\tt del\_sem} システムコールによってセマフォが削除された場合、 
+E\_TMOUT のエラーとなり、待ち状態から解放される。
+
+\end{lablist}
+
+\newpage
+\paragraph{イベントフラグ}
+
+イベントフラグ関係のシステムコールは表 \ref{tab:event-syscall} に示す
+とおりです。
+
+
+\begin{table}[htbp]
+  \caption{イベントフラグ関係のシステムコール}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l l }
+      システムコール名 & \multicolumn{1}{c}{機能} \\ \hline\hline
+      clr\_flg  & イベントフラグの値をクリアする \\
+      cre\_flg  & イベントフラグの生成 \\
+      del\_flg  & イベントフラグの削除 \\
+      pol\_flg  & イベントフラグ待ち(ポーリング付き) \\
+      ref\_flg  & イベントフラグ状態参照 \\
+      set\_flg  & イベントフラグに値をセットする \\
+      twai\_flg & イベントフラグ待ち(タイムアウト付き) \\
+      wai\_flg  & イベントフラグ待ち \\
+    \end{tabular}
+  \end{center}
+  \label{tab:event-syscall}
+\end{table}
+
+\newpage
+  \function{clr\_flg  --- イベントフラグの値をクリアする}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER clr\_flg (ID flgid, UINT clrptn)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgid}  {イベントフラグの ID}
+  \labitem {clrptn} {クリアする値}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     フラグ ID が範囲外
+  \labitem {E\_NOEXS}  フラグ ID で指定したイベントフラグは存在していない
+\end{lablist}
+
+
+\labitem{機能}
+指定した ID をもつイベントフラグをクリアする。
+クリアする値は引数で指定できる。
+
+このシステムコールを実行した後のイベントフラグの値は次の式で表すことが
+できる。
+
+\begin{quote}
+  イベントフラグの値 = イベントフラグの値 \& クリアパターン
+\end{quote}
+
+
+\end{lablist}
+
+\newpage
+  \function{cre\_flg  --- イベントフラグの生成}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER cre\_flg (ID flgid, T\_CFLG *pk\_flg)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgid}    {イベントフラグの ID}
+  \labitem {pk\_flg}  {イベントフラグの属性情報}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_OBJ}    ID で指定したイベントフラグは、すでに生成済
+  \labitem {E\_PAR}    pk\_flg の値がおかしい
+\end{lablist}
+
+
+\labitem{機能}
+  イベントフラグを使用する場合、まず、cre\_flg によってイベントフラグを
+生成しなければならない。
+
+  cre\_flg は引数で指定された ID をもつイベントフラグを新規に生成する。
+もし、指定した ID をもつイベントフラグがすでに生成されていたら、エラー
+(E\_ID) となる。
+\end{lablist}
+
+\newpage
+  \function{del\_flg  --- イベントフラグの削除}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER del\_flg (ID flgid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgid}{削除するイベントフラグの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_OBJ}    ID で指定したイベントフラグは、すでに生成済
+\end{lablist}
+
+
+\labitem{機能}
+
+引数 flgid で指定したイベントフラグを削除する。
+削除したイベントフラグは再利用する。そのため、このシステムコールを実行
+した後は、同じ ID をもつイベントフラグが生成することがある。
+
+削除するイベントフラグを待っているタスクがある場合、そのタスクに対して
+は、待ちが生じているシステムコールは E\_TMOUT のエラーとなる。
+
+
+\end{lablist}
+
+\newpage
+  \function{pol\_flg  --- イベントフラグ待ち(ポーリング付き)}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER pol\_flg (UINT *flgptn, ID flgid, UINT waiptn, UINT wfmode)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgptn} {このシステムコールがイベントフラグ待ちから解放した
+    時のイベントフラグのビットパターン}
+  \labitem {flgid}  {チェックするイベントフラグの ID}
+  \labitem {waiptn} {待ちから解放するときのイベントフラグのパターン}
+  \labitem {wfmode} {待ちモード}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_OBJ}    ID で指定したイベントフラグはすでに生成済
+  \labitem {E\_TMOUT}  イベントフラグは waiptn に合致していない
+  \labitem {E\_NOEXS}  指定したイベントフラグは、生成されていない
+\end{lablist}
+
+
+\labitem{機能}
+
+イベントフラグの状態を調べ、もしイベントフラグの値が指
+定したビットパターンと合致していれば、正常終了する。ま
+た、ビットフラグの値が指定したビットパターンと一致して
+いない場合にもタスクは待ち状態とならず、呼び出し側に戻
+る。ただし、エラー(E\_TMOUT)を返す。
+\end{lablist}
+
+\newpage
+\function{ref\_flg  --- イベントフラグ状態参照}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ref\_flg (T\_RFLG *pk\_rflg, ID flgid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {pk\_rflg}{フラグの状態}
+  \labitem {flgid}   {状態を参照したいイベントフラグの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_NOEXS}  指定したイベントフラグは、生成されていない
+\end{lablist}
+
+
+\labitem{機能}
+
+  指定したイベントフラグの状態を参照する。
+  イベントフラグの状態は、次に示す構造体の形式で返される。
+
+  \begin{quote}
+    \begin{verbatim}
+typedef struct t_rflg
+{
+  VP            exinf;          /* 拡張情報                             */
+  BOOL_ID       wtsk;           /* 待ちタスクの有無                     */
+  UINT          flgptn;         /* イベントフラグのビットパターン       */
+}
+    \end{verbatim}
+  \end{quote}
+
+\end{lablist}
+
+\newpage
+\function{set\_flg  --- イベントフラグに値をセットする}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER set\_flg (ID flgid, UINT setptn)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgid} {値をセットするイベントフラグの ID}
+  \labitem {setptn}{セットするビットパターン}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_NOEXS}  指定したイベントフラグは、生成されていない
+\end{lablist}
+
+\labitem{機能}
+
+指定した ID をもつイベントフラグをセットする。
+もし、イベントフラグを待っていたタスクがあった場合、そのタスクは 
+wakeup される。
+イベントフラグを待つタスクは複数いてもよい。
+
+\end{lablist}
+
+\newpage
+\function{twai\_flg --- イベントフラグ待ち(タイムアウト付き)}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER twai\_flg (UINT *flgptn, ID flgid, UINT waiptn, UINT wfmode, TMO tmout)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgptn} {このシステムコールがイベントフラグ待ちから解放した
+    時のイベントフラグのビットパターン}
+  \labitem {flgid}  {チェックするイベントフラグの ID}
+  \labitem {waiptn} {待ちから解放するときのイベントフラグのパターン}
+  \labitem {wfmode} {待ちモード}
+  \labitem {tmout}  {タイムアウトするまでの時間 (10 ms 単位}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_OBJ}    ID で指定したイベントフラグはすでに生成済
+  \labitem {E\_TMOUT}  イベントフラグは、引数 tmout で示す時間内に指定
+  したビットパターンにならなかった。あるいは、イベントフラグが削除され
+  た。
+  \labitem {E\_NOEXS}  指定したイベントフラグは、生成されていない
+\end{lablist}
+
+
+\labitem{機能}
+wai\_flg にタイムアウト機能を追加したもの。
+イベントフラグの値が指定したビットパターンと一致してい
+なければ、待ち状態となる。そして、指定した時間が過ぎて
+もイベントフラグがセットされなければ、この関数の呼び出
+し側へエラー(E\_TMOUT) 返す。
+\end{lablist}
+
+\newpage
+  \function{wai\_flg  --- イベントフラグ待ち}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER wai\_flg (UINT *flgptn, ID flgid, UINT waiptn, UINT wfmode)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {flgptn} {このシステムコールがイベントフラグ待ちから解放した
+    時のイベントフラグのビットパターン}
+  \labitem {flgid}  {チェックするイベントフラグの ID}
+  \labitem {waiptn} {待ちから解放するときのイベントフラグのパターン}
+  \labitem {wfmode} {待ちモード}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}     イベントフラグの ID がおかしい
+  \labitem {E\_OBJ}    ID で指定したイベントフラグはすでに生成済
+  \labitem {E\_TMOUT}  イベントフラグが削除された。
+  \labitem {E\_NOEXS}  指定したイベントフラグは、生成されていない
+\end{lablist}
+
+\labitem{機能}
+一番単純なイベントフラグ待ち関数。
+指定した ID をもつイベントフラグの値が特定のビットパタ
+ーンになるまで、この関数を実行したタスクは、wait 状態
+となる。そして、set\_flg によってイベントフラグの値が指
+定したビットパターンになると、待ち状態にあったタスクは、
+wakeup する (すなわち、wai\_flg システムコールが終了する)。
+\end{lablist}
+
+\newpage
+\paragraph{メッセージバッファ}
+
+メッセージバッファ関係のシステムコールは、表 \ref{tab:mes-syscall} に
+示すとおりです。
+
+\begin{table}[htbp]
+  \caption{メッセージバッファ関係のシステムコール}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l l }
+      システムコール名 & \multicolumn{1}{c}{機能} \\ \hline\hline
+      cre\_mbf  & メッセージバッファ生成 \\
+      del\_mbf  & メッセージバッファを削除する \\
+      prcv\_mbf & メッセージバッファから受信する (ポーリング)  \\
+      psnd\_mbf & メッセージバッファへ送信(ポーリング) \\
+      rcv\_mbf  & メッセージバッファから受信する \\
+      ref\_mbf  & メッセージバッファ状態参照 \\
+      snd\_mbf  & メッセージバッファへ送信 \\
+      trcv\_mbf & メッセージバッファから受信する(タイムアウト有) \\
+      tsnd\_mbf & メッセージバッファへ送信(タイムアウト機能つき) \\
+    \end{tabular}
+  \end{center}
+  \label{tab:mes-syscall}
+\end{table}
+
+\newpage
+\function{cre\_mbf  --- メッセージバッファ生成}
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER cre\_mbf (ID id, T\_CMBF *pk\_cmbf)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {id}{生成するメッセージバッファ ID}
+  \labitem {pk\_cmbf}{メッセージバッファ生成情報
+    以下の要素をもつ構造体である。
+
+    \begin{tabular}[h]{l l}
+    mbfatr &    メッセージ属性 (TA\_FIFO 固定) \\
+    bufsz  &    バッファサイズ \\
+    maxmsz &    メッセージの最大長 \\
+    \end{tabular}
+    }
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_OBJ}     同一ID のメッセージがすでに存在する
+  \labitem {E\_PAR}     パラメータ不正
+\end{lablist}
+
+
+\labitem{機能}
+メッセージバッファを生成する。
+
+各メッセージバッファには識別のための メッセージ ID がつく。メッセージ 
+ID は、引数 id によって指定する。
+\end{lablist}
+
+\newpage
+  \function{del\_mbf  --- メッセージバッファを削除する}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER del\_mbf (ID id)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {id}{削除するメッセージ ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}      システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+\end{lablist}
+
+\labitem{機能}
+引数 ID で指定したメッセージバッファを削除する。
+
+もし、削除するメッセージバッファにメッセージを受信/送信待ちしているタ
+スクがあった場合、それぞれのタスクのシステムコールは中断し、E\_DLT の
+エラーコードが返る。
+
+\end{lablist}
+
+\newpage
+  \function{prcv\_mbf --- メッセージバッファから受信する (ポーリング) }
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER prcv\_mbf (VP msg, INT *size, ID id)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {msg}        受信したメッセージを入れる領域
+  \labitem {size}       受信したメッセージのサイズ(返り値)
+  \labitem {id}         メッセージバッファ ID
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}      システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+  \labitem {E\_TMOUT}   受信すべきメッセージが存在しない
+\end{lablist}
+
+
+\labitem{機能}
+
+prcv\_mbf システムコールは、メッセージバッファからメッセージを受信する。 
+
+もし、受信すべきメッセージがメッセージバッファに存在しない場合、
+受信を待たずに E\_TMOUT のエラーリターンとなる。
+
+
+\end{lablist}
+
+\newpage
+  \function{psnd\_mbf --- メッセージバッファへ送信(ポーリング)}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER psnd\_mbf (ID id, INT size, VP msg)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {id}   メッセージバッファ ID
+  \labitem {size} 送信メッセージのサイズ
+  \labitem {msg}  送信メッセージの先頭アドレス
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+  \labitem {E\_TMOUT}   メッセージバッファをアロケートできなかった。
+\end{lablist}
+
+
+\labitem{機能}
+メッセージバッファへメッセージを送る。
+
+もし、メッセージバッファがいっぱいの場合、空くのを待たずに E\_TMOUT で
+エラーリターンする。
+
+\end{lablist}
+
+\newpage
+  \function{rcv\_mbf  --- メッセージバッファから受信する}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER rcv\_mbf (VP msg, INT *size, ID id)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {msg}        受信したメッセージを入れる領域
+  \labitem {size}       受信したメッセージのサイズ(返り値)
+  \labitem {id}         メッセージバッファ ID
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+  \labitem {E\_TMOUT}   受信すべきメッセージが存在しない
+  \labitem {E\_DLT}     メッセージバッファが削除された
+\end{lablist}
+
+
+\labitem{機能}
+rcv\_mbf システムコールは、メッセージバッファからメッセージを受信する。 
+
+もし、受信すべきメッセージがメッセージバッファに存在しない場合、
+他のタスクからメッセージが送信されるまで待つ (スリープする)。
+
+メッセージの受信待ちをしている状態で、メッセージバッファを削除した場合
+には E\_DLT のエラーとなり、システムコールは中断する。
+
+\end{lablist}
+
+\newpage
+  \function{ref\_mbf  --- メッセージバッファ状態参照}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ref\_mbf (T\_RMBF *pk\_rmbf, ID id)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {pk\_rmbf}   メッセージバッファ状態 (返り値)
+  \labitem {id}         メッセージ ID
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+\end{lablist}
+
+
+\labitem{機能}
+引数 id で指定したメッセージバッファの状態を返す。
+
+状態は、次の構造体として返る。
+
+\begin{verbatim}
+typedef struct t_rmbf
+{
+  VP            exinf;
+  BOOL_ID       wtsk;
+  BOOL_ID       stsk;
+  INT           msgsz;
+  INT   frbufsz;
+
+} T_RMBF;
+\end{verbatim}
+
+\end{lablist}
+
+\newpage
+  \function{snd\_mbf  --- メッセージバッファへ送信}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER snd\_mbf (ID id, INT size, VP msg)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {id}         メッセージバッファ ID
+  \labitem {size}       送信メッセージのサイズ
+  \labitem {msg}        送信メッセージの先頭アドレス
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}      システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+  \labitem {E\_OBJ}     メッセージバッファの領域を確保できなかった
+\end{lablist}
+
+\labitem{機能}
+メッセージをメッセージバッファへ送信する
+
+もしメッセージバッファが満杯の場合には、空きができるまでタスクは待ち状
+態に入る。
+
+\end{lablist}
+
+\newpage
+  \function{trcv\_mbf --- メッセージバッファから受信する(タイムアウト有)} 
+  
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER trcv\_mbf (VP msg, INT *size, ID id, TMO tmout)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {msg}        受信したメッセージを入れる領域
+  \labitem {size}       受信したメッセージのサイズ(返り値)
+  \labitem {id}         メッセージバッファ ID
+  \labitem {tmout}      受信待ち時間
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}      システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+  \labitem {E\_TMOUT}   受信すべきメッセージが存在しない(タイムアウト)
+  \labitem {E\_DLT}     メッセージバッファが削除された
+\end{lablist}
+
+
+\labitem{機能}
+trcv\_mbf システムコールは、タイムアウト付きのメッセージ受信を行う。
+
+メッセージバッファにメッセージがない場合、引数 tmout で指定した時間だ
+け待つ。
+
+もし、指定した時間が過ぎてもメッセージが送信されてこない場合には、
+E\_TMOUT のエラーとなる。その場合、引数 msg の値は何も変更しない。
+
+メッセージの受信待ちをしている状態で、メッセージバッファを削除した場合
+には E\_DLT のエラーとなり、システムコールは中断する。
+
+\end{lablist}
+
+\newpage
+  \function{tsnd\_mbf --- メッセージバッファへ送信(タイムアウト機能つき)} 
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER tsnd\_mbf (ID id, INT size, VP msg, TMO tmout)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {id}         メッセージバッファ ID
+  \labitem {size}       送信メッセージのサイズ
+  \labitem {msg}        送信メッセージの先頭アドレス
+  \labitem {tmout}      タイムアウト値
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      メッセージ ID 不正
+  \labitem {E\_NOEXS}   指定したメッセージは存在していない
+  \labitem {E\_OBJ}     メッセージバッファの領域を確保できなかった
+  \labitem {E\_TMOUT}   メッセージバッファが満杯で送信できなかった (タ
+  イムアウト)
+\end{lablist}
+
+\labitem{機能}
+tsnd\_mbf システムコールは、メッセージバッファにメッセージを追加する。
+
+もし、メッセージバッファが満杯で送信できなかった場合には、引数 tmout 
+で指定した時間だけ待つ。
+
+もし、指定した時間が過ぎてもメッセージバッファに空きができない場合には、
+E\_TMOUT のエラーとなり、システムコールは終了する。
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: "itron"
+% End: 

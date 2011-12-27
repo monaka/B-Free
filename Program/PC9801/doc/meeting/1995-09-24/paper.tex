@@ -1,0 +1,83 @@
+\documentstyle[a4j]{jarticle}
+
+\setlength{\topmargin}{-1cm}
+\begin{document}
+
+\begin{flushright}
+  平成７年９月２４日(日)
+\end{flushright}
+
+\section*{B-Free ミーティング資料}
+
+
+\subsection*{B-Free OS の現状}
+
+\begin{itemize}
+\item {\tt Console} ドライバ (キャラクタ版) 作成
+\item キーボードドライバ 作成 作成
+\end{itemize}
+
+\subsection*{今後の予定}
+
+\begin{enumerate}
+\item 最小限のデバイスドライバの作成
+
+  \begin{enumerate}
+  \item コンソールドライバ(キャラクタ表示) (完成)
+  \item キーボードドライバ                 (完成)
+  \item FD ドライバ \hfill \\
+    Boot で使っているものに HD/HC のモード切換え機能を追加したもの。
+  \item HD ドライバ (SCSI) \hfill \\
+    FreeBSD(98) を参考に作成。Boot にも移植。
+  \end{enumerate}
+
+\item CLI (Command Line Interface) プログラムの作成
+
+現在 ITRON 中に埋め込まれている CLI を独立したプログラムに分離する。
+諸々のサーバのテストに使用する。
+
+また、1 と 2 の作業と並行して以下の作業も行う。
+
+\item BTRON マネージャ (周辺核) の I/F 決め
+
+周辺核の送受信するメッセージフォーマットを決める。
+デバイス・マネージャについては、メッセージはすでに決まっているので、作っ
+てしまった方が良い？
+\end{enumerate}
+
+
+\subsection*{その他}
+
+\begin{enumerate}
+\item 新しいB-Freeのソースを {\tt
+    {\small ftp://ftp.webcity.co.jp/pub/andoh/bfree/btron-src-19950919.tar.gz}}
+に登録しました。
+
+\item ソースファイルへの Copyright Notice の記述を追加中です。
+
+追加する内容は、次とおり：
+
+\baselineskip=.7\normalbaselineskip
+\begin{verbatim}
+/*
+
+B-Free Project の生成物は GNU Generic PUBLIC LICENSE に従います。
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+
+(C) B-Free Project.
+
+*/
+\end{verbatim}
+
+\end{enumerate}
+
+
+
+\end{document}
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: t
+% End: 

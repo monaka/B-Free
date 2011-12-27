@@ -1,0 +1,869 @@
+\documentstyle[a4j,epsf,fancyheadings,makeidx]{jbook}
+
+%
+%  プリアンブル
+%
+\makeatletter
+
+% -----------------------------------------------------------------------------
+% 最も長い項目ラベルを探してインデントの幅をこれに合わせるリスト環境マクロです。
+% ただし、「２-パス」 です。最初にLaTeXすると、description風に決まった
+% 幅のままですが、もう一回LaTeXすると、最長の項目ラベルに合わせてインデント
+% します。各項目は\itemではなく\labitemで指定します。
+% 
+% 例えば
+% 
+%  \begin{lablist}
+%  \labitem{項目１}     ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ
+%  ｘｘｘｘｘｘｘｘｘｘｘ
+%  ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ
+%  \labitem{項目２２}   ｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚ
+%  \labitem{項目３}     ｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃ
+%  \end{lablist}
+% 
+% とします。
+% なお、複数のlablist環境がある時、defaultでは各環境毎に最長のラベルを
+% さがしますが、\commonlabelコマンドを入れると、以下のすべてのlablist
+% の中で最も長いラベルに合わせます。もとの状態に戻すには\nocommonlabel
+% を入れます（これらはlablist環境の外で指定します）。
+% 
+%-----------------------------------------------------------------------
+%=======================================================================
+\newdimen\lab@labelwidth
+\lab@labelwidth=0pt
+\newcount\lab@count
+\lab@count=1
+\newif\iflab@no
+\let\iflab@no=\iftrue\relax
+
+\def\commonlabel{\let\iflab@no=\iffalse\relax}
+\def\nocommonlabel{\let\iflab@no=\iftrue\relax\global\advance\lab@count by 1}
+
+\def\lablist{
+ \let\@orgitem=\item\relax
+ \def\item{\@ifnextchar [{\@labitem}{\@noitemargtrue \@labitem[\@itemlabel]}}
+ \begin{list}{}{\def\makelabel##1{##1\hfil}
+ \iflab@no\lab@labelwidth=0pt\fi
+ \@ifundefined{lab@\@roman{\lab@count}}%
+  {\setlength{\labelwidth}{2.5em}}%
+  {\setlength{\labelwidth}{\csname lab@\@roman{\lab@count}\endcsname}}
+ \setlength{\labelsep}{1em}
+ \setlength{\leftmargin}{\labelwidth}
+ \addtolength{\leftmargin}{2\labelsep}} % labelsep both sides of label
+}
+
+\def\@labitem[#1]{\labitem{#1}}
+\def\labitem#1{\settowidth{\@tempdima}{#1}\ifdim\@tempdima>\lab@labelwidth
+\global\lab@labelwidth=\@tempdima\fi\@item[#1]}
+
+\def\endlablist{\if@filesw
+ \immediate\write\@auxout{\string\@lablist{lab@\@roman{\lab@count}}%
+  {\the\lab@labelwidth}}\fi
+ \iflab@no\global\advance\lab@count by 1\fi
+ \end{list}
+ \let\item=\@orgitem\relax
+}
+\def\@lablist#1#2{\global\@namedef{#1}{#2}}
+
+%
+%
+%
+\gdef\@title{}
+\gdef\title#1{\gdef\@title{#1}}
+\gdef\@years{}
+\gdef\years#1{\gdef\@years{#1}}
+\gdef\@author{}
+\gdef\author#1{\gdef\@author{#1}}
+\gdef\@abstract{}
+\gdef\abstract#1{\gdef\@abstract{#1}}
+
+\def\maketitle{\begin{titlepage}%
+\let\footnotesize\small
+\let\footnoterule\relax
+\setcounter{page}{0}%
+\null
+\begin{flushright}
+\today
+\end{flushright}
+\vskip 3 in
+\noindent
+{\Large\sf \@title}\\
+\rule{\textwidth}{1mm}\\
+\mbox{} \hfill Copyright \copyright\ \@years\ \begin{tabular}[t]{r}
+                                              \@author\end{tabular}\\
+
+\vspace{.75in}\noindent
+{\sf \@abstract}
+\end{titlepage}%
+\setcounter{footnote}{0}%
+\gdef\@author{}\gdef\@title{}\gdef\@years{}\gdef\@abstract{}
+\let\maketitle\relax}
+
+%
+%
+%
+\newcommand{\micro}{$\mu$}
+\newcommand{\BFree}{{\sf B$-$Free }}
+\newcommand{\BTRON}{{\sf BTRON }}
+\newcommand{\TRON}{{\sf TRON }}
+\newcommand{\ITRON}{{\sf ITRON }}
+\newcommand{\CTRON}{{\sf CTRON }}
+\newcommand{\microITRON}{\micro\ITRON}
+
+\makeatother
+
+\title{B$-$Free アーキテクチャ (案) --- {\it Version 0.1}}
+\author{内藤隆一}
+\years{1994}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\pagestyle{empty}
+\titlepage
+\newpage
+\tableofcontents
+\newpage
+
+%
+%
+%
+\pagestyle{fancyplain}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter \/ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \/ #1}}
+%\renewcommand{\subsectionmark}[1]{\markright{#1}}
+\lhead{\leftmark}
+\rhead{\rightmark}
+%\rfoot{\leftmark\\}
+
+
+
+\chapter{\BFree プロジェクトとは何か}
+
+\begin{flushright}
+  {\small
+  \begin{minipage}[h]{7cm}
+  --- そのときはわからなかったが、これはそれまで私が手掛けた中で
+      もっとも大胆なオペレーティングシステムのプロジェクトになる
+      のだった。
+  \end{minipage}
+
+  Helen Custer 「INSIDE WINDOWS NT」
+  }
+\end{flushright}
+
+\vspace{1cm}
+
+\section{目的}
+
+  \BFree は、フリーな BTRON を作成することを目的としたプロジェ
+クトです。
+
+  すなわち、\BFree プロジェクトは、他のＯＳを使わずスタンドアローン
+で動作する BTRON。BTRON$-$OSの上で動作するマネージャ群。
+そして基本的なアプリケーシュンなどから構成される完全なＢＴＲＯＮ環境を
+提供します。
+
+  現在のところ、BTRON 仕様の OS は商業的な目的に作成されたものだけ
+でした。BTRON$-$OS に興味を持っている人は、BTRON 仕様 OS を購
+入して使うしか方法はありませんでした。もちろん、この場合興味があっても
+ソースなどは見ることができません。
+  しかし、\BFree プロジェクトは商業的な目的で作成するものではあり
+ません。
+自由に使用することができ、興味があるならばソースを見ることはもちろん、
+プログラムを変更することもできます。
+
+  このようなプログラムを自由にながめ、変更できるような環境を作成するこ
+とを目的としたプロジェクトとしてＧＮＵプロジェクトがあります。
+  基本的な目的は、Ｂ−ＦｒｅｅプロジェクトとＧＮＵプロジェクトは似てい
+ます。しかし、ＧＮＵプロジェクトが(ある程度改良は施されているとはいえ)
+ＵＮ＊Ｘのような (like UN*X) ＯＳの作成を目標としているのに対し、\BFree
+では、ＢＴＲＯＮに基づいた環境を作成することで異なっています。
+
+
+\section{対象とする仕様}
+
+1994 年現在、\BTRON は、次の 3 つの仕様が決められ(あるいは決められよう
+とし)ています
+
+\begin{lablist}
+\labitem{BTRON1} 
+16ビット (正確には 80286 プロセッサ) を対象とした \BTRON 。
+構造は一枚岩的なもの(?)だが、比較的貧弱なハードウェアで実用的な
+マルチタスク / マルチウィンドウ OS を実現している。
+
+\labitem{BTRON2}
+TRON チップ仕様プロセッサあるいは同等の性能をもつ 32 ビット
+プロセッサを対象とした OS 。 マイクロカーネル構造を採用して
+おり、保守性および拡張性に優れている。
+
+\labitem{BTRON3}
+BTRON1 と BTRON2 の経験に基づき定義された \BTRON 仕様の最新
+バージョン。BTRON1 と同様にマイクロカーネル構造をもつ。1994
+年前半に仕様が fix される予定。
+\end{lablist}
+
+これらの \BTRON 仕様のうち、\BFree プロジェクトで作成する \BTRON は、
+\BTRON[13] を対象とします。
+
+  ただし、\BTRON [13] 仕様のうちマシン依存になっている部分については変
+更される場合もあります。たとえば、80286 を対象とした仕様などについては
+変更されるでしょう。
+  また、ＯＳの内部構造については \BTRON 1 仕様では定められていないため、
+独自に決めることとします。
+  
+
+
+\section{残りの内容}
+
+本ドキュメントの残りの章は、次のような構成になっています。
+
+\begin{description}
+\item[Chapter \ref{cha:user-side} ] 一般ユーザから見た \BFree OS の説明で
+  す。
+%
+\item[Chapter \ref{cha:structure} ] \BFree OS の構造を概略を説明します。
+%
+\item[Chapter \ref{cha:core} ] \BFree OS の最もハードウェア寄りの部分 --- 中
+  心核について説明します。
+
+\item[Chapter \ref{cha:server} ] \BFree OS の周辺核について説明します。
+
+%\item[Chapter \ref{cha:device} ] \BFree OS と周辺装置との間を取りもつソフ
+%  トウェアであるデバイスドライバについて説明する章です。
+%
+%\item[Chapter \ref{cha:manager} ] \BFree OS の中で一番ユーザプログラムに
+%  近い層である、外核について説明します。
+\end{description}
+
+\chapter{ユーザから見た \BFree OS}
+\label{cha:user-side}
+
+\begin{flushright}
+  {\small
+  \begin{minipage}[h]{7cm}
+  --- とんでもない、ワトスン、きみには何もかも見えているんだよ。
+  \end{minipage}
+
+  コナン・ドイル 「青い紅玉」
+  }
+\end{flushright}
+
+\vspace{1cm}
+
+\BFree OS は、ユーザからはシングルユーザ・マルチタスクの OS として見え
+ます。
+
+B-Free が起動すると、画面がクリアされ、{\em root ウィンドウが表示され
+  ます}。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=root-window.eps}
+  \end{center}
+  \caption{BTRON root ウィンドウ}
+  \label{fig:root-window}
+\end{figure}
+
+この状態で、ユーザはroot ウィンドウ上に表示されている仮身を操作するこ
+とができます。
+
+
+\section{\BFree のファイルシステム}
+
+ここでは、\BFree のファイルシステムについて説明します。
+
+最初にシステムをインストールした時点では、\BFree システムのファイルシ
+ステムは、図 \ref{fig:bfree-filesystem} のようになっています。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=bfree-filesystem.eps,height=8cm}
+  \end{center}
+  \caption{インストールした直後の\BFree のファイルシステム}
+  \label{fig:bfree-filesystem}
+\end{figure}
+
+この図のなかで、ユーザが直接見ることができるファイルは、網箱で囲んだ部
+分だけです。
+
+root ファイルシステムは、中心核や各種マネージャなどのシステムで
+使用する実身を含んでいます。
+
+\begin{lablist}
+  \labitem {SYSTEM} この実身には {\em KERNEL} という実身がひとつあ
+  るだけです。{\em KERNEL}という実身は、中心核の実行実身がそのまま入っ
+  ています。
+
+  \labitem {MANAGER} この実身には、システムで使用する各種マネージャ(周
+  辺核および外核が含まれています。
+
+  \labitem {\$\$PROGRAM.BOX} この実身には、アプリケーション群へのリン
+  クが含まれています。
+
+  \labitem {\$\$RELATION.BOX} この実身には、続柄の情報が入ります。
+
+  \labitem {\$\$小物入れ} この実身には、小物(アクセサリー的なアプリケ
+  ーション群へのリンクが入ります。
+
+  \labitem {USR} ユーザ自身が使用する実身が含まれています。立ち上げ直
+  後、ディスプレイに表示されるウィンドウは、この {\em USR}実身の内容で
+  す。
+\end{lablist}
+
+
+\section{ユーザの情報}
+
+\BFree OS は、シングルユーザ向けの OS です。
+しかし、多くのBTRONマシンがつながったネットワークを構築したような場合、
+ネットワーク全体では複数のユーザが資源(実身・プリンタなど)を共有するこ
+とができます。
+そのため、ユーザごとに特有の情報を記録する必要があります。
+
+\BFree OS では、ユーザ情報として以下の情報を管理します。
+
+\begin{description}
+\item[ユーザ名] \hfill \\
+  ユーザの名前です。
+%
+\item[所属グループ名] \hfill \\
+  \BFree OS では、何人かのユーザが集まってグループを作ることができます。
+  所属することができるグループは、4つまでです。ユーザ情報では、ユーザ
+  が所属するグループの名前を記録します。
+%
+\item[特権レベル] \hfill \\
+  \BFree OS は、ユーザを 0 から 16 の特権レベルに分けています。
+  \BFree での実身には、読み書きできる特権レベルを記録しています。
+
+  特権レベルでは、レベル 0 が最も高い特権をもち、すべての実身を読み書き
+  できます。レベル 0 のユーザに対して、実身を読み書きできないような指定
+  はできません。
+\end{description}
+
+
+
+\chapter{\BFree OS の構造}
+\label{cha:structure}
+
+\begin{flushright}
+  {\small
+  \begin{minipage}[h]{7cm}
+  --- われわれの間では、この物体を一応 ``SS'' のコードネームで
+      よんでいる。''スーパーシップ''または''スーパー・ストラクチャ''
+      の意味だ。
+  \end{minipage}
+
+  小松左京 「虚無回廊」
+  }
+\end{flushright}
+
+\section{一枚岩的な OS vs マイクロカーネル}
+
+
+OS は、一枚岩的 な構造をもつものが多数作られてきました。
+一枚岩的な OS は、その名のとおり OS がひとつの巨大なプログラムとなって
+います。
+
+すなわちコンピュータは、2つの動作モード --- カーネルモードとユーザモー
+ドをもち、カーネルモードで走るプログラムこそが OS という考えがその根底
+にあります。
+
+ユーザモードで走るプログラムは、あくまでもユーザが作成したプログラムで
+あり、OS 的な機能はありません。
+
+一枚岩的な OS の代表は、UN*X です (図 \ref{fig:unix-structure})。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=unix-structure.eps,height=7cm}
+  \end{center}
+  \caption{UN*Xの構造}
+  \label{fig:unix-structure}
+\end{figure}
+
+UNIX の世界では、一枚岩的な OS --- カーネルと呼びます、とユーザプログ
+ラムという2種類のプログラムしかありません \footnote{デーモンと呼ばれる
+特殊なプログラムもありますが、これもまたユーザプログラムの一つです。}
+
+一枚岩的な構造をもつカーネルの場合、カーネルを変更するには大変な努力が
+必要となります。
+それは、ある小さな変更をするだけでも他の(関係のなさそうな)部分に影響が及
+ぶ可能性があるからです。
+
+一枚岩的な構造をもつオペレーティングシステムは今でも主流です。しかし、
+一枚岩的な構造には、保守性や拡張性に問題があることが徐々に分かってきま
+した。そのため新しく生まれた考えかたがマイクロカーネルという考えです。
+
+マイクロカーネルという考えでは、ハードウェアに密着した部分などを小さな
+モジュール(マイクロカーネル)にまとめます。そして、一枚岩的なオペレーテ
+ィングではカーネルがやっていたほとんどの仕事をマイクロカーネルの外へ追い
+出します。
+
+マイクロカーネルの代表は Machオペレーテイングシステムです。
+正確にいうと、Mach オペレーティングシステムは、マイクロカーネルアーキ
+テクチャをとるシステムで使用するためのマイクロカーネルにすぎません。
+OS としてユーザプログラムを動かすためには、Mach の上に載る複数のプログ
+ラムが必要となります。
+
+現在のところ、Mach の上にのるプログラム(Machではサーバと呼んでいます)
+は、UN*Xのインタフェースをもつ UN*Xサーバや MS-D*Sのインタフェースを
+もつサーバなどがあります。
+また、最近では GNU プロジェクトでもMachを基にした Hurd という OS の作
+成を行っています。
+
+\begin{figure}[htbp]
+  \begin{center}
+%    \leavevmode
+    \epsfile{file=mach-hurd.eps,height=10cm}
+  \end{center}
+  \caption{Mach + Hurd の構成}
+  \label{fig:mach-hurd-structure}
+\end{figure}
+
+一枚岩的な OS とマイクロカーネルを比較してどちらが良いということは一言
+では言えません。
+
+さて、問題はB-Free OS でどちらのアーキテクチャを採用するかということで
+す。
+
+\BFree OS を製作する目的(OS のソースを公開し、簡単に変更などをできるよ
+うにする)を考えると、見とおしがよい構造というのが重要になってきます。
+そう考えると、一枚岩的な OS の利点はほとんど性能面においてであり、ソー
+スの変更や改良などを簡単に行うのは困難です。
+逆にマイクロカーネル方式の OS では、よほどうまく作らないと、性能面では
+一枚岩的な OS よりも劣ります。しかし、中の構造はひとつひとつの要素が分
+かれており、それぞれの変更が他に与える影響が少ない分だけ見とおしがよい
+といえそうです。
+
+これらのことから、B-Free OS の目的(ユーザが自由にソースを見て、OSを変
+更できる)を考えると、マイクロカーネル方式を採用するのが適当だと思われ
+ます。
+
+
+
+\section{全体構成}
+
+\BFree での OS の構造は、マイクロカーネル構造をとります。
+
+OS の中心となる核として、\ITRON を採用します。
+この \ITRON は、\microITRON 3.0 を基にしたものです。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=bfree-architecture.eps,height=10cm}
+  \end{center}
+  \caption{\BFree の構成}
+  \label{fig:bfree-architecture}
+\end{figure}
+
+\subsection{\BFree OS の構成要素}
+
+\BFree OS は、次の構成要素から成り立っています。
+
+\begin{lablist}
+  \labitem {中心核(いわゆるマイクロカーネル)} 
+  \microITRON 3.0 に準拠した \ITRON OS です。CPU のカーネルモードで動
+  きます。
+%
+  \labitem {デバイスドライバ}
+  周辺核よりも上位のソフトウェアとハードウェアとの間をとりもつソフトウ
+  ェアです。基本的に周辺機器ひとつごとにひとつのデバイスドライバが存在
+  します。
+
+  次のようなデバイスドライバは、最低必要となります。
+
+  \begin{itemize}
+  \item ディスプレイ・デバイスドライバ
+  \item キーボード・デバイスドライバ
+  \item ポインティグ・デバイスドライバ
+  \item FD/HD デバイスドライバ
+  \end{itemize}
+%
+  \labitem {周辺核}
+  \BTRON OS としての API を提供します。中心核の提供するシステムコールを
+  使用するタスク群です。ファイル管理やプロセス管理などの機能を提供しま
+  す。また周辺核にあるデバイスマネージャは、デバイスドライバへのアクセ
+  スする手段を提供します。
+
+  周辺核に含まれる機能は次のとおりです (カッコの中はその機能を実現する
+  マネージャの名前です)。
+
+  \begin{description}
+  \item[仮想メモリ管理 (メモリマネージャ)] \hfill \\
+    仮想記憶を管理するためのマネージャです。このマネージャでは、仮想メ
+    モリの高度な機能を提供します (物理ページの参照管理など)。
+
+    また、マネージャとは別に MMU を操作するような機能は中心核に含まれ
+    ています。中心核の提供する仮想記憶管理は、ある程度統一化されていま
+    す。
+%
+  \item[プロセス管理 (プロセスマネージャ)] \hfill \\
+    中心核の提供するのは ITRON レベルでのタスク管理機能ですが、プロセ
+    スマネージャは、中心核のもつタスク管理のインタフェースを使って
+    BTRON レベルのプロセス管理機能を上位の層に提供します。
+    プロセスの持つ情報を管理するのが主な処理です。
+%
+  \item[ファイル管理 (ファイルマネージャ)] \hfill \\
+    BTRON レベルでのファイル管理を行います。このレベルでは仮身/実身と
+    いう単位での管理ではなく、ファイル/レコードという単位で管理が行わ
+    れます。
+%
+  \item[ウィンドウマネージャ] \hfill \\
+    ウィンドウの管理を行います。描画自体は、ディスプレイデバイスドライ
+    バが行います。
+%
+  \item[デバイス管理 (デバイスマネジャ)]  \hfill \\
+    デバイスドライバの登録/参照などの管理を行います。
+  \end{description}
+%
+  \labitem {外核/殻}
+  補助的なサービス --- かな漢字変換や仮身・実身操作など、を提供するプ
+  ロセス群です。
+%
+  \labitem {ライブラリ}
+  アプリケーションに対して、\BTRON API を提供します。実際の処理は、外
+  核や周辺核と協調し、データをやりとりすることによって行います。
+%
+  \labitem {アプリケーション}
+  ユーザが使用するプログラムです。
+  実身の内容を表示するデータランドエディタ、テキスト実身の内容を編集す
+  る基本文書エディタ、そして図形実身の内容を編集する基本図形エディタな
+  どがあります。
+\end{lablist}
+
+
+
+\chapter{中心核}
+\label{cha:core}
+
+\begin{flushright}
+  {\small
+  \begin{minipage}[h]{7cm}
+  --- 銀河中心核には、とにかく早く入って早くでなければならない。
+      物理法則が存在するかぎり、あと戻りする道はないからな。
+  \end{minipage}
+
+  ドナルド・モフィット 「第二創世記」
+  }
+\end{flushright}
+
+\vspace{1cm}
+
+\BFree OS で最もマシン寄りの部分、それが中心核です。
+中心核は、それ自体\ITRON 仕様の OS となっています。
+中心核と上位の層とのインタフェースは、\ITRON システムコールとして決め
+られたインタフェースを使用しています(一部拡張してあります)。そのため、
+異なったCPU上に \BFree OS を移植する場合でも、変更は中心核のみに留め、
+上位層の変更は最小限にすることができるようになっています。
+
+この章では、中心核の機能と構造について説明します。
+
+
+\section{中心核の機能}
+
+中心核は、\microITRON 3.0 の基本仕様(一部拡張仕様も含む)準拠のカーネル
+です。
+
+中心核は、周辺核、外核そしてアプリケーションなどの上位層に対して次の機
+能を提供します。
+
+\begin{quote}
+  \begin{itemize}
+  \item タスク管理
+  \item 同期・通信機能(IPC)
+  \item メモリプール管理機能
+  \item 割り込み管理機能
+  \item 例外管理機能
+  \item 時間管理機能
+  \item システム管理機能
+\end{itemize}
+\end{quote}
+
+    
+ この他に \microITRON 3.0 では規定されていない次の機能も提供します。
+
+ \begin{quote}
+   \begin{itemize}
+   \item 仮想メモリ管理機能
+   \end{itemize}
+ \end{quote}
+    
+  中心核は、基本的な OS の機能を上位層に与えます。
+  なお、上位層は中心核に対してシステムコールを発行することによって、
+中心核の機能を使用します。しかし、中心核より上位の層(周辺核、外核も含
+む)は、すべてメッセージの送受信により要求の送受信を行います。システム
+コール( = CPU でのトラップ)を介して呼び出されるというのは中心核だけで
+す。
+
+  ユーザアプリケーションが、\BTRON の機能を使用する場合、次のような順
+序で処理を行います。
+
+\begin{enumerate}
+  \item ユーザプログラムは、中心核に対してメッセージを送信するシステム
+    コールを発行して、周辺核へメッセージを送る。 
+%
+  \item 周辺核は、送られてきたメッセージを受けとり、メッセージに書かれ
+    た要求を実行する。
+%
+   \item 周辺核は要求を処理すると、結果をメッセージの形にして中心核
+     を介してアプリケーションへ送る。
+%
+   \item ユーザアプリケーションは、返答メッセージを受けとる。
+     (システムコールの終了)
+\end{enumerate}
+    
+なお、中心核を呼び出す処理というのは、ライブラリが行うので、アプリケー
+ションが中心核を意識することはありません。
+ファイルの読み書きなどの処理は、周辺核のファイル管理マネージャが、メッ
+セージを受けとることによって処理します。
+
+  また、中心核では、\microITRON 3.0 で新たに拡張された接続機能に
+ついては、サポートしません。異なったホスト間での通信機能については、中
+心核よりも更に上位の層でサポートします。
+  μITRON3.0の接続機能を使用しない理由は次のとおりです。
+
+  \begin{itemize}
+  \item μITRON 3.0 での通信機能は組み込み機械で CPU が複数ある場合を
+    想定している。
+  \item 基本的に CPU がひとつだけ入っており、他のマシンとは比較的大域
+    の広いインタフェース (Ethernet など)が使えるパソコンとは相性が悪い。
+  \end{itemize}
+
+つまり、μITRON 3.0 での接続機能は、パーソナルコンピュータでの通信のよ
+うな用途には向かないのではないかということです。
+
+\section{中心核の構成}
+
+中心核の構成を図 \ref{fig:nucleas-structure} に示します。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=nucleus.eps}
+  \end{center}
+  \caption{中心核の構成}
+  \label{fig:nucleas-structure}
+\end{figure}
+中心核は、いくつかのモジュールに分かれています。
+
+\begin{lablist}
+  \labitem{タスク管理部分}
+    タスク管理では、\ITRON の意味でのタスクを管理します。タスクは実行
+    単位としてのプログラムを意味しています。
+    タスク管理部分では、タスクの生成/削除/実行などの操作の他に、タスク
+    同士で同期や通信などを行う機能も含んでいます。
+%
+  \labitem{メモリ管理部分}
+    メモリ管理部分では、物理メモリの管理を行います。物理メモリは基本的
+    にページ単位 (80386 で 4K バイト) で管理を行います。しかし、メモリ
+    管理部分が提供するインタフェースでは、バイト単位での物理メモリの取
+    得/解放ができるようになっています。
+%
+  \labitem{割込み/例外管理部分}
+    割込み管理では、外部割込みおよびトラップ (例外、内部割込み)の割り込みテ
+    ーブルへの登録を行います。また、実際に割り込みが起った場合の各関数
+    への処理の割り振りも行います。
+%
+  \labitem{時間管理部分}
+    一定時間ごとの指定された関数の実行をする機能を提供します。
+%
+  \labitem{システム管理部分}
+    バージョン番号などを管理します。
+%
+  \labitem {仮想メモリ管理部分}
+    CPU のもつ仮想メモリの管理機構をそのまま提供します。
+    更に抽象的な仮想メモリの管理については、周辺核のメモリマネージャが
+    行います。
+    
+    この仮想メモリの管理は、μITRON 3.0 では規定していないため、B-Free
+    独自の仕様を定めます。
+\end{lablist}
+
+
+
+%\section{中心核でサポートするシステムコール}
+%
+%中心核では、次のシステムコールをサポートします (* 印は現在未サポート)。
+%
+%\begin{description}
+%\item[タスク管理関係] \hfill \\
+%  cre\_tsk, 
+%\item[タスク附属同期機能] \hfill \\
+%  sus\_tsk,
+%\item[同期・通信機能] \hfill \\
+%  cre\_sem,
+%\item[割込み管理機能] \hfill \\
+%  def\_int,
+%\item[メモリプール管理機能] \hfill \\
+%  cre\_mpl,
+%\item[時間管理機能] \hfill \\
+%  set\_tim (*),
+%\item[システム管理機能] \hfill \\
+%  get\_ver,
+%\end{description}
+%
+%
+\chapter{周辺核}
+\label{cha:server}
+
+%\begin{flushright}
+%  {\small
+%  \begin{minipage}[h]{7cm}
+%  --- 
+%  \end{minipage}
+%
+%
+%  }
+%\end{flushright}
+
+
+
+\section{周辺核の探索}
+
+周辺核は、中心核 (ITRON)を使って、\BFree OS の中でも重要な機能 ---
+BTRON API を提供します。
+
+周辺核で提供する機能には、次の種類があります。
+
+\begin{description}
+\item[プロセス管理] \hfill \\
+  中心核の提供するタスク機能を使って、ファイルの管理情報などを追加した
+  実行単位 --- プロセスを管理します。
+%
+\item[メモリ管理] \hfill \\
+  BTRON プロセスが扱うメモリを管理します。
+  周辺核では、2種類 --- ローカル、共有メモリ --- のメモリを提供します。
+%
+\item[ファイル管理] \hfill \\
+  可変長レコードによるファイル機能を提供します。ファイル自体には、
+  BTRON の特徴である仮身・実身の機能はありません\footnote {実身や仮身
+    は、仮身・実身マネージャが提供する機能です。}。
+
+  \BFree OS では、次のような複数のファイル形式を使用することができます。
+
+  \begin{itemize}
+  \item BTRON FD ファイルシステム
+  \item {\it B-Free Standard File System}
+  \item {\tt MS-DOS ファイルシステム}
+  \end{itemize}
+%
+\item[イベント管理] \hfill \\
+  ポインティングデバイスからのイベントを管理します。
+%
+\item[デバイス管理] \hfill \\
+  周辺機器を操作するデバイスドライバを管理する機能です。
+  デバイスドライバをロード・アンロードすることができます。
+  (デバイスドライバ自体は、ITRON タスクとして動作します)
+%
+\item[時間管理] \hfill \\
+   時間に関係する機能を管理します。
+%
+\item[システム管理] \hfill \\
+  上記の管理機能に属さない、「その他の」機能です。
+%
+\end{description}
+
+
+\section{周辺核の構造}
+
+
+周辺核、すなわち \BFree OS での BTRON API を処理する部分は、決して巨大
+なプログラムではありません。
+
+周辺核は、図 \ref{fig:server-struct} に見るように単機能なプログラムの
+集まりです。
+
+\begin{figure}[h]
+  \begin{center}
+    \epsfile{file=server-struct.eps,height=8cm}
+  \end{center}
+  \caption{周辺核の構造}
+  \label{fig:server-struct}
+\end{figure}
+
+周辺核と上位層(外核とアプリケーション)は、中心核の IPC 機能によって通信し
+ます。
+
+周辺核を構成する要素を次のリストに示します。
+
+\begin{description}
+\item[プロセスマネージャ] \hfill \\
+  BTRON プロセスを管理する。プロセスは、ITRON タスクと結びついています。
+  プロセス管理サーバでは、プロセスに付随する情報を管理します。また、プ
+  ロ  セスのユーザ情報も管理し、特権レベルによって資源にアクセスできる
+  かどうかの判断も行います。
+%
+\item[メモリマネージャ] \hfill \\
+  仮想メモリ情報を管理します。
+  仮想メモリ機能の中でハードウェアに依存する機能については、ITRON で管
+  理します。メモリ管理サーバでは、メモリが足りなくなった場合の物理メモ
+  リの解放機能(ページアウト)や、物理メモリに結びついていない仮想メモリ
+  領域をどのように物理メモリに結びつける(マッピング)かの方針を決定しま
+  す。
+%
+\item[ファイルマネージャ] \hfill \\
+  BTRON のファイルシステムに関係する機能を提供します。
+
+  \BFree では、ファイル形式を複数取り扱うことができるので、ファイル管
+  理サーバでは、各ファイル形式ごとにあるファイル管理プログラムを統合し
+  ます。
+%
+\item[デバイスマネージャ] \hfill \\
+  周辺機器を制御するプログラム、すなわちデバイスドライバの管理を行います。
+
+  デバイスには各々名前が付いています。デバイス管理サーバでは、デバイス
+  名とデバイスドライバの持つ通信用のポートを結びつけます。
+\end{description}
+
+
+%
+%
+%\subsection{プロセスとタスク}
+%
+%
+%\subsubsection{プロセスマネージャ}
+%
+%
+%\subsection{ファイル}
+%
+%\subsubsection{\BFree でのファイル管理}
+%
+%\subsubsection{ファイルマネージャ}
+%
+%
+%\section{仮想記憶}
+%
+%
+%\subsection{記憶管理}
+%
+%
+%\subsubsection{メモリマネージャ}
+%
+%
+%%\chapter{デバイス管理}
+%%\label{cha:device}
+%%\section{\BFreeでのデバイスの定義}
+%%\section{デバイス管理入門}
+%%\chapter{外核}
+%%\label{cha:manager}
+%%\chapter{ユーザインタフェース}
+%%\chapter{POSIXインタフェース}
+%%\section{多頭の蛇}
+%%\section{Posixインタフェース}
+%%\chapter{アプリケーション}
+%
+%
+%
+
+\end{document}
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: t
+% End: 

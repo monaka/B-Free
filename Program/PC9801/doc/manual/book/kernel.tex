@@ -1,0 +1,54 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%		The kernel
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{カーネル}
+
+\chapter{カーネルの概要}
+
+BTRON/386 のカーネル部の構造をFigure: \ref{fig:kernel-architecture} に
+示す。
+
+
+\begin{figure}[h]
+	\label{fig:kernel-architecture}
+	\caption{BTRON/386 カーネル}
+	\begin{picture}(300,150)(0,0)
+	\end{picture}
+\end{figure}
+
+
+\section{API}
+
+BTRON/386 では、システムコールをTable \ref{tab:syscall-a-kind}
+のように分類している。
+
+\begin{table}[h]
+\begin{center}
+	\caption{BTRON/386カーネル のシステムコールの種類}
+	\label{tab:syscall-a-kind}
+	\begin{tabular}{c | l}				   \hline
+種類     &	内容					\\ \hline
+タスク管理    &  タスクの生成/削除など			\\ \hline
+メモリ管理    &  タスクごとのメモリの取得		\\ \hline
+	\end{tabular}
+\end{center}
+\end{table}
+
+\section{タスク管理管理}
+
+\section{メモリ管理}
+
+\section{IPC}
+
+\section{イベントマネージャ}
+
+\section{ディスプレイプリミティブ}
+
+\section{システムの起動}
+
+
+

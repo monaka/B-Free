@@ -1,0 +1,419 @@
+<html>
+<head>
+<title>無題ドキュメント</title>
+<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
+</head>
+
+<body bgcolor="#FFFFFF">
+<p><font size="7"><tt>割込み管理</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="def_int">def_int</a></tt></font><font size="4"><tt>（割込みハンドラ定義）</tt></font></p>
+<p><tt><font size="4">・既に存在する割込みハンドラの再定義も可能</font></tt></p>
+<p><tt><font size="4">・管理ブロックの確保</font></tt></p>
+<p><tt><font size="4">・静的な定義も可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = def_int( UINT dintno, T_DINT *pk_dint );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 dintno　　 割込み定義番号</tt></font></p>
+<p><font size="4"><tt>　T_DINT*　　pk_dint　　割込みハンドラ定義情報（NADR = -1(前回の割込みハンドラの終了)）</tt></font></p>
+<p><font size="4"><tt>　pk_dintの中身</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　intatr　　 割込みハンドラ属性（TA_ASM(アセンブラ) or TA_HLNG(高級言語)）</tt></font></p>
+<p><font size="4"><tt>　　FP　　　　 inthdr　　 割込みハンドラアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロック用が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 intatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 dintno、pk_dint、inthdrが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[R] </tt></font><font size="6"><tt><a name="ref_int">ref_int</a></tt></font><font size="4"><tt>（割込みハンドラから復帰）</tt></font></p>
+<p><tt><font size="4">・割込みハンドラの途中にディスパッチ遅延によって遅延された処理をまとめて行う</font></tt></p>
+<p><tt><font size="4">・CPUで直接起動するのでレジスタの管理が必要（アセンブラに限る）</font></tt></p>
+<p><tt><font size="4">・エラーの確認を行うときはエラーログを残す必要がある</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　void ret_int( );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 割込みハンドラ以外から発行（インプリメント依存）</tt></font></p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ret_wup">ret_wup</a></tt></font><font size="4"><tt>（割込みハンドラ復帰とタスク）</tt></font></p>
+<p><tt><font size="4">・指定タスクが起床待ちのとき待機解除して、自タスクを終了する</font></tt></p>
+<p><tt><font size="4">・指定タスクが起床待ちではないとき</font><font face="ＭＳ ゴシック, Osaka－等幅" size="4">TCBの起床要求キューイング数(wupcnt)を増やす</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　void ret_wup( ID tskid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 tskid　　　起床タスクＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　戻らない。</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　tskidが不正あ</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 tskidのタスクが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 指定タスクがDORMANT状態</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 割込みハンドラ以外からコールされた（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_QOVR　　　キューイング数wupcntのオーバーフロー</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部のタスクから他ノードのタスクを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[R] </tt></font><font size="6"><tt><a name="loc_cpu">loc_cpu</a></tt></font><font size="4"><tt>（割込みとディスパッチの禁止）</tt></font></p>
+<p><tt><font size="4">・割込みが許可されるまで割込みハンドラが遅延される</font></tt></p>
+<p><tt><font size="4">・ディスパッチが許可されるまでプリエンプト(CPUによる実行権の横取り)は行われない</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = loc_cpu( );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 コンテキストエラー（タスク独立部から発行）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[R] </tt></font><font size="6"><tt><a name="unl_cpu">unl_cpu</a></tt></font><font size="4"><tt>（割込みとディスパッチの許可）</tt></font></p>
+<p><tt><font size="4">・割込みとディスパッチが許可された状態でもE_OK</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = unl_cpu( );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部から発行</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="dis_int">dis_int</a></tt></font><font size="4"><tt>（割込み禁止）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = dis_int( UINT eintno );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 eintno　　 割込み許可番号</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 パラメータエラー（eintnoが不正あるいは利用できない）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="ena_int">ena_int</a></tt></font><font size="4"><tt>（割込み許可）</tt></font></p>
+<p><tt><font size="4">・特別なeintnoを指定すると、すべての割込みに許可を与えることができる（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ena_int( UINT eintno );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 eintno　　 割込み許可番号</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 eintnoが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="chg_iXX">chg_iXX</a></tt></font><font size="4"><tt>（割込みマスク（レベル、優先度）変更）</tt></font></p>
+<p><tt><font size="4">・XXには使用CPUの名前を入れる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = chg_iXX( UINT iXXXX );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 iXXXX　　　割込みマスク（レベル、優先度）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 iXXXXが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[C] </tt></font><font size="6"><tt><a name="ref_iXX">ref_iXX</a></tt></font><font size="4"><tt>（割込みマスク（レベル、優先度）参照）</tt></font></p>
+<p><tt><font size="4">・XXには使用CPUの名前を入れる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_iXX( UINT *p_iXXXX );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 iXXXX　　　割込みマスク（レベル、優先度）</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 パラメータエラー（eintnoが不正あるいは利用できない）</tt></font></p>
+<p>　</p>
+<p>　</p>
+<p><font size="7"><tt>メモリプール管理</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="cre_mpl">cre_mpl</a></tt></font><font size="4"><tt>（可変長メモリプール生成）</tt></font></p>
+<p><tt><font size="4">・管理ブロックとメモリプール領域を確保する</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_mpl( ID mplid, T_CMPL *pk_cmpl );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMPL*　　pk_cmpl　　可変長メモリプール生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmplの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　mplatr　　 メモリプール属性(</tt></font><tt><font size="4">メモリ獲得待ちのキューイングはTA_TFIFO(FIFO) 
+  || TA_TPRI(優先度順、レベルＸ)）</font></tt></p>
+<p><font size="4"><tt>　　INT　　　　mplsz　　　メモリプールの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックやメモリプール領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 mplatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_cmplが不正、mplszが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 mplidの可変長メモリプールが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="del_mpl">del_mpl</a></tt></font><font size="4"><tt>（可変長メモリプール削除）</tt></font></p>
+<p><tt><font size="4">・管理ブロックとメモリプール領域を解放する</font></tt></p>
+<p><tt><font size="4">・メモリプールでメモリ獲得待ちのタスクにはE_DLT</font></tt></p>
+<p><tt><font size="4">・メモリプールに複数のメモリ獲得待ちある場合、削除後の同優先度の順序はインプリメント依存</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_mpl( ID mplid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mplidの可変長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="get_blk">get_blk</a></tt></font><font size="4"><tt>（可変長メモリブロック獲得）</tt></font></p>
+<p><tt><font size="4">・獲得したメモリの内容は不定</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、メモリ獲得待ちになり行列に並ぶ</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかった場合、後方のタスクに獲得の機会を譲れる（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = get_blk( VP *p_blk, ID mplid, INT blksz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　blksz　　　メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 blkszが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mplidの可変長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメモリプールが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="pget_blk">pget_blk</a></tt></font><font size="4"><tt>（可変長メモリブロック獲得（ポーリング））</tt></font></p>
+<p><tt><font size="4">・獲得したメモリの内容は不定</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったときE_TMOUT</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかった場合、後方のタスクに獲得の機会を譲れる（インプリメント依存）</font></tt></p>
+<p><tt><font size="4">・タスク独立部やディスパッチ禁止状態のタスクからも実行可能（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = pget_blk( VP *p_blk, ID mplid, INT blksz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　blksz　　　メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 blkszが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mplidの可変長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="tget_blk">tget_blk</a></tt></font><font size="4"><tt>（可変長メモリブロック獲得（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・獲得したメモリの内容は不定</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、メモリ獲得待ちになり行列に並ぶ、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかった場合、後方のタスクに獲得の機会を譲れる（インプリメント依存）</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならばpget_blk、TMO_FEVRならばget_blk</font></tt></p>
+<p><tt><font size="4">・tmout=TMO_POLではタスク独立部やディスパッチ禁止状態のタスクからも実行可能（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = tget_blk( VP *p_blk, ID mplid, INT blksz, TMO 
+  tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　blksz　　　メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 tmout≦(-2)、blkszが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mplidの可変長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行（tmout=TMO_POLに限るインプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメモリプールが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="rel_blk">rel_blk</a></tt></font><font size="4"><tt>（可変長メモリブロック返却）</tt></font></p>
+<p><tt><font size="4">・返却先は獲得先と同じでなければならない</font></tt></p>
+<p><tt><font size="4">・返却メモリが大きいと複数のタスクが待機解除になる、そのときの同優先度の順序はインプリメント依存</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = rel_blk( ID mplid, VP blk );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blk　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 blkが不正、獲得先と異なるmplid</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mplidの可変長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ref_mpl">ref_mpl</a></tt></font><font size="4"><tt>（可変長メモリプール状態参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_mpl( T_RMPL *pk_rmpl, ID mplid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mplid　　　可変長メモリプールＩＤ（TMPL_OS = -4(OSの空きメモリ)レベルＸ、-3～-2(スタック専用のメモリプール)インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　T_RMPL　　 pk_rmpl　　メモリプール状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmplの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無（FALSE = 0(無し)、0以外待機中の先頭タスクのID(レベルＸ)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　frsz　　　 空き領域の大きさ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxsz　　　最大空き領域の大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 T_RMPLが不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mplidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mplidの可変長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mplid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="cre_mpf">cre_mpf</a></tt></font><font size="4"><tt>（固定長メモリプール生成）</tt></font></p>
+<p><tt><font size="4">・管理ブロックとメモリプール領域を確保する</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_mpf( ID mpfid, T_CMPF *pk_cmpf );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMPF*　　pk_cmpf　　固定長メモリプール生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmpfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　mpfatr　　 メモリプール属性</tt></font><font size="4"><tt>(</tt></font><tt><font size="4">メモリ獲得待ちのキューイングはTA_TFIFO(FIFO) 
+  || TA_TPRI(優先度順、レベルＸ)）</font></tt></p>
+<p><font size="4"><tt>　　INT　　　　mpfsz　　　メモリプールの大きさ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　blfsz　　　固定長メモリブロックの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックやメモリプール用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 mpfatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_cmpfが不正、mpfsz、blfszが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 mpfidの固定長メモリプールが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="del_mpf">del_mpf</a></tt></font><font size="4"><tt>（固定長メモリプール削除）</tt></font></p>
+<p><tt><font size="4">・管理ブロックとメモリプール領域の解放</font></tt></p>
+<p><tt><font size="4">・メモリプールでメモリ獲得待ちのタスクにはE_DLT</font></tt></p>
+<p><tt><font size="4">・メモリプールに複数のメモリ獲得待ちある場合、削除後の同優先度の順序はインプリメント依存</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_mpf( ID mpfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正あるいは利用できない</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mpfidの固定長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜</tt></font><font size="4"><tt>-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="get_blf">get_blf</a></tt></font><font size="4"><tt>（固定長メモリブロック獲得）</tt></font></p>
+<p><tt><font size="4">・獲得したメモリの内容は不定</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、メモリ獲得待ちになり行列に並ぶ</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、後方のタスクに獲得の機会を譲れる（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = get_blf( VP *p_blf, ID mpfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mpfidの固定長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメモリプールが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="pget_blf">pget_blf</a></tt></font><font size="4"><tt>（固定長メモリブロック獲得（ポーリング））</tt></font></p>
+<p><tt><font size="4">・獲得したメモリの内容は不定</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、メモリ獲得待ちになり行列に並ぶ</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、後方のタスクに獲得の機会を譲れる（インプリメント依存）</font></tt></p>
+<p><tt><font size="4">・タスク独立部やディスパッチ禁止状態のタスクからも実行可能（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = pget_blf( VP *p_blf, ID mpfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mpfidの固定長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="tget_blf">tget_blf</a></tt></font><font size="4"><tt>（固定長メモリブロック獲得（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・獲得したメモリの内容は不定</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、メモリ獲得待ちになり行列に並ぶ、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・メモリを獲得出来なかったとき、後方のタスクに獲得の機会を譲れる（インプリメント依存）</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならばpget_blf、TMO_FEVRならばget_blf</font></tt></p>
+<p><tt><font size="4">・tmout=TMO_POLではタスク独立部やディスパッチ禁止状態のタスクからも実行可能（インプリメント依存）</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = tget_blf( VP *p_blf, ID mpfid, TMO tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mpfidの固定長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行（tmout=TMO_POLに限る、インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメモリプールが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="rel_blf">rel_blf</a></tt></font><font size="4"><tt>（固定長メモリブロック返却）</tt></font></p>
+<p><tt><font size="4">・返却先は獲得先と同じでなければならない</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = rel_blf( ID mpfid, VP blf );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 blf　　　　メモリブロックのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 blfが不正、獲得先と同じmpfid</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mpfidの固定長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜-4のメモリプールは利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="ref_mpf">ref_mpf</a></tt></font><font size="4"><tt>（固定長メモリプール状態参照）</tt></font></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_mpf( T_RMPF *pk_rmpf, ID mpfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mpfid　　　固定長メモリプールＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RMPF*　　pk_rmpf　　メモリプール状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmpfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 待機タスクの有無（FALSE = 0(無し)、0以外(有り、先頭タスクのID(レベルＸ))）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　frbcnt　　 空き領域のブロック数</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rmpfが不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mpfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mpfidの固定長メモリプールが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mpfid＜-4は利用不可（インプリメント依存）</tt></font></p>
+<p>　</p>
+</body>
+</html>

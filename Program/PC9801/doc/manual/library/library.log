@@ -1,0 +1,47 @@
+This is TeX, C Version 2.99 - j1.7 (preloaded format=jlplain 94.1.30)  3 MAR 1994 23:12
+**&jlatex library.tex
+(library.tex
+LaTeX Version 2.09 <24 May 1989>
+(/usr/local/lib/tex/macros.sjis/jbook.sty
+Document Style `jbook'. <18 Dec 88>
+(/usr/local/lib/tex/macros.sjis/jbk10.sty)
+\descriptionmargin=\dimen99
+\c@part=\count78
+\c@chapter=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+) (library.aux) [0
+
+] (library.toc)
+\tf@toc=\write3
+
+[1
+
+] [2
+
+]
+Chapter 1.
+[3] [4
+
+]
+Chapter 2.
+[5] [6
+
+]
+Appendix A.
+[7] (library.aux) 
+Here is how much of TeX's memory you used:
+ 180 strings out of 1254
+ 1733 string characters out of 8891
+ 31127 words of memory out of 65531
+ 2202 multiletter control sequences out of 3000
+ 25112 words of font info for 94 fonts, out of 40000 for 255
+ 14 hyphenation exceptions out of 307
+ 12i,6n,15p,157b,281s stack positions out of 200i,40n,60p,4096b,2000s
+
+Output written on library.dvi (8 pages, 4108 bytes).

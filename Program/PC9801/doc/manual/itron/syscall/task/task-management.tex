@@ -1,0 +1,227 @@
+
+\subsubsection{タスク管理}
+
+タスク管理関係のシステムコールは、表 \ref{tab:task-syscall} に示すとお
+りです。
+
+\begin{table}[htbp]
+  \caption{タスク関係のシステムコール}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l l } \hline
+      システムコール名 & \multicolumn{1}{c}{機能} \\ \hline\hline
+      can\_wup  & タスクの起床要求を無効化 \\
+      cre\_tsk  & タスクの生成 \\
+      chg\_pri  & プライオリティの変更 \\
+      dis\_dsp  & ディスパッチ禁止 \\
+      ena\_dsp  & ディスパッチ許可 \\
+      ext\_tsk  & 自タスク終了 \\
+      exd\_tsk  & 自タスク終了と削除 \\
+      frsm\_tsk & 強制待ち状態のタスクから待ち状態を解除(多重の待ち状態
+      用) \\
+      get\_tid  & 自タスクのタスク ID 参照 \\
+      ref\_tsk  & タスク状態の参照 \\
+      rot\_rdq  & 同一プライオリティでのタスクの順序を変更する \\
+       rsm\_tsk  & 強制待ち状態のタスクから待ち状態を解除 \\
+      slp\_tsk  & 自タスクを待ち状態にする \\
+      sta\_tsk  & タスクの起動 \\
+      sus\_tsk  & 指定したタスクを強制待ち状態に移行 \\
+      ter\_tsk  & 他タスク強制終了 \\
+      wup\_tsk  & 指定されたタスクを起床する。 \\ \hline
+    \end{tabular}
+  \end{center}
+  \label{tab:task-syscall}
+\end{table}
+
+
+\paragraph{タスク管理情報}
+
+  タスクを管理する情報としては次のものがある。
+
+  \begin{enumerate}
+  \item タスク ID
+  \item タスク属性
+  \item タスク状態
+  \item タスク待ち要因
+  \item タスク優先度
+  \item 仮想メモリ管理テーブル
+  \item カーネルスタック
+  \item IPC (Inter process communication) 用の情報
+  \item 例外処理ハンドラテーブル
+  \end{enumerate}
+
+
+\subparagraph{タスク ID}
+
+タスク ID は、各タスクを識別するための情報である。そのため、タスク 
+ID は、各タスクごとにユニークな番号が割り当てられる。
+本 ITRON では、タスク情報の配列のインデックスが割りあてられる。
+タスク ID は 1 以上の数が割りあてられる。また、タスク ID 0 は、自分
+自身のタスクを表わす。
+        
+
+\subparagraph{タスク属性}
+
+タスク属性は、タスクを記述する言語が何であるかを示す情報である。
+この情報は ITRON 規約によって決められているものだが、本 ITRON では、
+アセンブラと高級言語で記述されたことの区別はつけないため、常に高級言
+語で記述した場合の値(TA\_HLNG)が入る。
+
+
+\subparagraph{タスク状態}
+
+現在のタスクの状態を示す。
+タスクの状態は、次に示す値のどれかになっている(マクロ名を示す。括弧
+内は、実際の値)。
+
+\begin{tabular}[h]{l p{5cm}}
+  TTS\_NON(0x00000000):  & 未生成状態  \\
+  TTS\_RUN(0x00000001):  & 走行状態。この値を示すタスクは、常にシステム内
+                        で1つだけである \\
+  TTS\_RDY(0x00000002):  & 走行可能状態 \\
+  TTS\_WAI(0x00000004):  & 待ち状態。自分でイベントを待つことを指定した場
+                        合にこの値をもつ \\
+  TTS\_SUS(0x00000008):  & 強制待ち状態。他のタスクから強制的に待ち状態に
+                        された場合、この値をもつ \\
+  TTS\_WAS(0x00000010):  & タスクが待ち状態に入っている場合に、他のタスク
+                        から強制的に待ち状態に、この値をもつ \\
+  TTS\_DMT(0x00000020):  & 休止状態。タスクが生成されてはいるがまだ起動さ
+                        れていない場合にこの値をもつ。この状態のときに
+                        は、タスクは自分の資源をなにも消費していない \\
+\end{tabular}
+
+
+\subparagraph{タスク待ち要因}
+
+TTS\_WAI,TTS\_SUS,TTS\_WASのいずれかの状態のときに、何の要因で待ち状態
+に入っているのかを示す値である。
+
+待ちとして以下の状態を定義している:
+
+\begin{description}
+\item[タイマ待ち]       (セマフォ、イベントフラ、メッセージの待ちと組
+  み合わせて使う)
+\item[セマフォ待ち]
+\item[イベントフラグ待ち]
+\item[メッセージ待ち]
+\end{description}
+
+セマフォ/イベントフラグ/メッセージは、タイマ待ちと組み合わせることが
+できる。
+
+逆にタイマ待ちを除いては、セマフォ/イベントフラグ/メッセージの待ち状
+態は重なることがない(例えばイベントフラグとセマフォとを同時に待つこと
+はない)。
+
+
+\subparagraph{タスク優先度}
+
+タスク優先度は、タスクを実行する場合にどのタスクを先に実行するかを示
+す値である。もし、同じ優先度のタスクがあった場合、その優先度のタスク
+リストの先頭にあるタスクが先に実行される。タスクリストについては、タ
+スクの構造を参照のこと。
+
+
+\subparagraph{仮想メモリ管理テーブル}
+
+タスクごとに必要とする仮想メモリのマッピング情報。
+
+カーネルモードでは、すべて同じマッピングだが、ユーザモード(アプリケ
+ーションプログラム)の領域は、マッピング情報がタスクごとに異なっている。
+
+仮想メモリ管理テーブルの詳細については、仮想メモリ機能の項目を参照の
+こと。
+
+
+\subparagraph{カーネルスタック}
+
+タスクごとにもつスタック領域。
+
+この大きさはタスクの生成時に指定される。本来の ITRON 規約ではバイト
+単位でサイズを指定するが、本 ITRON では、ページサイズに切り上げられ
+る。これは、スタック領域をオーバーフローしたことを関知するために、ス
+タック領域の前後のページを未マップ状態にするためである。スタック領域
+をはずれてアクセスした場合にどのような処理をするかは、例外処理ハンド
+ラとして各タスクごとに指定することができる。
+
+
+\subparagraph{IPC (Inter process communication) 用の情報}
+
+本 ITRON では、タスク間通信として次の機能をサポートしている。
+
+\begin{enumerate}
+\item セマフォ
+\item メッセージ
+\item イベントフラグ
+\end{enumerate}
+
+通信機能に必要な情報は、タスク情報として各タスクに付随している。
+
+
+\subparagraph{例外処理ハンドラテーブル}
+
+例外が発生した場合に実行されるハンドラへのアドレスを収めるテーブル。
+例外には、次の種類がある。
+
+\begin{enumerate}
+\item メモリフォールト
+\item トラップ (システムコール)
+\item 浮動小数点例外
+\end{enumerate}
+
+もし、例外発生時にタスク独自の処理をする必要がなければ、システムで決
+められた処理を行う。その場合、ハンドラアドレスとしてアドレス 0 (NULL
+ポインタ)をセットしておくこと。
+
+例外処理の詳細については、例外処理機能の項目を参照のこと。
+
+
+\newpage
+\newcommand{\function}[1]{
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+%   \stepcounter{subsubsection}
+   \addcontentsline{toc}{paragraph}{#1}
+  \vspace{1cm}}
+
+\input{syscall/task/can-wup.tex}
+\newpage
+\input{syscall/task/cre-tsk.tex}
+\newpage
+\input{syscall/task/chg-pri.tex}
+\newpage
+\input{syscall/task/dis-dsp.tex}
+\newpage
+\input{syscall/task/ena-dsp.tex}
+\newpage
+\input{syscall/task/ext-tsk.tex}
+\newpage
+\input{syscall/task/exd-tsk.tex}
+\newpage
+\input{syscall/task/frsm-tsk.tex}
+\newpage
+\input{syscall/task/get-tid.tex}
+\newpage
+\input{syscall/task/ref-tsk.tex}
+\newpage
+\input{syscall/task/rot-rdq.tex}
+\newpage
+\input{syscall/task/rsm-tsk.tex}
+\newpage
+\input{syscall/task/slp-tsk.tex}
+\newpage
+\input{syscall/task/sta-tsk.tex}
+\newpage
+\input{syscall/task/sus-tsk.tex}
+\newpage
+\input{syscall/task/ter-tsk.tex}
+\newpage
+\input{syscall/task/wup-tsk.tex}
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

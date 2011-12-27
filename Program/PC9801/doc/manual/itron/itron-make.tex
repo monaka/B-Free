@@ -1,0 +1,122 @@
+\section{ITRON の make 方法}
+
+\subsection{ディレクトリ構成}
+
+{\tt B-Free} \/ OS のソース環境は以下のディレクトリ構造になっています。
+
+{\Tabularleftskip  = 0pt
+\Tabularrightskip = 0pt
+\begin{Tabular}{p{2cm} p{2cm} p{2cm} p{5cm}}
+src  &  \multicolumn{3}{p{9cm}}{ソース環境のトップディレクトリ}         \\
+     &  boot   & \multicolumn{2}{p{7cm}}{ブートプログラムのソースです}   \\
+     &  kernel & \multicolumn{2}{p{7cm}}{中心核(ITRON)および周辺核のソースが
+       入っています} \\
+     &         & \multicolumn{2}{p{7cm}}{kernelディレクトリは更に次のディレ
+                 クトリに分かれています} \\
+     &         &  btron    &    BTRON API を提供するための周辺核(群)が
+                                入ります \\
+     &         &  itron-3.0 &   中心核(ITRON)のソースが入ります \\
+     &         &  make     &    カーネルを作成するための make ディレク
+                                トリです。今のところ使っていません。\\
+     &         &  servers  &    外核を構成するサーバ群が入るところで
+                                す。 \\
+%
+     &   lib   &  \multicolumn{2}{p{7cm}}{ユーザライブラリが入るディレクトリです。
+                  ライブラリの種類としては、以下のものが入る予定です}\\
+%
+     &         &  itron    &    中心核へのネイティブなシステムコール関
+                                数が入ります\\
+     &         &  posix    &    POSIX準拠の関数群が入ります。
+                                UN*X 系のソフトウェア用です \\
+     &         &  standard &    標準的な関数が入ります。\\
+     &         &  syscall  &     システムコールとのインタフェースルーチ
+                                ンが入ります。今のところusyscall.sが入
+                                っているだけです \\
+     &         &  window   &    ウィンドウマネージャ関連の関数が入りま
+                                す \\
+%
+%
+     &   tool  & \multicolumn{2}{p{7cm}}{ツールプログラムが入ります。
+                今のところ使っているツールは kp だけです} \\
+%
+     &         &  bin86    &    8086 系のアセンブラ/リンカが入る予定で
+                                す \\
+     &         &  fdformat &    BTRON/FD 形式で FD をフォーマットする
+                                ためのコマンドです。
+                                まだ、完成していません \\
+     &         &  kp       &    メッセージ類を EUC で書いた C のプログ
+                                ラムを TRON コード形式に直してコンパイ
+                                ルするプリプロセッサです。このプリプロ
+                                セッサを通したCのソースをコンパイルし
+                                ます \\
+\end{Tabular}}
+
+
+
+\subsection{make の準備}
+
+ITRON を make する前に、ツールプログラム {\tt kp} をセットアップしてく
+ださい。
+
+{\tt kp} の make は以下の手順で行います。
+
+  \begin{enumerate}
+  \item カレントディレクトリを btron/src/tool/kp ディレクトリに(cd コマン
+        ドで)移します。
+  \item make コマンドを実行してください。
+  \item kp というファイルができていれば完成です。
+  \end{enumerate}
+%
+
+\subsection{make の実行}
+
+
+とりあえず、今の環境では boot と ITRON が作成できるだけです。
+作成は以下の順序で行ってください。
+
+\begin{description}
+\item[(1) boot プログラムの作成] \hfill
+
+  boot プログラムは、bootimage というファイル名をもっています。
+
+  \begin{enumerate}
+  \item カレントディレクトリを btron/src/boot ディレクトリに移してくだ
+    さい。
+  \item make コマンドを実行してください。
+  \item bootimage というファイルができていれば完成です。
+  \end{enumerate}
+  
+
+\item[(2) ITRON カーネルの作成] \hfill
+
+  \begin{enumerate}
+  \item カレントディレクトリを btron/src/kernel/itron-3.0/make ディレクト
+        リに移してください。
+  \item make コマンドを実行してください。
+  \item itron.image というファイルができていれば完成です。
+  \end{enumerate}
+
+\item[(3) 立ち上げ用ディスクの作成]  \hfill
+
+ITRON を立ち上げるには boot ディスクと ITRON を入れるディスクの 2 枚必
+要です。
+
+Linux/BSD などの UNIX 系 OS でコンパイルした場合、直接 FD ディスクに書
+き込みができますから、
+{\tt btron/src/boot/bootimage} と 
+{\tt btron/src/kernel/itron-3.0/make/itron.image}
+をそれぞれ書き込んでください。
+
+\begin{quote}
+  {\small なお、Linux の場合ドライブ A に 1.2 M の FD ドライブがあった
+    場合には、/dev/fd0h1200 がスペシャルファイル名となります。}
+\end{quote}
+
+  {\tt cp btron/src/kernel/itron-3.0/make/itron.image 
+<1.2 M フォーマットの FD を表すスペシャルファイル> }
+
+  {\tt cp btron/src/boot/bootimage  
+<1.2 M フォーマットの FD を表すスペシャルファイル>}
+\end{description}
+
+

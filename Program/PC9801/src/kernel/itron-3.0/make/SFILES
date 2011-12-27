@@ -1,0 +1,12 @@
+
+io.o:		../i386/io.s
+	$(CPP) $(ASFLAGS) $< | $(AS) -o $*.o
+	
+locore.o:	../i386/locore.s
+	$(CPP) $(ASFLAGS) $< | $(AS) -o $*.o
+
+interrupt.o:	../i386/interrupt.s
+	$(CPP) $(ASFLAGS) $< | $(AS) -o $*.o
+
+startup.o:	../i386/startup.s
+	$(CPP) $(ASFLAGS) $< | $(AS) -o $*.o

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=x-euc-jp">
+<TITLE>
+B-Free meeting 1997/Oct/26 A part
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<DIV ALIGN="RIGHT"><I><A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/meeting/1997-Oct-26a.html">
+http://www.sccs.chukyo-u.ac.jp/B-Free/meeting/1997-Oct-26a.html</A></I></DIV>
+
+<HR>
+
+<H1>Ｂ−Ｆｒｅｅ全体ミーティング資料 (1997/Oct/26)</H1>
+
+<HR>
+
+<H2>1. サーバ移転について</H2>
+
+現在使用している b-free.orient.co.jp のサーバが 10 月いっぱいで
+使用できなくなる。代替のサーバとして中京大学情報科学部のサーバを
+借用する。中京大学の担当者からはすでに、アカウントをもらっており、
+WWW および FTP が使用可能。<BR>
+ML についても使用可能との連絡をもらっているが、ML については
+以前使用していた IIJ ML を使用する。
+<P>
+もともと、b-free.orient.co.jp のサーバは使用できなくなることはわ
+かっており、新しいサーバを立ち上げる作業をしていたが、10 月末には
+間に合いそうにない。新しいサーバについては、
+<A HREF="http://www.st.rim.or.jp/~rnaitoh/tron-fan-network/index.html">
+<I>http://www.st.rim.or.jp/~rnaitoh/tron-fan-network/index.html</I></A>
+を参照のこと。
+<P>
+なお、中京大学へサーバを移転した後も新しいサーバの立ち上げ作業は
+継続する。
+<P>
+
+<H3>■ サーバ移転のスケジュール</H3>
+
+<TABLE>
+<TR>
+<TD VALIGN=TOP>〜10/24
+<TD>b-free.orient.co.jp のデータのバックアップ<BR>
+    (バックアップは、10/24 以降も継続して行う)
+</TR>
+
+<TR>
+<TD>10/24
+<TD>サーバ移転の告知
+</TR>
+
+<TR>
+<TD>10/24〜10/26
+<TD>www.sccs.chukyo-u.ac.jp への WWW/FTP データの移転
+</TR>
+
+<TR>
+<TD>10/26
+<TD>www.sccs.chukyo-u.ac.jp での WWW/FTP の公開<BR>
+    b-free.orient.co.jp のサーバ停止のアナウンス (WWW)
+</TR>
+
+<TR>
+<TD>10/30
+<TD>b-free.orient.co.jp の WWW/FTP の停止
+</TR>
+
+</TABLE>
+
+
+<H3>■ B-Free サーバの構成</H3>
+
+TRON support network のサーバが立ち上がった後のサーバの構成は、図のようになる。
+<P>
+<A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/">http://www.sccs.chukyo-u.ac.jp/B-Free/</A>
+は、学情系のネットワークにつながっているため、ac.jp 以外のドメインからはアクセスしにくい。
+そこで、スタッフが WWW/FTP のデータを新しくしたい時は、TRON support network のデータのみ更新し、
+<A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/">http://www.sccs.chukyo-u.ac.jp/B-Free/</A>
+のデータは、mirror コマンドをつかって自動的にデータの同期をとるようにする。
+<P>
+<BLOCKQUOTE>
+なお、現在も <A HREF="http://www.b-free.orient.co.jp/">http://www.b-free.orient.co.jp</A> から
+<A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/">http://www.sccs.chukyo-u.ac.jp/B-Free/</A>
+へのデータのコピーは mirror コマンドをつかって自動的に行っている。
+</BLOCKQUOTE>
+<P>
+ML については、TRON support network のサーバで一括管理するようにし、
+<A HREF="http://www.sccs.chukyo-u.ac.jp/B-Free/">http://www.sccs.chukyo-u.ac.jp/B-Free/</A>
+では、ML の管理までは行わないようにする。
+
+<P>
+<center>
+<IMG SRC="server-network.gif" ALT="B-Free server network" BORDER=1>
+</center>
+<P>
+
+<H2>2. B-Free OS の現状</H2>
+
+
+B-Free OS Version 0.0.29 から Version 0.0.33 までのソースを公開した。<P>
+主な変更点は次のとおり
+
+<UL>
+<LI>POSIX 環境にて、ファイルの write 処理を追加(version 0.0.29)。
+<LI>FD ドライバにて write 処理ができなかったのを修正した (version 0.0.30)。
+<LI>POSIX 環境にて、システムコール exec/fork の処理の追加 (version 0.0.31/version 0.0.33)。<BR>
+    ただし、exec/fork の処理はまだ動かない。
+</UL>
+
+POSIX 環境用の lowlib の作成も開始しているが、引数を必要とするシステムコール実行時に
+lowlib がクラッシュ (page fault などのプロセッサ例外が発生) するという問題がある。
+
+
+<H2>3. 電脳文化祭</H2>
+<P>
+1997/11/15 - 11/16 に、「朝陽館本家」にて電脳文化祭がある。<BR>
+今回は、特に前もって文化祭実行委員が企画を決めることをせず、参加者が
+企画をもちよることになっている。<P>
+B-Free Project としても何か展示したい。
+
+<P>
+<HR>
+<A href="../index.html">B-Free オフィシャルホームページへ戻る</A>
+
+<HR>
+<font size=3>Copyright (C) 1996,1997 B-Free Project<BR></font>
+</BODY>
+</HTML>

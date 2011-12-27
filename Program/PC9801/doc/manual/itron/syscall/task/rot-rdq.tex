@@ -1,0 +1,57 @@
+
+  \function{rot\_rdq  --- 同一プライオリティでのタスクの順序を変更する}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER rot\_rdq (PRI tskpri)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskpri}{タスクのプライオリティレベル}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_PRI}    プライオリティ値が不正(範囲外)
+\end{lablist}
+
+
+\labitem{機能}
+
+引数で指定したプライオリティレディキューの配列のインデックスとなってい
+る。同じプライオリティをもつタスクは、レディキューのエントリからつながっ
+たリストになっている。
+リスト中にあるタスクのうち、リストの先頭(レディキューに近い側)から CPU 
+の制御が渡る。
+rot\_rdq システムコールは、このレディキューからのリストの順番を変更す
+る。
+具体的には、リストの先頭にあるタスクをリストの最後に移動する。
+リスト中の次のタスクが、先頭のタスク(同じプライオリティをもつタスクの
+中で次に実行されるタスク)になる。
+
+\labitem{\it Internal}
+
+このシステムコールの処理は次のようになる。
+
+\begin{quote}
+  先頭のタスク = readyタスクリストの配列[tskpri]。
+  先頭のタスクを削除。
+  先頭のタスクを (readyタスクリストの配列[tskpri]) の一番最後に追加。
+\end{quote}
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

@@ -1,0 +1,32 @@
+
+  \function{get\_tid  --- 自タスクのタスク ID 参照}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER get\_tid (ID *tskid}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid}{自タスクのタスク ID を入れるための領域のポインタ}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した。
+\end{lablist}
+
+引数 tskid には、返り値としてタスク ID が入れられる。
+
+\labitem{機能}
+
+タスク ID を取得するためのシステムコール。
+
+\end{lablist}
+

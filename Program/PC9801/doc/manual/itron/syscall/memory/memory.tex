@@ -1,0 +1,297 @@
+
+\subsubsection{メモリプール管理機能}
+
+\begin{table}[htbp]
+  \caption{メモリプール関係のシステムコール}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l l} \hline
+      システムコール名 & \multicolumn{1}{c}{機能} \\ \hline\hline
+      cre\_mpl  & メモリプールの生成 \\
+      del\_mpl  & 可変長メモリプールの削除 \\
+      get\_blk  & 可変長メモリブロック獲得 \\
+      pget\_blk & 可変長メモリブロック獲得(ポーリング) \\
+      rel\_blk  & 可変長メモリブロック返却 \\
+      ref\_mpl  & 可変長メモリプール状態参照 \\
+      tget\_blk & 可変長メモリブロック獲得(タイムアウト有) \\
+    \end{tabular}
+  \end{center}
+  \label{tab:memory-syscall}
+\end{table}
+
+\newpage
+  \function{cre\_mpl  --- メモリプールの生成}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER cre\_mpl (ID mplid, T\_CMPL *pk\_cmpl)
+}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {mplid}{メモリプール ID}
+  \labitem {ppk\_cmpl}{生成するメモリプールの属性情報
+    次の形式の構造体である。
+
+    \begin{verbatim}
+typedef struct t_cmpl
+{
+  VP            exinf;
+  ATR           mplatr;
+  INT           mplsz;
+  INT           align;          /* アライメントサイズ */
+} T_CMPL;
+    \end{verbatim}
+    }
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}      システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     すでに同一 ID の可変長メモリ ID が存在する。
+\end{lablist}
+
+
+\labitem{機能}
+可変長メモリプールを生成する。
+
+\end{lablist}
+
+\newpage
+  \function{del\_mpl  --- 可変長メモリプールの削除}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER del\_mpl (ID mplid)
+}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {mplid}{削除するメモリプールの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     ID を指定した可変長メモリ ID が存在しない。
+\end{lablist}
+
+
+\labitem{機能}
+可変長メモリプールを削除する。
+
+削除したメモリプール領域は、システムメモリプール領域へ返却する。
+
+
+\end{lablist}
+
+\newpage
+  \function{get\_blk  --- 可変長メモリブロック獲得}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER get\_blk (VP *pblk, ID mplid, INT blksz)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {pblk}       獲得したメモリブロックへのアドレス
+  \labitem {mplid}      メモリブロックを獲得するメモリプール ID 
+  \labitem {blksz}      獲得するブロックのサイズ
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     ID を指定した可変長メモリ ID が存在しない。
+\end{lablist}
+
+
+\labitem{機能}
+可変長メモリブロック獲得。
+
+もし、メモリブロックを獲得できなかった場合、空きができるまで待つ。
+
+\labitem {Internal}
+このシステムコールは、内部的に pget\_mpl を使っている。
+
+\end{lablist}
+
+\newpage
+  \function{pget\_blk --- 可変長メモリブロック獲得(ポーリング)}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER pget\_blk (VP *pblk, ID mplid, INT blksz)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {pblk}       獲得したメモリブロックへのアドレス
+  \labitem {mplid}      メモリブロックを獲得するメモリプール ID 
+  \labitem {blksz}      獲得するブロックのサイズ
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}      システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     ID を指定した可変長メモリ ID が存在しない。
+  \labitem {E\_TMOUT}   メモリ取得ができなかった。
+\end{lablist}
+
+\labitem{機能}
+可変長メモリブロック獲得。
+
+もし、メモリブロックを獲得できなかった場合、すぐに終了する。その場合、
+E\_TMOUT を返す。
+
+
+\end{lablist}
+
+\newpage
+  \function{rel\_blk  --- 可変長メモリブロック返却}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER rel\_blk(ID mplid, VP blk)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {mplid}      メモリブロックを返却するメモリプール ID 
+  \labitem {blk}        返却するメモリブロックの先頭アドレス
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     ID を指定した可変長メモリ ID が存在しない。
+\end{lablist}
+
+\labitem{機能}
+可変長メモリブロックを返却する。
+
+\end{lablist}
+
+\newpage
+  \function{ref\_mpl  --- 可変長メモリプール状態参照}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER ref\_mpl (ID mplid, T\_RMPL *pk\_rmpl)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {mplid}      状態を参照するメモリプール
+  \labitem {pk\_rmpl}   メモリ状態情報 (返り値)。以下のような構造体で
+  ある。
+
+  \begin{verbatim}
+typedef struct t_rmpl
+{
+  VP            exinf;
+  BOOL_ID       wtsk;
+  INT           frsz;
+  INT           maxsz;
+} T_RMPL;
+  \end{verbatim}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     ID を指定した可変長メモリ ID が存在しない。
+\end{lablist}
+
+
+\labitem{機能}
+可変長メモリブロックの状態を参照する。
+
+\end{lablist}
+
+\newpage
+  \function{tget\_blk --- 可変長メモリブロック獲得(タイムアウト有)}
+  
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER tget\_blk(ID mplid, INT blksz)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {mplid}      メモリブロックを獲得するメモリプール ID 
+  \labitem {blksz}      獲得するブロックのサイズ
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+  \labitem {E\_OK}     システムコールは正常に終了した
+  \labitem {E\_ID}      不正 ID 番号 (mplid が不正)
+  \labitem {E\_OBJ}     ID を指定した可変長メモリ ID が存在しない。
+  \labitem {E\_TMOUT}   メモリ取得ができなかった(タイムアウト)。
+\end{lablist}
+
+
+\labitem{機能}
+可変長メモリブロック獲得。
+
+本システムコールは、まだできていない。現在のところ、pget\_blk システム
+コールとして動作する。
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

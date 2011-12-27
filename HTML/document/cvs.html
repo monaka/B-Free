@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<TITLE>B-Free/document/CVS </TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffff">
+
+<h1>CVSによるソースの公開</h1>
+<DIV ALIGN="RIGHT">
+１９９８年１０月２８日(水)<BR>
+高田光隆 (<A>takada@tron-net.gr.jp</A>)</DIV>
+<hr>
+<h2>CVSを使用する経緯</h2>
+
+さて、これまで B-Free OS のソースは、適当なタイミングで tar + gz の形
+でファイルにまとめて公開していました。<br>
+これだと、公開の間の修正は、修正者以外見ることができません。あまりに公開の間が長いと、<br>
+なーにをやっているのかということで心配になってきますよね？
+<hr>
+<h3>で、使いかたです。</h3>
+
+CVS は、ソースの取得だけでなく修正を加えたソースの反映もできますが、<br>
+今回は取得する方法だけを説明します。取得だけでなく、変更したファイルを<br>
+アーカイブに反映する方法については、B-Free kernel ML の方で説明します。<h3>まず</h3>CVS をどこからか落としてきます。<br>
+CVS は、GNU のアーカイブに入っていますし、GNU 以外でも <A>http://www.cyclic.com/</a> などでもダウンロードでき
+ます。<br>cyclic.com には、UNIX 以外でも Windows、OS/2、Macintosh で使える
+バイナリがあるようです。この説明では、UNIX を前提として説明します。<br>
+
+<h3>落としたツールをコンパイルします</h3>
+これは、ダウンロードしたファイルを展開すると、INSTALL というファイルがあります。<br>
+このファイルを読んでコンパイルしてください。基本的に configure; make install で OK のはずです。<br>
+
+CVS では、リモートのマシンからソースを落とす方法が何種類かあるのですが、<br>
+今回は、誰でも落とせる方法として pserver を使った方法を説明します。<br>
+<br>
+<hr>
+
+・まず環境変数を設定します。設定する環境変数は、CVSROOT という変数です。 <br>
+  下線部を入力してください。<br>
+<br><br>
+
+<dl>
+ <dt>■ bsh 系のシェル(bash/ksh/bsh) の場合。
+ <dd>  $ CVSROOT=:pserver:anonymous@ns.tron-net.gr.jp:/usr/local/src/master
+ <dd>  $ export CVSROOT
+<br>
+ <dt>■ csh 系のシェルの場合。
+ <dd>  % setenv CVSROOT :pserver:anonymous@ns.tron-net.gr.jp:/usr/local/src/master
+</dl>
+
+<hr>
+
+・cvs の anonymous ユーザにログインします。<br>
+  (実際に、ns.tron-net.gr.jp にログインするわけではありません)<br>
+<DL>
+  <dd>$ cvs login<br>
+  <br>
+  そうすると、パスワードを聞いてきます。パスワード
+  anonymous を入力します。<br>
+  <br>
+  
+  <dd>(Logging in to anonymous@ns.tron-net.gr.jp)
+  <dd>CVS password: anonymous<br>
+  <br>
+  このパスワードは、~/.cvspass というファイルに記録されますので、次回からは入力する必要はありません。<br>
+  ・次に、ダウンロードしたい適当なディレクトリに行きます。<br>
+  ここでは、/tmp/foo というディレクトリにダウンロードすることにします。<br>
+  <br>
+  
+  <dd>$ mkdir /tmp/foo
+  <dd>$ cd /tmp/foo<br>
+  <br>
+  ・cvs を実行します。ソースファイルを持ってくる場合には、cvs
+  コマンドにcheckout を指定します。<br>
+  <br>
+  
+  <dd>$ cvs -z3 checkout btron-pc<br>
+  <br>
+  そうすると、サーバ (ns.tron-net.gr.jp)
+  から最新のソースがカレントディレクトリにダウンロードされます。<br>
+  -z3 というオプションは、通信路上で圧縮した状態で転送するかどうかを指定します。<br>
+  3 という数字は、圧縮のためのパラメータです。現在すべてのソースを落とすと2M 強になります。<br>
+  これは、圧縮していない状態のもの。圧縮パラメータをつけておくと大体10 分から 20 分ほどでダウンロードできます。<br>
+  <br>
+  本当は、CVS を使って全部落とさなくても、ftpから最新のソースを取ってきて、
+それを展開すれば同じことができるはずなんですが、試していません。<br>
+  その場合には、ソースを展開したディレクトリ(btron-pcが入っているディレクトリ。btron-pc の中じゃないよ)<br>
+  で、cvs -z3 checkout btron-pc を実行することになります。<br>
+</DL>
+  <hr>
+  <h3>これで</h3>
+  最新のソースがダウンロードできました。一旦ソースをすべて落とすしておけば、
+次回からは変更のあったファイルだけをダウンロードしてくれます。<br>
+  適当なタイミングで cvs -z3 checkout btron-pcを実行してみてください。<br>
+  <hr>
+  <h2>最後に</h2>
+  今のところ、どのような修正が行われているかを見ることは難しいですが、これも
+  cvsweb というツールを使って Web 上から簡単に把握できるようにするつもりです。<br>
+  cvsweb 以外でもよいツールがあったら教えてください。<br>
+  <HR>
+  このページについての感想は、<A>bfree-webmaster@tron-net.gr.jp</A>まで送ってください。
+  <HR>
+<A href="index.html">B-Free ドキュメント一覧へ戻る</A>
+<HR>
+<A href="../bc/index.html">B-Free オフィシャルホームページへ戻る</A>
+  <HR>
+  <font size=3>Copyright (C) 1996-1999 B-Free Project<BR>
+  </font>
+  <HR>
+</BODY>
+</HTML>

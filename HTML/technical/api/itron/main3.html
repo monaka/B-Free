@@ -1,0 +1,543 @@
+<html>
+<head>
+<title>無題ドキュメント</title>
+<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
+</head>
+
+<body bgcolor="#FFFFFF">
+<p><font size="7"><tt>拡張同期・通信</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="cre_mbf">cre_mbf</a></tt></font><font size="4"><tt>（メッセージバッファ生成）</tt></font></p>
+<p><tt><font size="4">・管理ブロックとメッセージ用バッファの確保</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・exinfの拡張情報はref_mbfで利用可</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_mbf( ID mbfid, T_CMBF *pk_cmbf );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbxid　　　メッセージバッファＩＤ（TMBF_DB = -3(デバッグ時使用)、TMBF_OS 
+  = -4(エラーログ</tt></font><font size="4"><tt>)）</tt></font></p>
+<p><font size="4"><tt>　T_CMBF*　　pk_cmbf　　メッセージバッファ生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cmbfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　mbfatr　　 メッセージバッファ属性（TA_TFIFO(タスクはFIFO) or TA_TPRI(タスクは優先度順-レベルＸ)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　bufsz　　　メッセージバッファのサイズ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxmsz　　 メッセージの最大長</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックやリングバッファ用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 mbfatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_cmbfが不正、bufsz、maxmszが負または不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 mbfidのメッセージバッファが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメッセージバッファは利用不可インプリメント依存</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでexinf、mbfatr、bufsz、maxmszが不正</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのメッセージバッファを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="del_mbf">del_mbf</a></tt></font><font size="4"><tt>（メッセージバッファ削除）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・管理ブロックとメッセージ用のバッファの解放</font></tt></p>
+<p><tt><font size="4">・複数のタスクを管理するメッセージバッファを削除後の同優先度の順序はインプリメント依存</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_mbf( ID mbfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックやリングバッファ用の領域が確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 mbfatrが不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在していない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　tskid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのメッセージバッファを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="snd_mbf">snd_mbf</a></tt></font><font size="4"><tt>（メッセージバッファへ送信）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・送信バッファに余裕があるときmsgをメッセージキュー(リングバッファ)に送信</font></tt></p>
+<p><tt><font size="4">・送信バッファに余裕がないとき送信待ち行列(キューイングはFIFO)に並ぶ</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = snd_mbf( ID mbfid, VP msg, INT msgz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　送信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　送信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 msgsz≦0、msgsz＞maxmsz、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメッセージバッファが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="psnd_mbf">psnd_mbf</a></tt></font><font size="4"><tt>（メッセージバッファへ送信（ポーリング））</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・送信バッファに余裕があるときmsgをメッセージキュー(リングバッファ)に送信</font></tt></p>
+<p><tt><font size="4">・送信バッファに余裕がないときE_TMOUT</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = psnd_mbf( ID mbfid, VP msg, INT msgz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　送信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　送信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 msgsz≦0、msgsz＞maxmsz、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメッセージバッファが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでmsgszが不正</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのメッセージバッファを指定（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="tsnd_mbf">tsnd_mbf</a></tt></font><font size="4"><tt>（メッセージバッファへ送信（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・送信バッファに余裕があるときmsgをメッセージキュー(リングバッファ)に送信</font></tt></p>
+<p><tt><font size="4">・送信バッファに余裕がないとき送信待ち行列(キューイングはFIFO)に並ぶ、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならばpsnd_mbf、TMO_FEVRならばsnd_mbf</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = tsnd_mbf( ID mbfid, VP msg, INT msgz, TMO tmout 
+  );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　送信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　送信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 msgsz≦0、msgsz＞maxmsz、msgが不正、tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行（tsnd_mbf(tmout=TMO_POL）限る</tt></font><font size="4"><tt>、インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメッセージバッファが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt></tt></font><font size="4"><tt>　EN_PAR　　　対象ノードでmsgsz、tmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのメッセージバッファを指定（tsnd_mbf（tmout=TMO_POL）に限る、インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="rcv_mbf">rcv_mbf</a></tt></font><font size="4"><tt>（メッセージバッファから受信）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・受信バッファにメッセージが有るときメッセージキューからmsgに受信</font></tt></p>
+<p><tt><font size="4">・受信後msgのサイズをリターン</font></tt></p>
+<p><tt><font size="4">・受信バッファにメッセージが無いとき受信待ち行列に並ぶ</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = rcv_mbf( VP msg, INT *p_msgsz, ID mbfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　受信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　受信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中メッセージバッファが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでtmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="prcv_mbf">prcv_mbf</a></tt></font><font size="4"><tt>（メッセージバッファから受信（ポーリング））</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・受信バッファにメッセージが有るときメッセージキューからmsgに受信</font></tt></p>
+<p><tt><font size="4">・受信後msgのサイズをリターン</font></tt></p>
+<p><tt><font size="4">・受信バッファにメッセージが届いていないときE_TMOUT</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = prcv_mbf( VP msg, INT *p_msgsz, ID mbfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　受信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　受信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 メッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメッセージバッファが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返ってきたmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="trcv_mbf">trcv_mbf</a></tt></font><font size="4"><tt>（メッセージバッファから受信（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・受信バッファにメッセージが有るときメッセージキューからmsgに受信</font></tt></p>
+<p><tt><font size="4">・受信後msgのサイズをリターン</font></tt></p>
+<p><tt><font size="4">・受信バッファにメッセージが無いとき受信待ち行列に並ぶ、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならばprcv_mbf、TMO_FEVRならばrcv_mbf</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = trcv_mbf( VP msg, INT *p_msgsz, ID mbfid, TMO 
+  tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　受信メッセージのアドレス</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　INT　　　　msgsz　　　受信メッセージのサイズ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 msgが不正、tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にメッセージバッファが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでtmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返ってきたmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="ref_mbf">ref_mbf</a></tt></font><font size="4"><tt>（メッセージバッファ状態参照）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_mbf( T_RMBF *pk_rmbf, ID mbfid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 mbfid　　　メッセージバッファＩＤ</tt></font></p>
+<p><font size="4"><tt>　TRMBF*　　 pk_rmbf　　メッセージバッファ状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rmbfの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報　　　 　</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　 　受信待機アドレスの有無（FALSE = 0(無し)）</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　stsk　　　 送信待機アドレスの有無（FALSE = 0(無し)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　msgsz　　　次に受信されるメッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　frbufsz　　空きバッファの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　mbfidが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rmbfが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 mbfidのメッセージバッファが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　mbfid＜-4のメッセージバッファは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのmbfidのメッセージバッファが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返ってきたexinf、wtsk、stsk、msgsz、frbufszが不正</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのメッセージバッファを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="cre_por">cre_por</a></tt></font><font size="4"><tt>（ランデブポート生成）</tt></font></p>
+<p><tt><font size="4">・管理ブロックを確保</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・poratrにはTA_NULL</font></tt></p>
+<p><tt><font size="4">・exinf(拡張情報)はref_porで呼び出せる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cre_por( ID porid, T_CPOR *pk_cpor );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_CMBF*　　pk_cpor　　ランデブ用ポート生成情報</tt></font></p>
+<p><font size="4"><tt>　pk_cporの中身</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　ATR　　　　poratr　　 ポート属性（TA_NULL = 0(デフォルト)）</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxcmsz　　呼出時メッセージの最大長</tt></font></p>
+<p><font size="4"><tt>　　INT　　　　maxrmsz　　返答用メッセージの最大長</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_NOMEM　　 管理ブロックが確保できない</tt></font></p>
+<p><font size="4"><tt>　E_RSATR　　 poratrが不正</tt></font></p>
+<p><font size="4"><tt>　E_RAR　　　 pk_cpor、maxcmsz、maxrmszが不正</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 poridのポートが既に存在</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのporidのポートが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでexinf、poratr、maxcmsz、maxrmszがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのポートを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="del_por">del_por</a></tt></font><font size="4"><tt>（ランデブポート削除）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・削除後ポートに待機中のタスクはE_DLT</font></tt></p>
+<p><tt><font size="4">・ランデブ成立済みタスクを削除してもエラーにならない</font></tt></p>
+<p><tt><font size="4">・複数のタスクを管理するポートを削除後、同優先度の順序はインプリメント依存</font></tt></p>
+<p><tt><font size="4">・管理ブロックを解放</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = del_por( ID porid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノード側のporidのポートが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　タスク独立部あるいはディスパッチ禁止状態のタスクから他ノードのポートを指定</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="cal_por">cal_por</a></tt></font><font size="4"><tt>（ポートに対するランデブの呼出）</tt></font></p>
+<p><tt><font size="4">・指定ポートにWAIT状態(ランデブ受付待ち)で受付側acpptnと呼出側calptnの積が0以外のとき、ランデブ成立で受付側がREADY状態に、呼出側がWAIT状態(ランデブ終了待ち)になる</font></tt></p>
+<p><tt><font size="4">・指定ポートに複数の受付状態タスクがあるときは先頭から順番に条件を比較していく</font></tt></p>
+<p><tt><font size="4">・指定ポートにWAIT状態(ランデブ受付待ち)で受付側acpptnと呼出側calptnの積が0以外のタスクがないときWAIT状態(ランデブ呼出待ち)になる</font></tt></p>
+<p><tt><font size="4">・ランデブ成立時に受付側にcmsgszのmsgが送信できる</font></tt></p>
+<p><tt><font size="4">・ランデブ終了時に呼出側にp_rmsgszのmsgが受信できる</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = cal_por( VP msg, INT *p_rmsgsz, ID porid, UINT 
+  calptn, INT cmsgsz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><tt><font size="4">　INT　　　　p_rmsgsz　 返答メッセージの大きさ</font></tt></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cmsgsz≦0、cmsgsz＞maxcmsz、calptn=0、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象ポートが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのporidのポートが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでcalptn、cmsgszがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたp_rmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="pcal_por">pcal_por</a></tt></font><font size="4"><tt>（ポートに対するランデブの呼出（ポーリング））</tt></font></p>
+<p><tt><font size="4">・指定ポートにWAIT状態(ランデブ受付待ち)で受付側acpptnと呼出側calptnの積が0以外のとき、ランデブ成立で受付側がREADY状態に、呼出側がWAIT状態(ランデブ終了待ち)になる</font></tt></p>
+<p><tt><font size="4">・指定ポートに複数の受付状態タスクがあるときは先頭から順番に条件を比較していく</font></tt></p>
+<p><tt><font size="4">・指定ポートにWAIT状態(ランデブ受付待ち)で受付側acpptnと呼出側calptnの積が0以外のタスクがないときE_TMOUT</font></tt></p>
+<p><tt><font size="4">・ランデブ成立時に受付側にcmsgszのmsgが送信できる</font></tt></p>
+<p><tt><font size="4">・ランデブ終了時に呼出側にp_rmsgszのmsgが受信できる</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = pcal_por( VP msg, INT *p_rmsgsz, ID porid, UINT 
+  calptn, INT cmsgsz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><tt><font size="4">　INT　　　　p_rmsgsz　 返答メッセージの大きさ</font></tt></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cmsgsz≦0、cmsgsz＞maxcmsz、calptn=0、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><tt><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></tt></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのporidのポートが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでcalptn、cmsgszがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたp_rmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="tcal_por">tcal_por</a></tt></font><font size="4"><tt>（ポートに対するランデブの呼出（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・指定ポートにWAIT状態(ランデブ受付待ち)で受付側acpptnと呼出側calptnの積が0以外のとき、ランデブ成立で受付側がREADY状態に、呼出側がWAIT状態(ランデブ終了待ち)になる</font></tt></p>
+<p><tt><font size="4">・指定ポートに複数の受付状態タスクがあるときは先頭から順番に条件を比較していく</font></tt></p>
+<p><tt><font size="4">・指定ポートにWAIT状態(ランデブ受付待ち)で受付側acpptnと呼出側calptnの積が0以外のタスクがないときWAIT状態(ランデブ呼出待ち)に、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・ランデブ成立時に受付側にcmsgszのmsgが送信できる</font></tt></p>
+<p><tt><font size="4">・ランデブ終了時に呼出側にp_rmsgszのmsgが受信できる</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならpcal_por、TMO_FEVRならcal_por</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = tcal_por( VP msg, INT *p_rmsgsz, ID porid, UINT 
+  calptn, INT cmsgsz, TMO tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><tt><font size="4">　INT　　　　p_rmsgsz　 返答メッセージの大きさ</font></tt></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cmsgsz≦0、cmsgsz＞maxcmsz、calptn=0、msgが不正、tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　ユーザタスクからporid＜(-4)のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中に対象ポートが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのporidのポートが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでcalptn、cmsgsz、tmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返されたp_rmsgszが不正</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="acp_por">acp_por</a></tt></font><font size="4"><tt>（ポートに対するランデブ受付）</tt></font></p>
+<p><tt><font size="4">・指定ポートに呼出状態(ランデブ呼出待ち)で受付側acpptnと呼出側calptnの積が0以外ならランデブ成立で受付側がREADY状態に、呼出側がWAIT状態(ランデブ終了待ち)になる</font></tt></p>
+<p><tt><font size="4">・指定ポートに呼出状態(ランデブ呼出待ち)で受付側acpptnと呼出側calptnの積が0以外の条件を満たすタスクがないとき受付状態(ランデブ受付待ち)で行列を作る</font></tt></p>
+<p><tt><font size="4">・再度実行する(外部から影響)可能性がある場合、rdvnoは呼出側の状態を判断できるようにする</font></tt></p>
+<p><tt><font size="4">・ランデブ成立時に呼出側からp_cmsgszのmsgが受信できる</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = acp_por( RNO *p_rdvno, VP msg, INT *p_cmsgsz, 
+  ID porid, UINT acpptn );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 acpptn　　 受信側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　呼出メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 acpptn=0、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にポートが削除された</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_NOSPT　　サポートされていない接続機能</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="pacp_por">pacp_por</a></tt></font><font size="4"><tt>（ポートに対するランデブ受付（ポーリング））</tt></font></p>
+<p><tt><font size="4">・指定ポートに呼出状態(ランデブ呼出待ち)で受付側acpptnと呼出側calptnの積が0以外ならランデブ成立で受付側がREADY状態に、呼出側がWAIT状態(ランデブ終了待ち)になる</font></tt></p>
+<p><tt><font size="4">・指定ポートに呼出状態(ランデブ呼出待ち)で受付側acpptnと呼出側calptnの積が0以外の条件を満たすタスクがないときE_TMOUT</font></tt></p>
+<p><tt><font size="4">・再度実行する(外部から影響)可能性がある場合、rdvnoは呼出側の状態を判断できるようにする</font></tt></p>
+<p><tt><font size="4">・ランデブ成立時に呼出側からp_cmsgszのmsgが受信できる</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = pacp_por( RNO *p_rdvno, VP msg, INT *p_cmsgsz, 
+  ID porid, UINT acpptn );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 acpptn　　 受信側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　呼出メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 acpptn=0、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 ポーリング失敗</tt></font></p>
+<p><font size="4"><tt>　EN_NOSPT　　サポートされていない接続機能</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="tacp_por">tacp_por</a></tt></font><font size="4"><tt>（ポートに対するランデブ受付（タイムアウト有））</tt></font></p>
+<p><tt><font size="4">・指定ポートに呼出状態(ランデブ呼出待ち)で受付側acpptnと呼出側calptnの積が0以外ならランデブ成立で受付側がREADY状態に、呼出側がWAIT状態(ランデブ終了待ち)になる</font></tt></p>
+<p><tt><font size="4">・指定ポートに呼出状態(ランデブ呼出待ち)で受付側acpptnと呼出側calptnの積が0以外の条件を満たすタスクがないとき受付状態(ランデブ受付待ち)で行列を作る、tmout経過後E_TMOUT</font></tt></p>
+<p><tt><font size="4">・再度実行する(外部から影響)可能性がある場合、rdvnoは呼出側の状態を判断できるようにする</font></tt></p>
+<p><tt><font size="4">・ランデブ成立時に呼出側からp_cmsgszのmsgが受信できる</font></tt></p>
+<p><tt><font size="4">・tmoutがTMO_POLならpacp_por、TMO_FEVRならacp_por</font></tt></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = tacp_por( RNO *p_rdvno, VP msg, INT *p_cmsgsz, 
+  ID porid, UINT acpptn, TMO tmout );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 acpptn　　 受信側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　呼出メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　TMO　　　　tmout　　　タイムアウト時間（TMO_POL = 0(0)、TMO_FEVR = -1(∞)）</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 acpptn=0、msgが不正、tmout≦-2</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　E_DLT　　　 待機中にポートが削除された</tt></font></p>
+<p><font size="4"><tt>　E_TMOUT　　 タイムアウト</tt></font></p>
+<p><font size="4"><tt>　E_RLWAI　　 </tt></font><font size="4" face="ＭＳ ゴシック, Osaka－等幅"><tt>待機中に待機強制解除(rel_wai)を受け付け</tt></font></p>
+<p><font size="4"><tt>　EN_NOSPT　　サポートされていない接続機能</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="fwd_por">fwd_por</a></tt></font><font size="4"><tt>（ポートに対するランデブ回送）</tt></font></p>
+<p><tt><font size="4">・呼出側(rdvno)、受付側(自タスク)のランデブを終了する</font></tt></p>
+<p><tt><font size="4">・呼出側を<tt>cal_por( msg, 終了メッセージの大きさ, porid, calptn, cmsgsz 
+  )でリセットする</tt></font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = fwd_por( ID porid, UINT calptn, RNO rdvno, VP 
+  msg, INT cmsgsz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　UINT　　　 calptn　　 呼出側選択条件のビットパターン</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　回送前のランデブ番号</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 呼出メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正あるいは利用できない、poridが他ノードのポート</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 cmsgsz≦0、cmsgsz＞回送後のmaxcmsz、cmsgsz＞回送前のmaxrmsz、calptn=0、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 rdvnoが不正、回送後のmaxrmsz＞回送前のmaxrmsz　　</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部またはディスパッチ禁止状態で実行</tt></font></p>
+<p><font size="4"><tt>　EN_NOSPT　　サポートされていない接続機能</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[E] </tt></font><font size="6"><tt><a name="rpl_rdv">rpl_rdv</a></tt></font><font size="4"><tt>（ランデブ返答）</tt></font></p>
+<p><tt><font size="4">・受付側の処理終了を呼出側(rdvno、ランデブ終了待ち)に通知して、自タスクはWAIT状態になる</font></tt></p>
+<p><tt><font size="4">・呼出側にcmsgszの大きさのmsgを送信できる</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = rpl_rdv( RNO rdvno, VP msg, INT rmsgsz );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　RNO　　　　rdvno　　　ランデブ番号</tt></font></p>
+<p><font size="4"><tt>　VP　　　　 msg　　　　返答メッセージアドレス</tt></font></p>
+<p><font size="4"><tt>　INT　　　　cmsgsz　　 返答メッセージの大きさ</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 rmsgsz≦0、rmsgsz＞maxrmsz、msgが不正</tt></font></p>
+<p><font size="4"><tt>　E_OBJ　　　 rdvnoが不正</tt></font></p>
+<p><font size="4"><tt>　E_CTX　　　 タスク独立部から発行（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_CTXID　　ディスパッチ禁止状態から呼出側タスクが他ノードのポートを指定（インプリメント依存）</tt></font></p>
+<p>　</p>
+<p><font size="6"><tt>[EN] </tt></font><font size="6"><tt><a name="ref_por">ref_por</a></tt></font><font size="4"><tt>（ポート状態参照）</tt></font></p>
+<p><tt><font size="4">・接続機能が利用可能</font></tt></p>
+<p><font size="4"><tt>Ｃ言語関数</tt></font></p>
+<p><font size="4"><tt>　ER ercd = ref_por( T_RPOR *pk_rpor, ID porid );</tt></font></p>
+<p><font size="4"><tt>引数</tt></font></p>
+<p><font size="4"><tt>　ID　　　　 porid　　　ランデブ用ポートＩＤ</tt></font></p>
+<p><font size="4"><tt>　T_RPOR*　　pk_rpor　　ポート状態のアドレス</tt></font></p>
+<p><font size="4"><tt>戻り値</tt></font></p>
+<p><font size="4"><tt>　ER　　　　 ercd　　　 エラーコード</tt></font></p>
+<p><font size="4"><tt>　pk_rpor</tt></font></p>
+<p><font size="4"><tt>　　VP　　　 　exinf　　　拡張情報</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　wtsk　　　 呼出待機タスクの有無（FALSE = 0(無し)）</tt></font></p>
+<p><font size="4"><tt>　　BOOL_ID　　atsk　　　 受信待機タスクの有無（FALSE = 0(無し)）</tt></font></p>
+<p><font size="4"><tt>エラーの内容</tt></font></p>
+<p><font size="4"><tt>　E_OK　　　　正常終了</tt></font></p>
+<p><font size="4"><tt>　E_ID　　　　poridが不正、poridが他ノードのポート</tt></font></p>
+<p><font size="4"><tt>　E_PAR　　　 pk_rporが不正</tt></font></p>
+<p><font size="4"><tt>　E_NOEXS　　 poridのポートが存在しない</tt></font></p>
+<p><font size="4"><tt>　E_OACV　　　porid＜-4のポートは利用不可（インプリメント依存）</tt></font></p>
+<p><font size="4"><tt>　EN_OBJNO　　対象ノードのporidのポートが不正または存在しない</tt></font></p>
+<p><font size="4"><tt>　EN_PAR　　　対象ノードでcalptn、cmsgsz、tmoutがサポートされていない</tt></font></p>
+<p><font size="4"><tt>　EN_RPAR　　 対象ノードから返ってきたrmsgszが不正</tt></font></p>
+<p>　</p>
+</body>
+</html>

@@ -1,0 +1,57 @@
+\function{chg\_pri  --- プライオリティの変更}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER chg\_pri (ID tskid, PRI tskpri}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid}{プライオリティを変更するタスクの ID}
+  \labitem {tskpri} {変更後のプライオリティ}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     tskid で指定したタスク ID が不正
+\labitem {E\_NOEXS}  tskid で指定したタスク ID に該当するタスクが存在
+しない。
+\end{lablist}
+
+\labitem{機能}
+
+タスクのプライオリティを変更する。
+
+タスクのプライオリティは、0 から 31 までの範囲の値となる。
+プライオリティの高いものは低いものより優先して実行される。
+
+タスクの プライオリティ 0 も使用することができる。
+
+tskid に 0 を指定した場合、自タスクを指定したことになる。
+
+
+\labitem{\it Internal}
+
+タスクのプライオリティの範囲は、src/kernel/itron/include/config.h の中
+のマクロ MIN\_PRIORITY (最小のプライオリティ) と MAX\_PRIORITY (最大のプ
+ライオリティ)の2つで定義する。
+
+内部的には、タスクのプライオリティはタスクの RUN キューの入る配列のイ
+ンデックスとなっている(つまり中心核は RUN キューは、32 個の要素からな
+る配列で管理する)。
+
+
+\end{lablist}
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: "itron"
+% End: 

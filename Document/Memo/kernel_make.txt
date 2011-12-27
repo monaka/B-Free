@@ -1,0 +1,68 @@
+カーネルの make 方法
+
+
+内藤 隆一
+1998/Feb/18 初稿
+1999/May/2  改訂
+
+
+□ ディレクトリ構成
+
+B-Free OS のソース環境は以下のディレクトリ構造になっています。
+
+boot	ブートプログラムのソースです
+
+kernel	中心核(ITRON)および周辺核のソースが入っています。
+	kernelディレクトリは更に次のディレクトリに分かれています。
+
+	ITRON	中心核(ITRON)のソースが入ります。
+
+        BTRON	BTRON API を提供するための周辺核(群)が入ります。
+
+		device	デバイスドライバ群のソースが入ります。
+
+		make	カーネルを作成するためのディレクトリです。
+
+        POSIX	POSIX 互換サーバが入ります。
+
+
+
+□ make の実行
+
+作成は以下の順序で行ってください。
+
+1. boot プログラムの作成
+    boot ディレクトリにて、make を実行し、boot プログラムを作成してください。
+    bootimage というファイルができます。
+
+
+2.カーネルの作成
+
+    kernel/BTRON/make ディレクトリにて、make を実行してください。
+    (必要なファイルがコンパイルされます)<BR>
+    make 終了後、btron というファイルができます。
+
+
+3.ブートプログラム/OS イメージをそれぞれ別の FD に落としてください。
+
+	cp boot/bootimage /dev/fd0
+	cp kernel/BTRON/make/btron /dev/fd0
+
+
+4.POSIX ファイルシステム FD の作成
+
+    POSIX 環境を作成するには、更に POSIX ファイルシステム FD を作成する必要があります。
+
+    作成手順
+
+    (1)kernel/POSIX/mkfs ディレクトリにて mkfs コマンドを作成
+
+	make mkfs
+
+    (2)FD を論理フォーマットする
+
+        ./mkfs /dev/fd0 2880 512 100
+
+
+--------------
+Copyright (C) 1996-1999 B-Free Project

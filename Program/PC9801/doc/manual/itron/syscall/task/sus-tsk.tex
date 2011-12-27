@@ -1,0 +1,38 @@
+\function{sus\_tsk  --- 指定したタスクを強制待ち状態に移行}
+
+
+\begin{lablist}
+
+\labitem{呼び出し形式}
+
+{\tt ER sus\_tsk (ID tskid)}
+
+\labitem{引数}
+
+\begin{lablist}
+  \labitem {tskid}{suspend するタスクの ID}
+\end{lablist}
+
+\labitem{返り値}
+
+以下のエラー番号が返る。
+
+\begin{lablist}
+\labitem {E\_OK}     システムコールは正常に終了した
+\labitem {E\_ID}     タスク ID が不正
+\labitem {E\_OBJ}    指定したタスクが現タスク
+\labitem {E\_QOVR}   タスクの多重待ち数を越えた
+\labitem {E\_NOEXS}  タスクが生成されていない
+\labitem {E\_OBJ}    タスク状態が TTS\_RDY、TTS\_SUS、TTS\_WAI、
+                     TTS\_NON 以外だった。
+\end{lablist}
+
+\labitem{機能}
+
+指定したタスクを 強制待ち状態へと移行する。
+
+もし、タスクが TTS\_WAI の場合には TTS\_WAS 状態へと移行する。
+
+
+\end{lablist}
+

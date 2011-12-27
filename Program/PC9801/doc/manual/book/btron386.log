@@ -1,0 +1,178 @@
+This is BigTeX, C Version 2.99 - j1.7 (preloaded format=jlplain 94.4.3)  3 APR 1994 18:07
+**&jlatex \nonstopmode\input{btron386.tex}
+(btron386.tex (/usr/local/lib/tex/macros.sjis/jbook.sty
+Document Style `jbook'. <18 Dec 88>
+(/usr/local/lib/tex/macros.sjis/jbk10.sty)
+\descriptionmargin=\dimen99
+\c@part=\count78
+\c@chapter=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+) (btron386.aux) [0
+
+] (btron386.toc
+[1
+
+] [2])
+\tf@toc=\write3
+ (outline.tex [3] [4
+
+] [5] [6]
+Chapter 1.
+[7
+
+]
+Overfull \hbox (6.7472pt too wide) in paragraph at lines 81--83
+[]\tenrm BTRON/386 \tenmin は 、 \tenrm In-tel i386/DX/SX \tenmin を使 っ たマ
+シン上で動く \tenrm BTRON/1
+
+\hbox(7.77588+2.5)x310.76122, glue set - 1.0
+.\hbox(0.0+0.0)x15.0
+.\tenrm B
+.\tenrm T
+.\tenrm R
+.\kern-0.27779
+.etc.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
+
+
+\hbox(0.0+0.0)x285.76122
+.\glue(\rightskip) 0.0
+
+) (organization.tex [8] [9
+
+] [10]
+Chapter 2.
+[11
+
+] [12]
+Overfull \hbox (63.45084pt too wide) in paragraph at lines 93--106
+\tenmin 状態 。 この値を示すタスクは 、 常にシステム内で \tenrm 1 \tenmin つだ
+けである 。 \tenrm TTS[]RDY(0x00000002):
+
+\hbox(7.77588+2.5)x310.76122, glue set - 1.0
+.\tenmin 状
+.\tenmin 態
+.\penalty 10000
+.\glue(\kanjiskip) 0.0 plus 0.4 minus 0.5
+.\tenmin 。
+.etc.
+
+[13] [14] [15] [16] [17]
+Overfull \hbox (72.72441pt too wide) in paragraph at lines 441--441
+[]    \tentt VP          exinf;          /* \tenmin 拡張情報                   
+          \tentt */[] 
+
+\hbox(7.77588+1.38887)x310.76122, glue set - 1.0
+.\hbox(0.0+0.0)x0.0
+.\penalty 10000
+.\glue 5.24995
+.\penalty 10000
+.\glue 5.24995
+.etc.
+
+
+Overfull \hbox (67.21342pt too wide) in paragraph at lines 441--441
+[]    \tentt BOOL\_ID    wtsk;           /* \tenmin 待ちタスクの有無           
+          \tentt */[] 
+
+\hbox(7.77588+1.38887)x310.76122, glue set - 1.0
+.\hbox(0.0+0.0)x0.0
+.\penalty 10000
+.\glue 5.24995
+.\penalty 10000
+.\glue 5.24995
+.etc.
+
+[18] [19] [20] [21] [22] [23] [24]) (kernel.tex
+Underfull \vbox (badness 7667) has occurred while \output is active
+\vbox(625.96062+0.0)x310.76122, glue set 4.24939
+.\glue(\topskip) 0.0
+.\hbox(11.19725+1.9995)x310.76122, glue set 165.29424fil
+..\hbox(9.27998+0.0)x37.71973
+...\glue 0.0
+...\frtnbf 2
+...\frtnbf .
+...\frtnbf 2
+...\glue 16.55989
+..\frtnbf B
+..\frtnbf T
+..\frtnbf R
+..\kern-0.46
+..etc.
+.\mark{{\uppercase {Chapter\ 2. \ 構成要素の概要}}{\uppercase {2.2. \ BTRON \ET
+C.}
+.\write1{\@writefile{toc}{\string\contentsline\space {section}{\string\numberl\
+ETC.}
+.\penalty 10000
+.etc.
+
+ [25]
+[26] [27
+
+] [28]
+Chapter 3.
+) (btron-server.tex
+Underfull \vbox (badness 2213) has occurred while \output is active
+\vbox(625.96062+0.0)x310.76122, glue set 2.81123
+.\write-{}
+.\write1{\@writefile{toc}{\string\contentsline\space {chapter}{\string\numberl\
+ETC.}
+.\mark{{\uppercase {Chapter\ 3. \ カーネルの概要}}{}}
+.\write1{\@writefile{lof}{\string\addvspace\space {10pt}}}
+.\write1{\@writefile{lot}{\string\addvspace\space {10pt}}}
+.etc.
+
+ [29
+
+]
+[30] [31
+
+] [32]) (manager.tex [33] [34
+
+] [35] [36]) (library.tex [37
+
+] [38]
+Chapter 4.
+[39
+
+] [40
+
+]
+Chapter 5.
+[41] [42
+
+]
+Chapter 6.
+) (appendix.tex [43] [44
+
+] [45] [46]
+Appendix A.
+[47
+
+] [48
+
+]
+Appendix B.
+) [49] [50
+
+]
+Appendix C.
+[51] (btron386.aux) 
+Here is how much of TeX's memory you used:
+ 203 strings out of 3458
+ 1953 string characters out of 37925
+ 36094 words of memory out of 327671
+ 2200 multiletter control sequences out of 9500
+ 25112 words of font info for 94 fonts, out of 72000 for 255
+ 14 hyphenation exceptions out of 607
+ 16i,8n,16p,209b,281s stack positions out of 300i,40n,60p,4096b,4000s
+
+Output written on btron386.dvi (52 pages, 74048 bytes).

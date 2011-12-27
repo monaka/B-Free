@@ -1,0 +1,19 @@
+/* POSIX Library native functions.
+ */
+
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/PC9801/src/posix/usr/src/lib/libc/native/Head,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+static char rcsid[] = "@(#)$Header: /cvsroot/bfree-info/B-Free/Program/PC9801/src/posix/usr/src/lib/libc/native/Head,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+
+/* $Log: Head,v $
+/* Revision 1.1  2011/12/27 17:13:35  liu1
+/* Initial Version.
+/*
+/* Revision 1.1  1995-03-18 14:18:39  night
+/* ╨г╫И╓непо©
+/*
+ *
+ */
+
+#include <itron/types.h>
+#include <native/syscall.h>
+

@@ -1,0 +1,68 @@
+\subsubsection{ドライバ支援}
+
+この項では、デバイスドライバを支援するためのシステムコールおよびライブ
+ラリ関数を記述します。
+
+このシステムコール群は、元の μ ITRON 3.0 仕様では規定してありません。
+(そのため システムコール名の先頭に、拡張システムコールを示す {\tt 'v'} の文
+字があります)
+
+\begin{quote}
+  注意 !
+
+  本システムコールは、一部ドライバマネージャの機能を提供しているものが
+  あります。
+  ドライバマネージャが完成したときには、それらのシステムコールはシステ
+  ムコールから削除する可能性があります。
+\end{quote}
+
+
+\begin{table}[htbp]
+  \caption{ドライバ支援システムコール \& ライブラリ関数一覧}
+  \begin{center}
+    \leavevmode
+
+    \begin{tabular}[h]{l p{10cm}} \hline 
+      \multicolumn{1}{c}{システムコール名} &
+      \multicolumn{1}{c}{機能} \\ \hline \hline
+%
+      vdef\_dev           & デバイスの登録 \\
+      vopn\_dev           & デバイスのオープン \\
+      vcls\_dev           & デバイスのクローズ \\
+      vget\_ioport        & デバイス用のメッセージポートの獲得 \\
+      vio\_request        & デバイスに対して入出力要求を送る \\
+      vio\_response       & 非同期モードのデバイス入出力のときにＩＯのレス
+                          ポンスを受けとる \\
+    \end{tabular}
+  \end{center}
+  \label{tab:driver-assist-syscall}
+\end{table}
+
+\renewcommand{\function}[1]{
+  {\fbox{\begin{minipage}[h]{\textwidth}
+      \vspace{5mm}
+      \hspace{1cm}{\Large {\bf {#1}}}
+      \vspace{5mm}
+    \end{minipage}}}
+%   \stepcounter{subsubsection}
+   \addcontentsline{toc}{paragraph}{#1}
+  \vspace{1cm}}
+
+\newpage
+\input{syscall/driver/vdef-dev.tex}
+\newpage
+\input{syscall/driver/vopn-dev.tex}
+\newpage
+\input{syscall/driver/vcls-dev.tex}
+\newpage
+\input{syscall/driver/vget-ioport.tex}
+\newpage
+\input{syscall/driver/vio-request.tex}
+\newpage
+%\input{syscall/driver/vio-response.tex}
+
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% TeX-master: "itron"
+% End: 

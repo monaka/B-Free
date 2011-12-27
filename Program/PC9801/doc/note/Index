@@ -1,0 +1,36 @@
+doc/note --- Index		-*- text -*-
+
+
+このディレクトリには、B-Free OS についてのメモ文章が入っています。
+ファイル名と内容を次の表に示します。
+
+
+   1.  architecture.txt		B-Free OS の基本構成についての説明文章
+   2.  architecture.tex		上記メモの TeX 版
+   3.  boot.txt			ブートプログラムについての説明
+   4.  copying			著作権についての注意
+   5.  knownport.txt		システムで使用するメッセージバッファ ID の一覧
+   6.  source.txt		ソースファイルの形式についての説明
+   7.  startup.txt		システムの立ち上げに処理についての説明
+   8.  syscall.txt		システムコール一覧
+   9.  task.tex			タスク管理について
+   10. btron-protocol.txt	BTRON サーバが使用するプロトコルの定義
+   11. memory.txt		BTRON レベルでのメモリ管理機構
+   12. device.txt		BTRON でのデバイス名
+   13. itc.txt			ITRON でのタスク間通信機能
+   14. user-program.txt		BTRON/386 でのユーザプログラムの構造
+   15. rs232c.txt		RS232C ドライバの仕様書
+   16. time-schedule.tex	グローバルスケジュール
+D  17. bs.txt			外部仕様書
+   18. region.txt		ITRON レベルでの仮想記憶管理(提案)
+   19. region/			上記メモの TeX 版
+   20. btron-api/		BTRON API (周辺核レベル) の説明
+   21. vmemmap.txt		仮想メモリマップ
+   22. posix.text		POSIX サーバ概要
+   23. low-library.text		低レベル・ライブラリ
+   24. port-manager.text	ポートマネージャ概要
+   25. festival.text		電脳文化祭
+
+なお、拡張子が .tex となっているものは、TeX で書かれています。
+(../style ディレクトリにあるスタイルファイルを参照しているものもありま
+す)。 

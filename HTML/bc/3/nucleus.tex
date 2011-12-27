@@ -1,0 +1,479 @@
+%
+%
+%
+\documentstyle[a4j,epsf,fancyheadings,ascmac,makeidx,supertabular,boxedminipage,multicol]{jarticle}
+
+
+\makeatletter
+
+% -----------------------------------------------------------------------------
+% 最も長い項目ラベルを探してインデントの幅をこれに合わせるリスト環境マクロです。
+% ただし、「２-パス」 です。最初にLaTeXすると、description風に決まった
+% 幅のままですが、もう一回LaTeXすると、最長の項目ラベルに合わせてインデント
+% します。各項目は\itemではなく\labitemで指定します。
+% 
+% 例えば
+% 
+%  \begin{lablist}
+%  \labitem{項目１}     ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ
+%  ｘｘｘｘｘｘｘｘｘｘｘ
+%  ｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘｘ
+%  \labitem{項目２２}   ｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚｚ
+%  \labitem{項目３}     ｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃｃ
+%  \end{lablist}
+% 
+% とします。
+% なお、複数のlablist環境がある時、defaultでは各環境毎に最長のラベルを
+% さがしますが、\commonlabelコマンドを入れると、以下のすべてのlablist
+% の中で最も長いラベルに合わせます。もとの状態に戻すには\nocommonlabel
+% を入れます（これらはlablist環境の外で指定します）。
+% 
+%-----------------------------------------------------------------------
+%=======================================================================
+\newdimen\lab@labelwidth
+\lab@labelwidth=0pt
+\newcount\lab@count
+\lab@count=1
+\newif\iflab@no
+\let\iflab@no=\iftrue\relax
+
+\def\commonlabel{\let\iflab@no=\iffalse\relax}
+\def\nocommonlabel{\let\iflab@no=\iftrue\relax\global\advance\lab@count by 1}
+
+\def\lablist{
+ \let\@orgitem=\item\relax
+ \def\item{\@ifnextchar [{\@labitem}{\@noitemargtrue \@labitem[\@itemlabel]}}
+ \begin{list}{}{\def\makelabel##1{##1\hfil}
+ \iflab@no\lab@labelwidth=0pt\fi
+ \@ifundefined{lab@\@roman{\lab@count}}%
+  {\setlength{\labelwidth}{2.5em}}%
+  {\setlength{\labelwidth}{\csname lab@\@roman{\lab@count}\endcsname}}
+ \setlength{\labelsep}{1em}
+ \setlength{\leftmargin}{\labelwidth}
+ \addtolength{\leftmargin}{2\labelsep}} % labelsep both sides of label
+}
+
+\def\@labitem[#1]{\labitem{#1}}
+\def\labitem#1{\settowidth{\@tempdima}{#1}\ifdim\@tempdima>\lab@labelwidth
+\global\lab@labelwidth=\@tempdima\fi\@item[#1]}
+
+\def\endlablist{\if@filesw
+ \immediate\write\@auxout{\string\@lablist{lab@\@roman{\lab@count}}%
+  {\the\lab@labelwidth}}\fi
+ \iflab@no\global\advance\lab@count by 1\fi
+ \end{list}
+ \let\item=\@orgitem\relax
+}
+\def\@lablist#1#2{\global\@namedef{#1}{#2}}
+
+%
+%
+
+\newcommand{\micro}{$\mu$}
+\newcommand{\BFree}{{\sf B$-$Free }}
+\newcommand{\BTRON}{{\sf BTRON }}
+\newcommand{\TRON}{{\sf TRON }}
+\newcommand{\ITRON}{{\sf ITRON }}
+\newcommand{\CTRON}{{\sf CTRON }}
+\newcommand{\microITRON}{\micro\ITRON}
+
+\title{\BFree {\sf OS} 〜 中心核の概要}
+\author{内藤 隆一 (night@b-free.orient.co.jp)}
+\date{1997 年 6 月 7 日}
+
+
+
+\begin{document}
+
+\maketitle
+
+\vspace{1cm}
+
+\section{中心核}
+\label{cha:core}
+
+\vspace{1cm}
+
+
+\BFree OS で最もマシン寄りの部分、それが中心核です。
+中心核は、それ自体\ITRON 仕様の OS となっています。
+中心核と上位の層とのインタフェースは、\ITRON システムコールとして決め
+られたインタフェースを使用しています(一部拡張してあります)。そのため、
+異なったCPU上に \BFree OS を移植する場合でも、変更は中心核のみに留め、
+上位層の変更は最小限にすることができるようになっています。
+
+
+本ドキュメントでは、中心核の機能と構造について説明します。
+
+
+\subsection{中心核の機能}
+
+中心核は、\microITRON 3.0 の基本仕様(一部拡張仕様も含む)準拠のカーネル
+です。
+
+中心核は、周辺核、外核そしてアプリケーションなどの上位層に対して次の機
+能を提供します。
+
+\begin{quote}
+  \begin{itemize}
+  \item タスク管理
+  \item 同期・通信機能(IPC)
+  \item メモリプール管理機能
+  \item 割り込み管理機能
+  \item 例外管理機能
+  \item 時間管理機能
+  \item システム管理機能
+\end{itemize}
+\end{quote}
+
+    
+ この他に \microITRON 3.0 では規定されていない次の機能も提供します。
+
+ \begin{quote}
+   \begin{itemize}
+   \item 仮想メモリ管理機能
+   \end{itemize}
+ \end{quote}
+    
+  中心核は、基本的な OS の機能を上位層に与えます。
+  なお、上位層は中心核に対してシステムコールを発行することによって、
+中心核の機能を使用します。しかし、中心核より上位の層(周辺核、外核も含
+む)は、すべてメッセージの送受信により要求の送受信を行います。システム
+コール( = CPU でのトラップ)を介して呼び出されるというのは中心核だけで
+す。
+
+
+\subsubsection{システムコール呼び出しの経路}
+
+
+  ユーザアプリケーションが、\BTRON の機能を使用する場合、次のような順
+序で処理を行います(図 \ref{fig:syscall-route})。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=syscall-route.eps}
+  \end{center}
+  \caption{システムコール呼び出しの経路}
+  \label{fig:syscall-route}
+\end{figure}
+
+
+\begin{enumerate}
+  \item ユーザプログラムは、中心核に対してメッセージを送信するシステム
+    コールを発行して、周辺核へメッセージを送る。 
+%
+  \item 周辺核は、送られてきたメッセージを受けとり、メッセージに書かれ
+    た要求を実行する。
+%
+   \item 周辺核は要求を処理すると、結果をメッセージの形にして中心核
+     を介してアプリケーションへ送る。
+%
+   \item ユーザアプリケーションは、返答メッセージを受けとる。
+     (システムコールの終了)
+\end{enumerate}
+    
+なお、中心核を呼び出す処理というのは、ライブラリが行うので、アプリケー
+ションが中心核を意識することはありません。
+ファイルの読み書きなどの処理は、周辺核のファイル管理マネージャが、メッ
+セージを受けとることによって処理します。
+
+
+\subsubsection{接続機能について}
+
+
+  また、中心核では、\microITRON 3.0 で新たに拡張された接続機能に
+ついては、サポートしません。異なったホスト間での通信機能については、中
+心核よりも更に上位の層でサポートします。
+  μITRON3.0の接続機能を使用しない理由は次のとおりです。
+
+  \begin{itemize}
+  \item μITRON 3.0 での通信機能は組み込み機械で CPU が複数ある場合を
+    想定している。
+  \item 基本的に CPU がひとつだけ入っており、他のマシンとは比較的大域
+    の広いインタフェース (Ethernet など)が使えるパソコンとは相性が悪い。
+  \end{itemize}
+
+
+\subsection{中心核の構成}
+
+中心核の構成を図 \ref{fig:nucleas-structure} に示します。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=nucleus.eps}
+  \end{center}
+  \caption{中心核の構成}
+  \label{fig:nucleas-structure}
+\end{figure}
+中心核は、いくつかのモジュールに分かれています。
+
+\begin{lablist}
+  \labitem{タスク管理部分}
+    タスク管理では、\ITRON の意味でのタスクを管理します。タスクは実行
+    単位としてのプログラムを意味しています。
+    タスク管理部分では、タスクの生成/削除/実行などの操作の他に、タスク
+    同士で同期や通信などを行う機能も含んでいます。
+%
+  \labitem{メモリ管理部分}
+    メモリ管理部分では、物理メモリの管理を行います。物理メモリは基本的
+    にページ単位 (80386 で 4K バイト) で管理を行います。しかし、メモリ
+    管理部分が提供するインタフェースでは、バイト単位での物理メモリの取
+    得/解放ができるようになっています。
+%
+  \labitem{割込み/例外管理部分}
+    割込み管理では、外部割込みおよびトラップ (例外、内部割込み)の割り込みテ
+    ーブルへの登録を行います。また、実際に割り込みが起った場合の各関数
+    への処理の割り振りも行います。
+%
+  \labitem{時間管理部分}
+    一定時間ごとの指定された関数の実行をする機能を提供します。
+%
+  \labitem{システム管理部分}
+    バージョン番号などを管理します。
+%
+  \labitem {仮想メモリ管理部分}
+    CPU のもつ仮想メモリの管理機構をそのまま提供します。
+    更に抽象的な仮想メモリの管理については、周辺核のメモリマネージャが
+    行います。
+    
+    この仮想メモリの管理は、μITRON 3.0 では規定していないため、\BFree
+    独自の仕様を定めます。
+\end{lablist}
+
+
+
+\subsection{仮想記憶}
+
+
+\subsubsection{i386 での仮想記憶管理機能}
+
+インテル i386 プロセッサには、ページ単位での仮想記憶を管理する機能があ
+ります。
+
+
+
+
+\subsubsection{モデル}
+
+\BFree での仮想記憶管理をモデル化したものを 図 \ref{fig:model} に示し
+ます。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=model.eps}
+  \end{center}
+  \caption{\BFree での仮想記憶のモデル}
+  \label{fig:model}
+\end{figure}
+
+仮想記憶は、リージョン (Region) という単位で管理します。
+この場合の管理情報は、仮想領域のアドレス、物理メモリのマップ情報、そし
+て、読み書きの許可を表す permission のことです。
+
+1つのタスクには1つ以上のリージョンを結びつけることができます。
+たとえば、BTRON レベルでのユーザプロセス(の中のタスク)は、プログラムの
+実行部分(コード部分)が入るテキスト・リージョン、読み書きするためのデー
+タが入るデータ・リージョン(実際には、データ・リージョンは、恐らく実行
+前に値が決まっている変数が入るリージョンと、実行前には領域だけが決まっ
+ているリージョンそして、ヒープのために使われるリージョンの3つのリージ
+ョンに分かれます)、そしてスタック領域を表すスタック・リージョンと
+いう複数の Region と結びついています。
+
+タスクが複数のリージョンを所有するのは、次のような利点があります。
+
+\begin{enumerate}
+\item 
+   リージョンごとに permission が指定できる。そのことによって、テキス
+   トは実行するだけで読み書きできないなどの指定ができる。すべてひとつ
+   のリージョンにしてしまうと、permission は最少公倍数的なものになって
+   しまうだろう(つまり、読み/書き/実行のすべてを許可した状態になってし
+   まう)。
+
+\item 
+   リージョンを仮想空間の中で離して置くことによって、リージョンの大き
+   さを広げることができる。成長するリージョンにはヒープ、スタックなど
+   があります。
+\end{enumerate}
+
+
+逆に、複数タスクが1つのリージョンを所有することもできます。この場合、複数のタ
+スクから所有されるリージョンは、共有メモリとなります(図 \ref{fig:share})。
+
+\begin{figure}[htbp]
+  \begin{center}
+    \leavevmode
+    \epsfile{file=share.eps}
+  \end{center}
+  \caption{複数タスクからの共有}
+  \label{fig:share}
+\end{figure}
+
+\BFree OS では、デフォルトでデータを共有することはしません。しかし、プ
+ログラムの実行部分についてはデフォルトで共有します。これは、プログラム
+の実行部分は大抵の場合変更しないため、共有しても他のプロセスに影響をお
+よぼすことがないからです。
+プログラムの実行部分を変更するような場合、リージョンを共有しないように
+システムに要求する必要があります。もし、共有しているプログラムの実行部
+分を変更しようとした場合、メモリの保護違反となりプログラムは、強制終了
+します。
+
+複数のリージョンが、仮想空間の中で重なりあうことはできません。
+
+
+\subsubsection{リージョンの操作}
+
+タスクは、リージョンの情報を直接操作することはできません。
+そのためリージョンの内容を変更する場合、中心核(ITRON)のシステムコール
+を実行する必要があります。
+
+中心核のもつリージョン操作関数を表 \ref{tab:function-list} に示します。
+もともと ITRON では、仮想記憶操作については定義していません。
+そのため、リージョン操作システムールは ITRON で規定している独自システ
+ムコールとしてシステムコール名の最初に 'v' がつきます。
+
+\begin{table}[tbp]
+    \caption{リージョン操作関数一覧}
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{l p{10cm}} \hline 
+      \multicolumn{1}{c}{システムコール名} &
+      \multicolumn{1}{c}{機能} \\ \hline \hline
+%
+      vcre\_reg  &      リージョンの生成              \\
+      vdel\_reg  &      リージョンの削除              \\
+      vmap\_reg  &      リージョンのマップ            \\
+      vunm\_reg  &      リージョンのアンマップ        \\
+      vdup\_reg  &      リージョンの複製を作る        \\
+      vprt\_reg  &      リージョンのプロテクト情報の設定 \\
+      vshr\_reg  &      タスク間でのリージョンの共有  \\
+      vput\_reg  &      リージョンへの書き込み        \\
+      vget\_reg  &      リージョンからの読み込み      \\
+      vsts\_reg  &      リージョンの情報              \\
+      \hline
+    \end{tabular}
+  \end{center}
+  \label{tab:function-list}
+\end{table}
+
+これらのシステムコールは、リージョンの情報をアクセスするだけで CPU の
+メモリ管理機能には影響を与えないものもあります。
+
+
+\newpage
+\null
+\newpage
+
+
+\section{今後の発表の予定}
+
+
+\begin{table}[htbp]
+  \begin{center}
+    \leavevmode
+    \begin{tabular}[h]{p{10cm} p{3cm}}            \hline
+   \multicolumn{1}{c}{内容}     & 発表月(予定) \\ \hline\hline
+   プロジェクト概要             & 2 月         \\
+   アーキテクチャの概要         & 4 月         \\
+   ITRON（中心核）解説          & 6 月         \\
+   外殻（周辺核）解説           & 8 月以降     \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+\section{\BFree プロジェクトの情報を公開しているサイト}
+
+
+\begin{enumerate}
+\item \BFree ホームページ\hfill
+
+  {\bf http://www.b-free.orient.co.jp/index.html}
+
+
+\item 最新のソース
+
+  \BFree プロジェクトの成果は逐次 FTP によって公開しています。
+
+  {\bf ftp://www.b-free.orient.co.jp/pub/IBM-PC/source/}
+
+\item \BFree カーネルグループのホームページ
+
+  {\bf http://www.st.rim.or.jp/~rnaitoh/B-Free/index.html}
+
+
+\item \BFree ドキュメント進捗一覧
+
+  {\bf http://www.cocktail.cas.uec.ac.jp/~iijima/sintyoku.html}
+
+\item プロセスマネージャのページ
+
+  {\bf http://www.st.rim.or.jp/~joy/}
+
+\end{enumerate}
+
+
+\newpage
+
+\section{プロジェクトに参加するには}
+
+プロジェクトに参加するには、特に資格等は必要ありません。
+誰でも参加できます。
+
+メイリングリストへの登録方法は以下のように行ってください。
+
+
+
+\subsubsection*{B-Free メイリングリストへの参加方法}
+
+
+メイリングリストでは、B-Free OS プロジェクト全般の議論とカーネル作成の
+ための議論の両方を行っています。
+
+
+以下の行を含んだメイルを「majordomo@b-free.orient.co.jp」まで送付してくだ
+さい(Subject は無視されます)。
+
+
+\begin{quote}
+        subscribe b-free  
+\end{quote}
+
+
+メイリングリストに登録が成功すると、登録が完了したメイルをお返しします。
+
+登録後、メイリングリストへメッセージを送付する時には、以下のメイルアド
+レスへ送ってください。
+
+\begin{quote}
+        b-free@b-free.orient.co.jp
+\end{quote}
+
+
+\vspace{1cm}
+
+B-Free プロジェクトについての意見や質問は以下のメイルアドレスへインタ
+ーネットメイルにて送ってください。
+
+\begin{quote}
+        rnaitoh@st.rim.or.jp
+\end{quote}
+
+
+
+\begin{flushright}
+  --- 以上 ---
+\end{flushright}
+
+
+
+\end{document}
+
+
+% Local Variables: 
+% mode: japanese-LaTeX
+% compile-command: "dvi2ps nucleus.dvi > nucleus.ps"
+% TeX-master: t
+% End: 

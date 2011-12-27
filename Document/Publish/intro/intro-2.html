@@ -1,0 +1,3213 @@
+<HTML>
+<HEAD>
+<TITLE>プロジェクト B-Free 〜 Introduction: ユーザから見た B-Free OS</TITLE>
+</HEAD>
+<BODY>
+<A HREF="intro-1.html">Previous</A>
+<A HREF="intro-3.html">Next</A>
+<A HREF="intro.html#toc2">Table of Contents</A>
+<HR>
+<H2><A NAME="s2">2. ユーザから見た B-Free OS</A></H2>
+
+<P>\begin{flushright}
+{\small
+\begin{minipage}<F>h</F>{7cm}
+--- とんでもない、ワトスン、きみには何もかも見えているんだよ。
+\end{minipage}</P>
+<P>コナン・ドイル 「青い紅玉」
+}
+\end{flushright}</P>
+
+<P>B-Free OS は、ユーザからはシングルユーザ・マルチタスクの OS として見え
+ます。</P>
+<P>B-Free が起動すると、画面がクリアされ、{\em root ウィンドウが表示され
+ます}。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=root-window.eps}
+\end{center}
+\caption{BTRON root ウィンドウ}
+\label{fig:root-window}
+\end{figure}</P>
+<P>この状態で、ユーザはroot ウィンドウ上に表示されている仮身を操作するこ
+とができます。</P>
+
+
+<H2><A NAME="ss2.1">2.1 B-Free のファイルシステム</A></H2>
+
+<P>ここでは、B-Free のファイルシステムについて説明します。</P>
+<P>最初にシステムをインストールした時点では、B-Free システムのファイルシ
+ステムは、図 \ref{fig:bfree-filesystem} のようになっています。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=bfree-filesystem.eps,height=8cm}
+\end{center}
+\caption{インストールした直後のB-Free のファイルシステム}
+\label{fig:bfree-filesystem}
+\end{figure}</P>
+<P>この図のなかで、ユーザが直接見ることができるファイルは、網箱で囲んだ部
+分だけです。</P>
+<P>root ファイルシステムは、中心核や各種マネージャなどのシステムで
+使用する実身を含んでいます。</P>
+<P>\begin{lablist}
+\labitem {SYSTEM} この実身には {\em KERNEL} という実身がひとつあ
+るだけです。{\em KERNEL}という実身は、中心核の実行実身がそのまま入っ
+ています。</P>
+<P>\labitem {MANAGER} この実身には、システムで使用する各種マネージャ(周
+辺核および外核が含まれています。</P>
+<P>\labitem {\$\$PROGRAM.BOX} この実身には、アプリケーション群へのリン
+クが含まれています。</P>
+<P>\labitem {\$\$RELATION.BOX} この実身には、続柄の情報が入ります。</P>
+<P>\labitem {\$\$小物入れ} この実身には、小物(アクセサリー的なアプリケ
+ーション群へのリンクが入ります。</P>
+<P>\labitem {USR} ユーザ自身が使用する実身が含まれています。立ち上げ直
+後、ディスプレイに表示されるウィンドウは、この {\em USR}実身の内容で
+す。
+\end{lablist}</P>
+
+
+
+<H2><A NAME="ss2.2">2.2 ユーザの情報</A></H2>
+
+<P>B-Free OS は、シングルユーザ向けの OS です。
+しかし、多くのBTRONマシンがつながったネットワークを構築したような場合、
+ネットワーク全体では複数のユーザが資源(実身・プリンタなど)を共有するこ
+とができます。
+そのため、ユーザごとに特有の情報を記録する必要があります。</P>
+<P>B-Free OS では、ユーザ情報として以下の情報を管理します。</P>
+<P>\begin{description}
+\item<F>ユーザ名</F> \hfill \\
+ユーザの名前です。
+%
+\item<F>所属グループ名</F> \hfill \\
+B-Free OS では、何人かのユーザが集まってグループを作ることができます。
+所属することができるグループは、4つまでです。ユーザ情報では、ユーザ
+が所属するグループの名前を記録します。
+%
+\item<F>特権レベル</F> \hfill \\
+B-Free OS は、ユーザを 0 から 16 の特権レベルに分けています。
+B-Free での実身には、読み書きできる特権レベルを記録しています。</P>
+<P>特権レベルでは、レベル 0 が最も高い特権をもち、すべての実身を読み書き
+できます。レベル 0 のユーザに対して、実身を読み書きできないような指定
+はできません。
+\end{description}</P>
+
+
+<P>\chapter{B-Free OS の構造}
+\label{cha:structure}</P>
+<P>\begin{flushright}
+{\small
+\begin{minipage}<F>h</F>{7cm}
+--- われわれの間では、この物体を一応 ``SS'' のコードネームで
+よんでいる。''スーパーシップ''または''スーパー・ストラクチャ''
+の意味だ。
+\end{minipage}</P>
+<P>小松左京 「虚無回廊」
+}
+\end{flushright}</P>
+
+
+<H2><A NAME="ss2.3">2.3 一枚岩的な OS vs マイクロカーネル</A></H2>
+
+<P>OS は、一枚岩的 な構造をもつものが多数作られてきました。
+一枚岩的な OS は、その名のとおり OS がひとつの巨大なプログラムとなって
+います。</P>
+<P>すなわちコンピュータは、2つの動作モード --- カーネルモードとユーザモー
+ドをもち、カーネルモードで走るプログラムこそが OS という考えがその根底
+にあります。</P>
+<P>ユーザモードで走るプログラムは、あくまでもユーザが作成したプログラムで
+あり、OS 的な機能はありません。</P>
+<P>一枚岩的な OS の代表は、UN*X です (図 \ref{fig:unix-structure})。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=unix-structure.eps,height=7cm}
+\end{center}
+\caption{UN*Xの構造}
+\label{fig:unix-structure}
+\end{figure}</P>
+<P>UNIX の世界では、一枚岩的な OS --- カーネルと呼びます、とユーザプログ
+ラムという2種類のプログラムしかありません \footnote{デーモンと呼ばれる
+特殊なプログラムもありますが、これもまたユーザプログラムの一つです。}</P>
+<P>一枚岩的な構造をもつカーネルの場合、カーネルを変更するには大変な努力が
+必要となります。
+それは、ある小さな変更をするだけでも他の(関係のなさそうな)部分に影響が及
+ぶ可能性があるからです。</P>
+<P>一枚岩的な構造をもつオペレーティングシステムは今でも主流です。しかし、
+一枚岩的な構造には、保守性や拡張性に問題があることが徐々に分かってきま
+した。そのため新しく生まれた考えかたがマイクロカーネルという考えです。</P>
+<P>マイクロカーネルという考えでは、ハードウェアに密着した部分などを小さな
+モジュール(マイクロカーネル)にまとめます。そして、一枚岩的なオペレーテ
+ィングではカーネルがやっていたほとんどの仕事をマイクロカーネルの外へ追い
+出します。</P>
+<P>マイクロカーネルの代表は Machオペレーテイングシステムです。
+正確にいうと、Mach オペレーティングシステムは、マイクロカーネルアーキ
+テクチャをとるシステムで使用するためのマイクロカーネルにすぎません。
+OS としてユーザプログラムを動かすためには、Mach の上に載る複数のプログ
+ラムが必要となります。</P>
+<P>現在のところ、Mach の上にのるプログラム(Machではサーバと呼んでいます)
+は、UN*Xのインタフェースをもつ UN*Xサーバや MS-D*Sのインタフェースを
+もつサーバなどがあります。
+また、最近では GNU プロジェクトでもMachを基にした Hurd という OS の作
+成を行っています。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+%    \leavevmode
+\epsfile{file=mach-hurd.eps,height=10cm}
+\end{center}
+\caption{Mach + Hurd の構成}
+\label{fig:mach-hurd-structure}
+\end{figure}</P>
+<P>一枚岩的な OS とマイクロカーネルを比較してどちらが良いということは一言
+では言えません。</P>
+<P>さて、問題は B-Free OS でどちらのアーキテクチャを採用するかということで
+す。</P>
+<P>B-Free OS を製作する目的(OS のソースを公開し、簡単に変更などをできるよ
+うにする)を考えると、見とおしがよい構造というのが重要になってきます。
+そう考えると、一枚岩的な OS の利点はほとんど性能面においてであり、ソー
+スの変更や改良などを簡単に行うのは困難です。
+逆にマイクロカーネル方式の OS では、よほどうまく作らないと、性能面では
+一枚岩的な OS よりも劣ります。しかし、中の構造はひとつひとつの要素が分
+かれており、それぞれの変更が他に与える影響が少ない分だけ見とおしがよい
+といえそうです。</P>
+<P>これらのことから、B-Free OS の目的(ユーザが自由にソースを見て、OSを変
+更できる)を考えると、マイクロカーネル方式を採用するのが適当だと思われ
+ます。</P>
+
+
+
+
+<H2><A NAME="ss2.4">2.4 全体構成</A></H2>
+
+<P>B-Free での OS の構造は、マイクロカーネル構造をとります。</P>
+<P>OS の中心となる核として、\ITRON を採用します。
+この \ITRON は、\microITRON 3.0 を基にしたものです。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=bfree-architecture.eps,height=10cm}
+\end{center}
+\caption{B-Free の構成}
+\label{fig:bfree-architecture}
+\end{figure}</P>
+
+<H3>B-Free OS の構成要素</H3>
+
+<P>B-Free OS は、次の構成要素から成り立っています。</P>
+<P>\begin{lablist}
+\labitem {中心核(いわゆるマイクロカーネル)} 
+\microITRON 3.0 に準拠した \ITRON OS です。CPU のカーネルモードで動
+きます。
+%
+\labitem {LOWLIB}
+アプリケーションプログラムに対してシステムコールインタフェースを提供
+するための層です。</P>
+<P>厳密にはライブラリではないため、LOWLIB (低レベルライブラリ)という名
+前になっています。</P>
+<P>LOWLIB は、システムコールインタフェースを提供する他にユーザプロセス
+の初期化や各周辺核との通信なども行います。
+%
+\labitem {周辺核}
+<CODE>BTRON</CODE> OS としての API を提供します。中心核の提供するシステムコールを
+使用するタスク群です。ファイル管理やプロセス管理などの機能を提供しま
+す。また周辺核にあるデバイスマネージャは、デバイスドライバへのアクセ
+スする手段を提供します。</P>
+<P>周辺核に含まれる機能は次のとおりです (カッコの中はその機能を実現する
+マネージャの名前です)。</P>
+<P>\begin{description}
+\item<F>仮想メモリ管理 (メモリマネージャ)</F> \hfill \\
+仮想記憶を管理するためのマネージャです。このマネージャでは、仮想メ
+モリの高度な機能を提供します (物理ページの参照管理など)。</P>
+<P>また、マネージャとは別に MMU を操作するような機能は中心核に含まれ
+ています。中心核の提供する仮想記憶管理は、ある程度統一化されていま
+す。
+%
+\item<F>プロセス管理 (プロセスマネージャ)</F> \hfill \\
+中心核の提供するのは ITRON レベルでのタスク管理機能ですが、プロセ
+スマネージャは、中心核のもつタスク管理のインタフェースを使って
+BTRON レベルのプロセス管理機能を上位の層に提供します。
+プロセスの持つ情報を管理するのが主な処理です。
+%
+\item<F>ファイル管理 (ファイルマネージャ)</F> \hfill \\
+BTRON レベルでのファイル管理を行います。このレベルでは仮身/実身と
+いう単位での管理ではなく、ファイル/レコードという単位で管理が行わ
+れます。
+%
+\item<F>ウィンドウマネージャ</F> \hfill \\
+ウィンドウの管理を行います。描画自体は、ディスプレイデバイスドライ
+バが行います。
+%
+\item<F>デバイス管理 (デバイスマネジャ)</F>  \hfill \\
+デバイスドライバの登録/参照などの管理を行います。
+\end{description}
+%
+\labitem {デバイスドライバ}
+周辺核よりも上位のソフトウェアとハードウェアとの間をとりもつソフトウ
+ェアです。基本的に周辺機器ひとつごとにひとつのデバイスドライバが存在
+します。</P>
+<P>次のようなデバイスドライバは、最低必要となります。</P>
+<P>\begin{itemize}
+\item ディスプレイ・デバイスドライバ
+\item キーボード・デバイスドライバ
+\item ポインティグ・デバイスドライバ
+\item FD/HD デバイスドライバ
+\end{itemize}
+%
+\labitem {外核/殻}
+補助的なサービス --- かな漢字変換や仮身・実身操作など、を提供するプ
+ロセス群です。
+%
+\labitem {ライブラリ}
+アプリケーションに対して、<CODE>BTRON</CODE> API を提供します。実際の処理は、外
+核や周辺核と協調し、データをやりとりすることによって行います。
+%
+\labitem {アプリケーション}
+ユーザが使用するプログラムです。
+実身の内容を表示するデータランドエディタ、テキスト実身の内容を編集す
+る基本文書エディタ、そして図形実身の内容を編集する基本図形エディタな
+どがあります。
+\end{lablist}</P>
+
+
+<P>\chapter{中心核}
+\label{cha:core}</P>
+<P>\begin{flushright}
+{\small
+\begin{minipage}<F>h</F>{7cm}
+--- 銀河中心核には、とにかく早く入って早くでなければならない。
+物理法則が存在するかぎり、あと戻りする道はないからな。
+\end{minipage}</P>
+<P>ドナルド・モフィット 「第二創世記」
+}
+\end{flushright}</P>
+<P>\vspace{1cm}</P>
+<P>B-Free OS で最もマシン寄りの部分、それが中心核です。
+中心核は、それ自体\ITRON 仕様の OS となっています。
+中心核と上位の層とのインタフェースは、\ITRON システムコールとして決め
+られたインタフェースを使用しています(一部拡張してあります)。そのため、
+異なったCPU上に B-Free OS を移植する場合でも、変更は中心核のみに留め、
+上位層の変更は最小限にすることができるようになっています。</P>
+<P>この章では、中心核の機能と構造について説明します。</P>
+
+
+
+
+<H2><A NAME="ss2.5">2.5 中心核の機能</A></H2>
+
+<P>中心核は、\microITRON 3.0 の基本仕様(一部拡張仕様も含む)準拠のカーネル
+です。</P>
+<P>中心核は、周辺核、外核そしてアプリケーションなどの上位層に対して次の機
+能を提供します。</P>
+<P>\begin{quote}
+\begin{itemize}
+\item タスク管理
+\item 同期・通信機能(IPC)
+\item メモリプール管理機能
+\item 割り込み管理機能
+\item 例外管理機能
+\item 時間管理機能
+\item システム管理機能
+\end{itemize}
+\end{quote}</P>
+
+<P>この他に \microITRON 3.0 では規定されていない次の機能も提供します。</P>
+<P>\begin{quote}
+\begin{itemize}
+\item 仮想メモリ管理機能
+\end{itemize}
+\end{quote}</P>
+<P>中心核は、基本的な OS の機能を上位層に与えます。
+なお、上位層は中心核に対してシステムコールを発行することによって、
+中心核の機能を使用します。しかし、中心核より上位の層(周辺核、外核も含
+む)は、すべてメッセージの送受信により要求の送受信を行います。システム
+コール( = CPU でのトラップ)を介して呼び出されるというのは中心核だけで
+す。</P>
+<P>中心核では、次のシステムコールをサポートします (* 印は現在未サポート)。</P>
+<P>\vspace{1cm}</P>
+<P>\topcaption{中心核でサポートするシステムコール}
+\tablehead{ 
+\hline 
+\multicolumn{3}{l}{\small 前ページより続く} \\
+\hline
+\multicolumn{1}{c}{分類} &
+\multicolumn{1}{|c}{システムコール名} &
+\multicolumn{1}{|c}{機能} \\ \hline\hline
+}
+\tablefirsthead{ \hline
+\multicolumn{1}{c}{分類} &
+\multicolumn{1}{|c}{システムコール名} &
+\multicolumn{1}{|c}{機能} \\ \hline\hline
+}
+\tabletail { 
+\hline
+\multicolumn{3}{r}{\small 次ページへ続く} \\
+\hline
+}
+\tablelasttail {\hline}
+%
+\begin{center}
+\begin{supertabular}{l@{\hspace{1cm}} | p{3cm}@{\hspace{1cm}} | p{7cm}}
+タスク管理関係 & cre_tsk  & \\
+& del_tsk  & \\
+& sta_tsk  & \\
+& ext_tsk  & \\
+& exd_tsk  & \\
+& ter_tsk  & \\
+& dis_dsp  & \\
+& ena_dsp  & \\
+& chg_pri  & \\
+& rot_rdq  & \\
+& rel_wai  & \\
+& get_tid  & \\
+& ref_tsk  & \\ \hline
+タスク附属同期機能 
+& sus_tsk  & \\
+& rsm_tsk  & \\
+& frsm_tsk  & \\
+& slp_tsk  & \\
+& \* tslp_tsk  & \\
+& wup_tsk  & \\
+& can_wup  & \\ \hline
+同期・通信機能 
+& cre_sem  & \\
+& del_sem  & \\
+& sig_sem  & \\
+& wai_sem  & \\
+& preq_sem  & \\
+& twai_sem  & \\
+& ref_sem  & \\
+& cre_flg  & \\
+& del_flg  & \\
+& set_flg  & \\
+& clr_flg  & \\
+& wai_flg  & \\
+& pol_flg  & \\
+& twai_flg  & \\
+& ref_flg  & \\
+& cre_mbf  & \\
+& del_mbf  & \\
+& snd_mbf  & \\
+& psnd_mbf  & \\
+& tsnd_mbf  & \\
+& rcv_mbf  & \\
+& prcv_mbf  & \\
+& trcv_mbf  & \\ \hline
+割込み管理機能
+& dis_int  & \\
+& ena_int  & \\ \hline
+メモリプール管理機能
+& cre_mpl  & \\
+& del_mpl  & \\
+& get_blk  & \\
+& pget_blk  & \\
+& rel_blk  & \\
+& ref_mpl  & \\
+& tget_blk  & \\ \hline
+時間管理機能
+& \*set_tim  & \\ \hline
+システム管理機能
+& get_ver  & \\ \hline
+\end{supertabular}
+\end{center}</P>
+<P>\vspace{1cm}</P>
+
+
+<H3>システムコール呼び出しの経路</H3>
+
+
+<P>ユーザアプリケーションが、<CODE>BTRON</CODE> の機能を使用する場合、次のような順
+序で処理を行います(図 \ref{fig:syscall-route})。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=syscall-route.eps}
+\end{center}
+\caption{システムコール呼び出しの経路}
+\label{fig:syscall-route}
+\end{figure}</P>
+
+<P>\begin{enumerate}
+\item ユーザプログラムは、中心核に対してメッセージを送信するシステム
+コールを発行して、周辺核へメッセージを送る。 
+%
+\item 周辺核は、送られてきたメッセージを受けとり、メッセージに書かれ
+た要求を実行する。
+%
+\item 周辺核は要求を処理すると、結果をメッセージの形にして中心核
+を介してアプリケーションへ送る。
+%
+\item ユーザアプリケーションは、返答メッセージを受けとる。
+(システムコールの終了)
+\end{enumerate}</P>
+<P>なお、中心核を呼び出す処理というのは、ライブラリが行うので、アプリケー
+ションが中心核を意識することはありません。
+ファイルの読み書きなどの処理は、周辺核のファイル管理マネージャが、メッ
+セージを受けとることによって処理します。</P>
+
+
+<H3>接続機能について</H3>
+
+
+<P>また、中心核では、\microITRON 3.0 で新たに拡張された接続機能に
+ついては、サポートしません。異なったホスト間での通信機能については、中
+心核よりも更に上位の層でサポートします。
+μITRON3.0の接続機能を使用しない理由は次のとおりです。</P>
+<P>\begin{itemize}
+\item μITRON 3.0 での通信機能は組み込み機械で CPU が複数ある場合を
+想定している。
+\item 基本的に CPU がひとつだけ入っており、他のマシンとは比較的大域
+の広いインタフェース (Ethernet など)が使えるパソコンとは相性が悪い。
+\end{itemize}</P>
+<P>つまり、μITRON 3.0 での接続機能は、パーソナルコンピュータでの通信のよ
+うな用途には向かないのではないかということです。</P>
+
+
+
+<H2><A NAME="ss2.6">2.6 中心核の構成</A></H2>
+
+<P>中心核の構成を図 \ref{fig:nucleas-structure} に示します。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=nucleus.eps}
+\end{center}
+\caption{中心核の構成}
+\label{fig:nucleas-structure}
+\end{figure}
+中心核は、いくつかのモジュールに分かれています。</P>
+<P>\begin{lablist}
+\labitem{タスク管理部分}
+タスク管理では、\ITRON の意味でのタスクを管理します。タスクは実行
+単位としてのプログラムを意味しています。
+タスク管理部分では、タスクの生成/削除/実行などの操作の他に、タスク
+同士で同期や通信などを行う機能も含んでいます。
+%
+\labitem{メモリ管理部分}
+メモリ管理部分では、物理メモリの管理を行います。物理メモリは基本的
+にページ単位 (80386 で 4K バイト) で管理を行います。しかし、メモリ
+管理部分が提供するインタフェースでは、バイト単位での物理メモリの取
+得/解放ができるようになっています。
+%
+\labitem{割込み/例外管理部分}
+割込み管理では、外部割込みおよびトラップ (例外、内部割込み)の割り込みテ
+ーブルへの登録を行います。また、実際に割り込みが起った場合の各関数
+への処理の割り振りも行います。
+%
+\labitem{時間管理部分}
+一定時間ごとの指定された関数の実行をする機能を提供します。
+%
+\labitem{システム管理部分}
+バージョン番号などを管理します。
+%
+\labitem {仮想メモリ管理部分}
+CPU のもつ仮想メモリの管理機構をそのまま提供します。
+更に抽象的な仮想メモリの管理については、周辺核のメモリマネージャが
+行います。</P>
+<P>この仮想メモリの管理は、μITRON 3.0 では規定していないため、B-Free
+独自の仕様を定めます。
+\end{lablist}</P>
+
+
+
+
+
+<H2><A NAME="ss2.7">2.7 タスク管理部</A></H2>
+
+<P>タスク管理部分は、次のモジュールからできています。</P>
+
+<P>\begin{table}<F>htbp</F>
+\caption{タスク管理部を構成するモジュール}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l p{10cm}} \hline
+\multicolumn{1}{c}{ファイル名} & 
+\multicolumn{1}{c}{内容} \\ \hline\hline
+{\tt common/task.c} & タスク管理システムコール関数の定義     \\
+{\tt i386/tss.c}    & TSS (Task State Segment) の管理をする。\\
+{\tt i386/startup.s}& IDTR/GDTR の設定などを行う。           \\
+{\tt i386/locore.s} & タスクスイッチ等アセンブラで書いた関数。\\
+{\tt h/task.h}      & タスク管理用の定義ファイル。           \\ \hline
+\end{tabular}
+\end{center}
+\label{tab:task-management-module}
+\end{table}</P>
+
+
+
+<H3>タスク情報</H3>
+
+<P>各タスクには、構造体 {\tt t_tcb} の形式のデータがひとつ割り当てられます。</P>
+<P>{\tt t_tcb} は次の情報を記録します。</P>
+<P>\begin{quote}
+\begin{itemize}
+\item タスクリストのためのリンクリスト
+\item タスク ID
+\item タスクの状態
+\item タスクのプライオリティ(優先順位)
+\item タスク属性
+\item タスクが待ち状態のときに使用する情報
+\item タスク間通信で使用する情報
+\item スタック情報
+\item コンテキスト情報 (80386)
+\item 仮想記憶のために使用する情報
+\end{itemize}
+\end{quote}</P>
+
+<P>現在動いているタスクは、{\tt run_tsk} というポインタ変数が指し示して
+います。</P>
+
+
+
+<H3>タスク ID</H3>
+
+<P>タスク ID は MIN_TASKID から MAX_TASKID までの範囲を占める整数値 (32 
+ビット) です。
+MIN_TASKID と MAX_TASKID は、{\tt src/kernel/itron-3.0/h/config.h}で
+定義しています。</P>
+<P>デフォルトでは、次の値となります。</P>
+<P>\vspace{5mm}
+\begin{boxedminipage}<F>h</F>{15cm}
+\begin{tabular}<F>h</F>{@{\hspace{2cm}} l @{\hspace{2cm}} p{5cm}}
+MIN_TASKID & 1 \\
+MAX_TASKID & 128 \\
+\end{tabular}
+\end{boxedminipage}
+\vspace{5mm}</P>
+<P>中心核のシステムコールでは、対象となるタスクを指定するためにタスク ID 
+を使います。</P>
+
+
+<H3>タスクプライオリティ</H3>
+
+<P>タスクのプライオリティ(優先順位)は、32 ビットの整数で表現します。
+この値の範囲は、マクロ MIN_PRIORITY(プライオリティの最小値) から 
+MAX_PRIORITY(プライオリティ値の最大値) となります。</P>
+<P>プライオリティは、値の小さい方が優先度が高くなります。そのため、
+MIN_PRIORITTY が一番高くなります。</P>
+<P>MIN_PRIORITY / MAX_PRIORITY は、
+{\tt src/kernel/itron-3.0/h/config.h} で定義しています。デフォルトの値
+は次のとおりです。</P>
+<P>\vspace{5mm}
+\begin{center}
+\begin{boxedminipage}<F>h</F>{15cm}
+\begin{tabular}<F>h</F>{@{\hspace{2cm}} l @{\hspace{2cm}} p{10cm}}
+{\tt MIN_PRIORITY} & 0 \\
+{\tt MIN_PRIORITY} & 31 \\
+\end{tabular}
+\end{boxedminipage}
+\end{center}
+\vspace{5mm}</P>
+<P>タスクのレディキューの配列は、各エントリがひとつのプライオリティに対応
+しています。そのため、プリオリティ値の範囲がレディキューの配列のエント
+リ数となります。</P>
+
+
+<H3>タスク属性</H3>
+
+<P>記述言語の指定を行います。μ ITRON 3.0 では、TA_ASM (アセンブラ) と 
+TA_HLNG (高級言語) の 2 つの状態をもちますが、B-Free の中心核では
+記述言語による区別はしていないので、TA_HLNG だけが使用できます。</P>
+
+
+<H3>タスク状態</H3>
+
+<P>タスクは、表 \ref{tab:task-status} 示した値のどれかの状態になります。</P>
+<P>\begin{table}<F>h</F>
+\caption{タスクの状態}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{c @{\hspace{1cm}} p{10cm}} 
+\hline
+\multicolumn{1}{c}{タスクの状態} &
+\multicolumn{1}{c}{タスクの状態} \\ \hline\hline
+TTS_NON & 非存在状態 \\
+TTS_RUN & 実行状態 \\
+TTS_RDY & 実行可能状態 \\
+TTS_WAI & 待ち状態 \\
+TTS_SUS & 強制待ち状態 \\
+TTS_WAS & 強制待ち状態 + 待ち状態 \\
+TTS_DMT & 未生成状態 \\ \hline
+\end{tabular}
+\end{center}
+\label{tab:task-status}
+\end{table}</P>
+<P>タスク状態は、図 \ref{fig:task-life} に示す状態遷移図のように変化しま
+す。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=task-life.eps,height=8cm}
+\end{center}
+\caption{タスクの一生}
+\label{fig:task-life}
+\end{figure}</P>
+
+<H3>タスクが待ち状態のときに使用する情報</H3>
+
+<P>タスクは、以下の原因によって待ち状態となります。</P>
+<P>\begin{itemize}
+\item システムコールによる待ち状態。
+\item タスク間同期・通信機能による待ち状態
+\item 資源取得時の待ち状態
+\end{itemize}</P>
+<P>タスクの待ち状態は、表 \ref{tab:wait-status} のマクロによって表現します。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{待ち状態一覧}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} 
+\hline
+\multicolumn{1}{c}{状態を示す値(マクロ)} &
+\multicolumn{1}{c}{内容} \\ \hline\hline
+TTW_SLP & slp_tsk, tslp_tsk による待ち  \\
+TTW_DLY & dly_tsk による待ち   \\
+TTW_NOD & 接続機能応答待ち   \\
+TTW_FLG & wai_flg, twai_flg による待ち \\
+TTW_SEM & wai_sem, twai_sem による待ち \\
+TTW_MBX & rcv_msg, trcv_msg による待ち \\
+TTW_SMBF & snd_mbf, tsnd_mbf による待ち \\
+TTW_MBF & rcv_mbf, trcv_mbf による待ち \\
+TTW_CAL & ランデブ呼び出し待ち \\
+TTW_ACP & ランデブ受け付け待ち \\
+TTW_RDY & ランデブ終了待ち \\
+TTW_MPL & get_blk, tget_blk による待ち \\
+TTW_MPF & get_blf, tget_blf による待ち \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:wait-status}
+\end{table}</P>
+
+
+<H3>タスク間通信で使用する情報</H3>
+
+<P>タスク間通信を行うための情報を表 \ref{tab:タスク間通信のための情報} に
+示すものがあります。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{タスク間通信で使用する情報}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+\multicolumn{1}{c}{タスク間通信の種類} &
+\multicolumn{1}{c}{記憶する情報} \\ \hline\hline
+セマフォ       & セマフォ待ちリストのためのポインタ情報 \\
+イベントフラグ & 待ち条件の値。イベントフラグの ID \\
+メッセージ     & メッセージ待ちリストのためのポインタ情報 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:タスク間通信のための情報}
+\end{table}</P>
+
+<H3>スタック情報</H3>
+
+<P>カーネルモードで動作するときのスタック領域を指すポインタ変数です。</P>
+<P>スタックの領域は、関数 \verb+make_task_stack()+ が作成します。
+スタックのサイズは、1 ページ \footnote{80386 の場合、4K バイトです}
+です。</P>
+
+
+<H3>コンテキスト情報</H3>
+
+<P>コンテキスト情報は、CPU に依存したタスクの情報です。
+コンテキストスイッチが発生した時点でのレジスタの値が入ります。</P>
+<P>コンテキスト情報は、T_I386_CONTEXT
+\footnote{src/kernel/itron-3.0/i386/i386.h で定義}
+という型で定義しています(80386 の場合)。</P>
+<P>\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}</P>
+<P>コンテキスト情報構造体 (T_I386_CONTEXT)</P>
+<P>typedef struct 
+{
+UW            backlink;
+UW            esp0;
+UW            ss0;
+UW            esp1;
+UW            ss1;
+UW            esp2;
+UW            ss2;</P>
+<P>UW            cr3;
+UW            eip;
+UW            eflags;
+UW            eax;
+UW            ecx;
+UW            edx;
+UW            ebx;
+UW            esp;
+UW            ebp;
+UW            esi;
+UW            edi;
+UW            es;
+UW            cs;
+UW            ss;
+UW            ds;
+UW            fs;
+UW            gs;
+UW            ldtr;
+UH            t:1;
+UH            zero:15;
+UH            iobitmap;
+} T_I386_CONTEXT;</P>
+<P>\end{verbatim}
+\end{boxedminipage}</P>
+
+
+
+<H3>コンテキストスイッチ</H3>
+
+<P>コンテキストスイッチは、{\tt task_switch()} と {\tt resume()} が行い
+ます。</P>
+<P>{\tt task_switch()}\footnote{
+common/task.c の中で宣言しています。}
+は、レディタスクリストの中で、一番優先順位の高い
+タスクをカレントタスクにします。
+実際のタスク切り換えは、{\tt resume()} によっておこないます。
+そのため、この関数の中での処理は、{\tt run_tsk} 変数とレディタスクリ
+ストの更新だけとうことになります。</P>
+<P>{\tt task_switch()}は、引数 {\tt save_nowtask} をもちます。
+この {\tt save_nowtask} が TRUE のとき現タスクをレディタスクリスト
+に保存します。FALSE の時は、ready タスクキューから削除します。</P>
+<P>レディタスクリストから削除しない場合、他のタスクのプライオリティが下が
+ると、コンテキストスイッチを行ったタスクは、再び実行されることになります。</P>
+<P>逆にレディタスクリストから削除した場合、他のタスクがレディリストに追加
+しない限り元のタスクが実行されることはありません。
+レディタスクリストから削除するのは、タスクが待ち状態に入ったときに行い
+ます。</P>
+<P>{\tt resume()} \footnote{
+i386/locore.s 内で宣言しています。}は、CPU のコンテキストスイッチ機
+能を使って、コンテキストスイッチを行います。</P>
+<P>具体的には、引数で渡されたセレクタが指しているプロセスの TSS にジャン
+プします。</P>
+<P>{\tt resume()} のソースは、高々 20 ステップしかないので、実際のリスト
+を次に示します。
+タスクスイッチは、{\tt .byte 0xff, .byte 0x28} と書いた部分で行ってい
+ます。これは、アセンブラに「TSS にジャンプする」という動作に対応するニ
+モニックが定義されていないためです。</P>
+
+<P>\begin{quote}
+\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}
+_resume:
+cli
+pushl   %ebp
+movl    %esp, %ebp
+movl    8(%ebp), %edx
+movw    %dx, (selector)
+lea     offset, %eax
+movl    %cr3, %ebx      /* TLB キャッシュをフラッシュする */
+movl    %ebx, %cr3
+_resume0:
+.byte   0xff            /* ここで TSS にジャンプしている */
+.byte   0x28
+leave
+sti
+ret
+\end{verbatim}
+\end{boxedminipage}
+\end{quote}</P>
+
+
+
+
+
+<H3>レディタスクリスト</H3>
+
+<P>タスク管理部分では、実行可能なタスクのリストをもっています。
+このリストは、{\tt common/task.c} の中で宣言しています。</P>
+<P>\vspace{5mm}
+\begin{minipage}<F>h</F>{13cm}
+\begin{tabular}<F>h</F>{l p{7cm}}
+{\tt ready_task} & 実行可能なタスクのリスト。プライオリティ順の
+配列となっている。 \\
+\end{tabular}
+\end{minipage}
+\vspace{5mm}</P>
+<P>このレディキューを操作するために以下の関数を定義しています。
+これらの関数は、引数として</P>
+<P>\begin{itemize}
+\item 操作するリスト
+\item 追加/挿入/削除するエントリ情報
+\end{itemize}</P>
+<P>の2つをもらい、修正したリストを返り値として返します。</P>
+
+<P>\subsubsection*{init_task}</P>
+<P>TCB テーブルの内容を初期化します。
+そして、カレントタスクをタスク番号 (-1) のタスクとします。</P>
+
+
+<P>\subsubsection*{add_tcb_list}</P>
+<P>引数 list で指定されたリストの一番最後にタスクを追加します。</P>
+<P>\subsubsection*{ins_tcb_list}</P>
+<P>引数 list で指定されたリストの一番最初にタスクを挿入します</P>
+
+<P>\subsubsection*{del_tcb_list}</P>
+<P>引数 list で指定されたリストから、要素 del を削除します。</P>
+
+
+
+
+
+
+
+<H2><A NAME="ss2.8">2.8 メモリ管理部</A></H2>
+
+<P>メモリ管理部分では、主に 2 つの形態の\underline{物理}メモリを管理します。</P>
+<P>\begin{itemize}
+\item ページ (4Kバイト) 単位での管理
+\item バイト単位での管理
+\end{itemize}</P>
+<P>さらに、μITRON 3.0 で定義している可変長メモリプールに関するシステムコー
+ルのためのモジュールがあります。</P>
+
+
+<H3>ページ単位のメモリ管理</H3>
+
+<P>ページ単位でのメモリ管理は、ファイル {\tt common/pmemory.c} にある関数
+で管理します。</P>
+<P>物理メモリページは、{\tt memory_map<F>MEMORY&thinsp;MAP&thinsp;SIZE</F>} という1エント
+リがバイトの大きさをもつ配列で管理します。
+この配列のエントリが1ページの物理メモリに対応します。</P>
+<P>各エントリは、次に示す値のどれかになります。</P>
+<P>\begin{quote}
+\begin{tabular}<F>h</F>{l l}
+MEM_FREE   & メモリページは、使用していない状態(フリー) \\
+MEM_USE    & メモリページは、使用している状態 \\
+\end{tabular}
+\end{quote}</P>
+
+<P>\subsubsection*{pmem_init()}</P>
+<P>配列 {\tt memory_map} の内容を初期化します。</P>
+
+<P>\subsubsection*{palloc()}</P>
+<P>サイズで指定したページ数分の連続した物理メモリ(ページ) をアロケートし
+ます。</P>
+<P>配列{\tt memory_map} のエントリのうちアロケートする物理ページに対応す
+るものの値を {\tt MEM_USE} に変更します。</P>
+<P>\subsubsection*{pfree()}</P>
+<P>{\tt palloc()} でアロケートした物理メモリ(ページ)をフリー状態にします。</P>
+<P>配列{\tt memory_map} の解放する物理ページに対応するエントリの値を 
+{\tt MEM_FREE} に変更します。</P>
+
+
+
+
+<H3>バイト単位でのメモリ管理</H3>
+
+<P>ITRON では、バイト単位のメモリのアロケート/フリーを行うためのシステム
+コールを定義しています。</P>
+<P>バイト単位のメモリ管理を行うための関数は、{\tt common/itron_memory.c} 
+で定義しています。</P>
+
+<P>\begin{table}<F>htbp</F>
+\caption{バイト単位のメモリ管理を行う関数}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} \hline
+\multicolumn{1}{c}{関数名} &
+\multicolumn{1}{c}{動作} \\ \hline\hline
+{\tt init_kalloc()} & バイト単位のメモリ管理の初期化 \\
+{\tt kalloc()}       & バイト単位のメモリ領域の取得(アロケート) \\
+{\tt kfree()}        & kalloc で取得したメモリ領域の解放(フリー) \\
+{\tt getcore()}      & 新たにkallocが管理するメモリ領域を追加する。\\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:byte-memory}
+\end{table}</P>
+<P>バイト単位のメモリ管理を行うために、フリーなメモリ領域をリストで管理し
+ています。
+各フリーメモリ領域は、構造体 {\tt kmem_entry} で管理します。この構造体は、
+{\tt freelist} という変数につながったリストとなります。</P>
+<P>メモリをアロケートする時は、この {\tt freelist} を辿り、取得したいサイ
+ズをもつフリーメモリ領域を割り当てます。
+フリーリストにアロケートできるようなサイズをもつフリー領域がない場合に
+は、{\tt getcore()} によって新しいフリーメモリを取り出します。このとき、
+{\tt getcore()} は、ページ単位のメモリのアロケートを行う 
+{\tt palloc()} を呼び出します。</P>
+
+
+
+<H3>可変長メモリプールシステムコール</H3>
+
+<P>μITRON 3.0 ではメモリ管理機能として固定長メモリプールと可変長メモリプー
+ルの2種類を定義しています。
+中心核でサポートしているのは、このうちの可変長メモリプールに関するシス
+テムコールです。</P>
+<P>可変長メモリプールの管理は、{\tt common/itron_memory.c} にある関数に
+よって行います。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{可変長メモリプールを管理する関数}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} \hline
+\multicolumn{1}{c}{関数名} &
+\multicolumn{1}{c}{動作} \\ \hline\hline
+{\tt init_mpl()} & メモリ管理機能を初期化します。\\
+{\tt cre_mpl()}  & 可変長メモリプールを生成します。\\
+{\tt del_mpl()}  & 可変長メモリプールを削除します。\\
+{\tt get_blk()}  & \\
+{\tt pget_blk()} & 可変長メモリブロックを獲得(アロケート)します。\\
+{\tt tget_blk()} & \\
+{\tt rel_blk()}  & 可変長メモリブロックを返却(フリー)します。\\
+{\tt ref_mpl()}  & 可変長メモリブロックの状態を参照します。\\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:itron-memory}
+\end{table}</P>
+<P>各可変長メモリプールは、構造体 {\tt memory_pool} によって管理します。
+構造体 {\tt memory_pool} には、次の情報を記録します。</P>
+<P>\begin{itemize}
+\item メモリプールの ID
+\item サイズ
+\item メモリブロック取得待ちのタスクのリスト
+\item このメモリプールが管理しているフリー領域のリスト
+\end{itemize}</P>
+<P>メモリプールは、{\tt memory_pool_table<F>MAX&thinsp;MEMORY&thinsp;POOL</F>} という配
+列で管理します。</P>
+<P>各メモリプールに属しているフリー領域は、構造体 {\tt free_mem_entry} 
+をエントリとなるリストで管理しています。</P>
+<P>メモリプールを生成するとき、メモリプールの管理するメモリのサイズを指定
+します。
+{\tt cre_mpl()} では、先に説明したバイト単位のメモリ管理を行う関数 
+({\tt kalloc()}) を使ってメモリを取得します。</P>
+
+
+
+
+<H2><A NAME="ss2.9">2.9 タスク間通信機能</A></H2>
+
+<P>中心核では、タスク間の同期・通信機能として次の機能を提供しています。</P>
+<P>\begin{itemize}
+\item セマフォ
+\item イベントフラグ
+\item メッセージバッファ
+\end{itemize}</P>
+<P>この章では、それぞれの機能の実装内容について説明します。</P>
+
+
+<H3>セマフォの実装</H3>
+
+<P>セマフォは、2つ以上のタスク間で同期を取ったり、同時にアクセスすることがで
+きないデータを保護するための機能です。</P>
+<P>そのために、次の機能が必要になります。</P>
+<P>\begin{itemize}
+\item すでにセマフォがロックされていた場合、セマフォが解放されるまでタ
+スクを待たせる機能。
+\item セマフォが解放されたとき、セマフォ待ちの状態にあるタスクを実行さ
+せる機能。
+\end{itemize}</P>
+<P>セマフォ待ちのタスクを管理するために、待ち状態にあるタスクのリストを管
+理しています。</P>
+<P>セマフォ機能は、次の関数が処理します\footnote{
+すべて {\tt src/kernel/itron-3.0/common/semaphore.c} の中で定義。}。</P>
+<P>\vspace{5mm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+{\tt init_semaphore} & セマフォ機能の初期化 \\
+{\tt cre_sem} & セマフォの生成 \\
+{\tt del_sem} & セマフォの削除 \\
+{\tt sig_sem} & セマフォの資源返却 \\
+{\tt wai_sem} & セマフォ資源獲得 \\
+{\tt preq_sem} & セマフォ資源獲得(ポーリング) \\
+{\tt twai_sem} & セマフォ資源獲得(タイムアウト有) \\
+{\tt ref_sem}  & セマフォ状態参照 \\
+{\tt twaisem_timer} & {\tt twai_sem} の時間切れのときに呼びされる
+関数 \\
+\hline
+\end{tabular}
+\vspace{5mm}</P>
+<P>ひとつひとつのセマフォは、構造体 {\tt semaphore_t} で管理しています。</P>
+<P>\vspace{5mm}
+\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}
+typedef struct semaphore_t
+{
+T_TCB       *waitlist;       /* セマフォ獲得待ちタスクのリスト */
+ATR         sematr;          /* セマフォ属性 */
+INT         isemcnt;         /* セマフォ獲得待ち数 */
+INT         maxsem;          /* セマフォ獲得待ち数の最大値 */
+VP          exinf;           /* 拡張属性(未使用) */
+} T_SEMAPHORE;
+\end{verbatim}
+\end{boxedminipage}
+\vspace{5mm}</P>
+<P>配列 \verb+semaphore_table<F>NSEMAPHORE</F>+ は、すべてのセマフォ情報を収め
+ています。</P>
+
+
+
+<H3>イベントフラグの実装</H3>
+
+
+
+
+
+<H3>メッセージバッファの実装</H3>
+
+
+
+
+
+
+<H2><A NAME="ss2.10">2.10 割り込み/トラップ/例外管理部分</A>ハードウェアからの外部割り込みやシステムコールなどのトラップなどは、この部分で管理します。管理モジュールは、以下のとおりです。\vspace{1cm}\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} \hline  i386/interrupt.s & \\  common/fault.c   & \\  \hline\end{tabular}\vspace{1cm}割り込み/トラップ/例外の違いは次のとおりです：\begin{description}\item<F>割り込み</F> \item<F>トラップ</F> \item<F>例外</F> \end{description}割り込み/トラップ/例外処理というのは、i386 ではひとつのテーブル (IDT) で管理しています。表 \ref{tab:i386-interrupt-table} に i386 で定義している割り込み/トラップ/例外の一覧を示します。\begin{table}<F>htbp</F>  \caption{i386 で定義している割り込み/トラップ/例外の種類}  \begin{center}    \leavevmode    \begin{tabular}<F>h</F>{r @{\hspace{1cm}} p{3cm} @{\hspace{1cm}} p{10cm}} \hline      \multicolumn{1}{c}{番号} &      \multicolumn{1}{c}{種類} &      \multicolumn{1}{c}{内容} \\ \hline\hline      1 & & \\      2 & & \\      3 & & \\      4 & & \\      5 & & \\      6 & & \\      7 & & \\      8 & & \\      9 & & \\      10 & & \\       \hline    \end{tabular}  \end{center}  \label{tab:i386-interrupt-table}\end{table}</H2>
+
+<H3>割り込みの処理</H3>
+
+<P>ハードウェア割り込み(外部割り込み)の処理は、{\tt i386/fault.c} の中にある
+{\tt interrupt()} で行います。</P>
+<P>割り込みが発生すると、{\tt interrupt()} は次の処理を行います。</P>
+<P>\begin{itemize}
+\item 大域変数 {\tt on_interrup} の値を TRUE に変更。
+\item 大域変数 {\tt delayed_disatch} の値を FALSE に変更。
+\item 各割り込み別に定義してある関数へ分岐。
+\item {\tt delayed_dispatch} が TRUE に変更されていたら、
+{\tt task_switch()} を実行。このとき、現走行タスクはレディキューから削
+除しない。
+\end{itemize}</P>
+<P>{\tt interrupt()} が処理する割り込みは、表 
+\ref{tab:interrupt-proclist} のとおりです。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{{\tt interrupt()} の処理する割り込み一覧}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{r @{\hspace{1cm}} p{10cm}} \hline
+\multicolumn{1}{c}{番号} &
+\multicolumn{1}{c}{内容} \\ \hline\hline
+32 & タイマー \\
+33 & キーボード \\
+42 & フロッピーディスク (1M) \\ 
+\hline
+\end{tabular}
+\end{center}
+\label{tab:interrupt-proclist}
+\end{table}</P>
+
+
+
+<H3>トラップの処理</H3>
+
+<P>トラップの処理は、\verb+trap()+ で行いますが、この関数は今のところ何も
+していません。</P>
+<P>トラップの一種であるシステムコールは、{\tt int64_handler} \footnote
+{{\tt src/kernel/itron-3.0/i386/interrupt.s}で定義。}
+と {\tt syscall()} \footnote{{\tt src/kernel/itron-3.0/common/syscall.c}
+で定義。}で処理します。</P>
+
+
+
+
+
+<H3>例外の処理</H3>
+
+<P>例外は、次の要因で発生する CPU のエラーです。</P>
+<P>\begin{itemize}
+\item 0 割り例外
+\item プロテクトフォールト
+\item ページフォールト
+\item 不法 TSS 例外
+\end{itemize}</P>
+<P>それぞれの例外が発生した時の対応は表 \ref{tab:except-process} に示すと
+おりです。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{例外が発生した場合の対応}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{5cm} @{\hspace{1cm}} p{5cm}}
+\hline
+\multicolumn{1}{c}{例外} &
+\multicolumn{2}{c}{対応} \\
+& \multicolumn{1}{c}{ユーザモード} &
+\multicolumn{1}{c}{カーネルモード} \\ \hline\hline
+0 割り例外            & 強制終了(ユーザ定義可能) & システム停止 \\
+プロテクトフォールト  & 強制終了                 & システム停止 \\
+ページフォールト      & ページインまたは強制終了 & システム停止 \\
+不法 TSS 例外         & 強制終了                 & システム停止 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:except-process}
+\end{table}</P>
+
+
+
+
+<H2><A NAME="ss2.11">2.11 仮想記憶</A></H2>
+
+<H3>i386 での仮想記憶管理機能</H3>
+
+<P>インテル i386 プロセッサには、ページ単位での仮想記憶を管理する機能があ
+ります。</P>
+
+
+
+
+
+<H3>モデル</H3>
+
+<P>B-Free での仮想記憶管理をモデル化したものを 図 \ref{fig:model} に示し
+ます。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=model.eps}
+\end{center}
+\caption{B-Free での仮想記憶のモデル}
+\label{fig:model}
+\end{figure}</P>
+<P>仮想記憶は、リージョン (Region) という単位で管理します。
+この場合の管理情報は、仮想領域のアドレス、物理メモリのマップ情報、そし
+て、読み書きの許可を表す permission のことです。</P>
+<P>1つのタスクには1つ以上のリージョンを結びつけることができます。
+たとえば、BTRON レベルでのユーザプロセス(の中のタスク)は、プログラムの
+実行部分(コード部分)が入るテキスト・リージョン、読み書きするためのデー
+タが入るデータ・リージョン(実際には、データ・リージョンは、恐らく実行
+前に値が決まっている変数が入るリージョンと、実行前には領域だけが決まっ
+ているリージョンそして、ヒープのために使われるリージョンの3つのリージ
+ョンに分かれます)、そしてスタック領域を表すスタック・リージョンと
+いう複数の Region と結びついています。</P>
+<P>タスクが複数のリージョンを所有するのは、次のような利点があります。</P>
+<P>\begin{enumerate}
+\item 
+リージョンごとに permission が指定できる。そのことによって、テキス
+トは実行するだけで読み書きできないなどの指定ができる。すべてひとつ
+のリージョンにしてしまうと、permission は最少公倍数的なものになって
+しまうだろう(つまり、読み/書き/実行のすべてを許可した状態になってし
+まう)。</P>
+<P>\item 
+リージョンを仮想空間の中で離して置くことによって、リージョンの大き
+さを広げることができる。成長するリージョンにはヒープ、スタックなど
+があります。
+\end{enumerate}</P>
+
+<P>逆に、複数タスクが1つのリージョンを所有することもできます。この場合、複数のタ
+スクから所有されるリージョンは、共有メモリとなります(図 \ref{fig:share})。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=share.eps}
+\end{center}
+\caption{複数タスクからの共有}
+\label{fig:share}
+\end{figure}</P>
+<P>B-Free OS では、デフォルトでデータを共有することはしません。しかし、プ
+ログラムの実行部分についてはデフォルトで共有します。これは、プログラム
+の実行部分は大抵の場合変更しないため、共有しても他のプロセスに影響をお
+よぼすことがないからです。
+プログラムの実行部分を変更するような場合、リージョンを共有しないように
+システムに要求する必要があります。もし、共有しているプログラムの実行部
+分を変更しようとした場合、メモリの保護違反となりプログラムは、強制終了
+します。</P>
+<P>複数のリージョンが、仮想空間の中で重なりあうことはできません。</P>
+
+
+
+<H3>リージョン情報</H3>
+
+
+
+
+<H3>リージョンを管理する情報</H3>
+
+<P>リージョンは、一言でいうと任意のタスクの仮想空間の一部の領域です。</P>
+<P>リージョンを管理するための情報には、次の種類があります。</P>
+<P>\begin{description}
+\item<F>(1)リージョンで管理する仮想空間領域</F> \hfill \\</P>
+<P>リージョンが管理する仮想空間は次の3つのパラメータで表します。</P>
+<P>\begin{itemize}
+\item リージョンの開始仮想アドレス
+\item 最少サイズ
+\item 最大サイズ
+\item 大きさが変わらないリージョンの場合には、最少サイズ、最大サイズは
+同じ値となります。
+\end{itemize}</P>
+<P>\item<F>(2) permission</F> \hfill \\</P>
+<P>仮想メモリ中のページの読み書きの許可状態を表ります。</P>
+<P>\begin{itemize}
+\item 実行可/実行不可
+\item 書き込み可/書き込み不可
+\item 読み込み可/読み込み不可
+\end{itemize}</P>
+<P>\item<F>(3) 物理メモリのマッピング情報</F> \hfill \\</P>
+<P>リージョンの中のページのうちどれが物理メモリとマッピングしているか、
+マッピングしていた場合には物理メモリ(ページ)番号を記憶します。</P>
+<P>\item<F>(4) メモリフォールトハンドラ</F> \hfill \\
+メモリフォールトが発生した場合、どのように処理するかを指定する情報
+です。
+\end{description}</P>
+
+
+
+<H3>リージョンの操作</H3>
+
+<P>タスクは、リージョンの情報を直接操作することはできません。
+そのためリージョンの内容を変更する場合、中心核(ITRON)のシステムコール
+を実行する必要があります。</P>
+<P>中心核のもつリージョン操作関数を表 \ref{tab:function-list} に示します。
+もともと ITRON では、仮想記憶操作については定義していません。
+そのため、リージョン操作システムールは ITRON で規定している独自システ
+ムコールとしてシステムコール名の最初に 'v' がつきます。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{リージョン操作関数一覧}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l p{10cm}} \hline 
+\multicolumn{1}{c}{システムコール名} &
+\multicolumn{1}{c}{機能} \\ \hline \hline
+%
+vcre_reg  &      リージョンの生成              \\
+vdel_reg  &      リージョンの削除              \\
+vmap_reg  &      リージョンのマップ            \\
+vunm_reg  &      リージョンのアンマップ        \\
+vdup_reg  &      リージョンの複製を作る        \\
+vprt_reg  &      リージョンのプロテクト情報の設定 \\
+vshr_reg  &      タスク間でのリージョンの共有  \\
+vput_reg  &      リージョンへの書き込み        \\
+vget_reg  &      リージョンからの読み込み      \\
+vsts_reg  &      リージョンの情報              \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:function-list}
+\end{table}</P>
+<P>これらのシステムコールは、リージョンの情報をアクセスするだけで CPU の
+メモリ管理機能には影響を与えないものもあります。</P>
+
+
+
+
+<H3>物理メモリの割り付け</H3>
+
+
+
+
+
+
+<H3>ページフォールト処理</H3>
+
+
+<P>ユーザプログラムが物理メモリにマップしていない仮想ページにアクセスした
+場合、ページフォールトが発生します。</P>
+<P>ページフォールトが発生した場合、中心核は次の処理を行います。</P>
+<P>\begin{itemize}
+\item ユーザのページフォルトハンドラを呼び出す。
+\end{itemize}</P>
+
+
+<P>\chapter{LOWLIB}
+\label{cha:lowlib}</P>
+<P>%\begin{flushright}
+%  {\small
+%  \begin{minipage}<F>h</F>{7cm}
+%  --- 
+%  \end{minipage}
+%
+%
+%  }
+%\end{flushright}</P>
+<P>\vspace{2cm}
+LOWLIB (低レベルライブラリ) は、ユーザプログラムに対してシステムコール
+インタフェースを提供するための層です。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=lowlib.eps,height=7cm}
+\end{center}
+\caption{LOWLIBの役割}
+\label{fig:lowlib}
+\end{figure}</P>
+
+<P>LOWLIB は、次の示す働きをします。</P>
+<P>\begin{itemize}
+\item アプリケーションの動作環境の初期化。
+\item システムコールをアプリケーションに提供。
+\item マネージャ群との通信を行う。
+\end{itemize}</P>
+<P>LOWLIB は、BTRON/POSIX という環境毎に、別々にもつことになります。
+そのために、LOWLIB をマッピングするための中心核のシステムコールがあり
+ます。</P>
+
+<P>\begin{table}<F>htbp</F>
+\caption{LOWLIB 用システムコール(中心核)}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+\multicolumn{1}{c}{システムコール名} &
+\multicolumn{1}{c}{機能} \\ \hline\hline
+{\tt lod_low} & 指定した LOWLIB をロード/マッピングする。\\
+{\tt uld_low} & 指定した LOWLIB をアンロードする。\\
+{\tt sts_low} & LOWLIB の情報を取り出す。\\ \hline
+\end{tabular}
+\end{center}
+\label{tab:lowlib-syscalls}
+\end{table}</P>
+
+
+
+
+
+<H2><A NAME="ss2.12">2.12 動作環境の初期化</A></H2>
+
+<P>中心核がサポートするタスク生成の機能だけでは、
+アプリケーションプログラムを動作させることはできません。</P>
+<P>LOWLIB は、中心核のタスク生成の機能ではサポートしていない
+アプリケーションプログラムが動作するための環境を初期化します。</P>
+<P>具体的には、次の処理を行います。</P>
+<P>\begin{itemize}
+\item ユーザモードで動くためのスタック領域を確保します。
+\item システムコール用のトラップハンドラを登録します。
+\item コードおよびデータ用の領域を仮想空間上に確保します。
+\end{itemize}</P>
+
+<P>これらの処理を行った後に、ユーザプログラムのエントリアドレスへジャンプ
+します。
+このとき、カーネルモードからユーザモードへの遷移を行います。</P>
+
+
+
+<H2><A NAME="ss2.13">2.13 システムコールの実行</A></H2>
+
+<P>結局のところアプリケーションにとっての環境というのは、システムコールの
+機能によって決定されます。</P>
+<P>LOWLIB は、アプリケーションプログラムにシステムコールを提供することに
+よって、アプリケーションの動作環境を提供します。</P>
+<P>システムコールの処理を行うために、LOWLIB 層にシステムコールのエントリ
+テーブルをもっています。</P>
+<P>また、システムコールの実行に必要な情報についても LOWLIB は各プロセス毎
+にもっています。</P>
+<P>システムコールの実行は次のように行います。</P>
+<P>\begin{enumerate}
+\item ユーザプログラムがシステムコールを呼び出す(CPU のトラップ命令を
+実行)。
+\item LOWLIB のトラップハンドラを実行。
+\item LOWLIB は、システムコール番号からシステムコール関数を選択、実行
+する。
+\item システムコールの実行後、ユーザプログラムへ戻る。
+\end{enumerate}</P>
+
+
+
+<H2><A NAME="ss2.14">2.14 BTRON 環境での LOWLIB</A></H2>
+
+<P>BTRON 環境での LOWLIB は、次のようなソース構成になっています。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{LOWLIB のソース構成}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+\multicolumn{1}{c}{ソース名} & 
+\multicolumn{1}{c}{内容} \\ \hline\hline
+{\tt lowlib.c} & LOWLIB の main 関数部分。\\
+{\tt entry.c}  & システムコールのエントリ部分 \\
+{\tt syscalls/\*} & システムコール毎に定義している関数の入っているファ
+イル群 \\
+{\tt misc.c}   & その他のファイル \\ \hline
+\end{tabular}
+\end{center}
+\label{tab:lowlib-source}
+\end{table}</P>
+<P>これらの他にライブラリとして、{\tt src/kernlib/libkernel.a} をリンクし
+ます。</P>
+
+
+<H3>LOWLIB/BTRON の初期化処理</H3>
+
+<P>BTRON 環境用の LOWLIB は、{\tt lowlib_start()} という関数から実行をは
+じめます。</P>
+<P>{\tt lowlib_start()}は、BTRON プロセスを動作させるために必要な、次の
+初期化処理を行います。</P>
+
+<P>\begin{itemize}
+\item ユーザプロセス用の Region を生成。</P>
+<P>ユーザプロセスはデフォルトで、次の Region をもちます。</P>
+<P>\begin{itemize}
+\item コード用 region (読み込みと実行のみ可能)
+\item データ用 region (読み込みと書き込みのみ可能)
+\item ヒープ用 region (読み込みと書き込みのみ可能：この region は大
+きさが変化する)
+\item スタック用 region (読み込みと書き込みのみ可能)
+\end{itemize}</P>
+<P>\item スタック領域の確保(物理メモリ)。
+\item 非同期動作用のタスクを生成(メインに動作するタスクは、親プロセス
+が生成します)。実行します。
+\item プロセス情報をプロセスマネージャに登録します。
+\item システムコール用のトラップハンドラをプロセス毎に存在するトラップ
+ベクタに登録します。
+\item ユーザプログラムのエントリルーチンへジャンプします。
+\end{itemize}</P>
+
+
+
+<H3>LOWLIB/BTRON のシステムコールの処理</H3>
+
+
+<P>システムコールのエントリルーチンは、次の3つの引数をもちます。</P>
+<P>\begin{description}
+\item<F>sysno</F> システムコール番号。
+\item<F>uargp</F> ユーザスタックの先頭アドレス。
+\item<F>errnop</F> システムコールを実行した結果のエラー番号が入る領域のポインタ。
+\end{description}</P>
+<P>エントリルーチンの動作は、次のようになります。</P>
+<P>\vspace{1cm}
+\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}</P>
+<P>entry(int sysno, void *uargp, int *errnop)
+{
+＜システムコール番号のチェック＞</P>
+<P>＜システムコール番号で指定しているシステムコール関数を呼び出す＞
+＜システムコール関数は、配列 syscalls<F></F> に登録している＞</P>
+<P>＜システムコールの実行結果を *errnop に入れる＞</P>
+<P>＜return＞
+}
+\end{verbatim}
+\end{boxedminipage}</P>
+
+<P>\chapter{周辺核}
+\label{cha:server}</P>
+
+
+
+
+<H2><A NAME="ss2.15">2.15 btron周辺核の探索</A></H2>
+
+<P>周辺核は、中心核 (ITRON)を使って、B-Free OS の中でも重要な機能 ---
+BTRON API を提供します。</P>
+<P>周辺核で提供する機能には、次の種類があります。</P>
+<P>\begin{description}
+\item<F>プロセス管理</F> \hfill \\
+中心核の提供するタスク機能を使って、ファイルの管理情報などを追加した
+実行単位 --- プロセスを管理します。
+%
+\item<F>メモリ管理</F> \hfill \\
+BTRON プロセスが扱うメモリを管理します。
+周辺核では、2種類 --- ローカル、共有メモリ --- のメモリを提供します。
+%
+\item<F>ファイル管理</F> \hfill \\
+可変長レコードによるファイル機能を提供します。ファイル自体には、
+BTRON の特徴である仮身・実身の機能はありません\footnote {実身や仮身
+は、仮身・実身マネージャが提供する機能です。}。</P>
+<P>B-Free OS では、次のような複数のファイル形式を使用することができます。</P>
+<P>\begin{itemize}
+\item BTRON FD ファイルシステム
+\item {\it B-Free Standard File System}
+\item {\tt MS-DOS ファイルシステム}
+\end{itemize}
+%
+\item<F>イベント管理</F> \hfill \\
+ポインティングデバイスからのイベントを管理します。
+%
+\item<F>デバイス管理</F> \hfill \\
+周辺機器を操作するデバイスドライバを管理する機能です。
+デバイスドライバをロード・アンロードすることができます。
+(デバイスドライバ自体は、ITRON タスクとして動作します)
+%
+\item<F>時間管理</F> \hfill \\
+時間に関係する機能を管理します。
+%
+\item<F>システム管理</F> \hfill \\
+上記の管理機能に属さない、「その他の」機能です。
+%
+\end{description}</P>
+
+
+
+<H2><A NAME="ss2.16">2.16 周辺核の構造</A></H2>
+
+<P>周辺核、すなわち B-Free OS での BTRON API を処理する部分は、決して巨大
+なプログラムではありません。</P>
+<P>周辺核は、図 \ref{fig:server-struct} に見るように単機能なプログラムの
+集まりです。</P>
+<P>\begin{figure}<F>h</F>
+\begin{center}
+\epsfile{file=server-struct.eps,height=8cm}
+\end{center}
+\caption{周辺核の構造}
+\label{fig:server-struct}
+\end{figure}</P>
+<P>周辺核と上位層(外核とアプリケーション)は、中心核の IPC 機能によって通信し
+ます。</P>
+<P>周辺核を構成する要素を次のリストに示します。</P>
+<P>\begin{description}
+\item<F>プロセスマネージャ</F> \hfill \\
+BTRON プロセスを管理する。プロセスは、ITRON タスクと結びついています。
+プロセス管理サーバでは、プロセスに付随する情報を管理します。また、プ
+ロ  セスのユーザ情報も管理し、特権レベルによって資源にアクセスできる
+かどうかの判断も行います。
+%
+\item<F>メモリマネージャ</F> \hfill \\
+仮想メモリ情報を管理します。
+仮想メモリ機能の中でハードウェアに依存する機能については、ITRON で管
+理します。メモリ管理サーバでは、メモリが足りなくなった場合の物理メモ
+リの解放機能(ページアウト)や、物理メモリに結びついていない仮想メモリ
+領域をどのように物理メモリに結びつける(マッピング)かの方針を決定しま
+す。
+%
+\item<F>ファイルマネージャ</F> \hfill \\
+BTRON のファイルシステムに関係する機能を提供します。</P>
+<P>B-Free では、ファイル形式を複数取り扱うことができるので、ファイル管
+理サーバでは、各ファイル形式ごとにあるファイル管理プログラムを統合し
+ます。
+%
+\item<F>デバイスマネージャ</F> \hfill \\
+周辺機器を制御するプログラム、すなわちデバイスドライバの管理を行います。</P>
+<P>デバイスには各々名前が付いています。デバイス管理サーバでは、デバイス
+名とデバイスドライバの持つ通信用のポートを結びつけます。
+\end{description}</P>
+
+
+
+<H2><A NAME="ss2.17">2.17 プロセスマネージャ</A></H2>
+
+
+
+
+<H2><A NAME="ss2.18">2.18 ファイルマネージャ</A></H2>
+
+
+
+<H2><A NAME="ss2.19">2.19 メモリマネージャ</A></H2>
+
+<P>メモリマネージャは、仮想メモリを操作するためのマネージャです。</P>
+<P>B-Free/OS では、仮想メモリベースの OS です。つまり、B-Free/OS は、ペー
+ジ単位での仮想メモリを扱うことができます。</P>
+
+
+<H3>仮想記憶の概念</H3>
+
+
+<P>--- B-Free/OS での仮想記憶とはどういうものなのか。</P>
+<P>\vspace{5mm}</P>
+<P>仮想記憶機能とは、物理メモリに依存しない仮想的なメモリを扱う機能のこと
+をいいます。</P>
+<P>物理メモリのみを使用する実記憶ベースの OS の場合、実メモリのサイズを越え
+てメモリを使用することはできません。</P>
+<P>例えば、実メモリが 4M バイトの大きさをもつシステムの場合、5M のメモリ
+を消費するアプリケーションを動かすことはできません。</P>
+<P>仮想記憶の機能をもつ OS の場合、仮想記憶機能を使うことによって物理メモ
+リのサイズを越えた記憶容量をもつことができます。
+仮想記憶では、物理メモリのサイズを越えた分の記憶領域を2次記憶装置にも
+つことにより、アプリケーションに対して物理メモリのサイズを越えたメモリ
+をもっているように見せます(図 \ref{fig:virtual-memory})。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=virtual-memory.eps,height=5cm}
+\end{center}
+\caption{仮想記憶の概念}
+\label{fig:virtual-memory}
+\end{figure}</P>
+
+<P>仮想記憶の機能を実現するために、メモリマネージャは次の処理を行います。</P>
+<P>\begin{quote}
+\begin{lablist}
+\labitem{ページイン処理} {二次記憶に追い出した情報を物理メモリに戻
+します。このとき、物理メモリが空いていない時には、物理メモリに空
+き領域を作ります。ページイン処理は、アプリケーションが物理メモリ
+にないページのアドレスをアクセスしたときに発生するページフォール
+トを契機にして実行します。}</P>
+<P>\labitem{ページアウト処理} {物理メモリにマッピングしているが、使用
+していないページの内容を二次記憶装置に追い出します。}</P>
+<P>\labitem{仮想記憶ページ情報の管理} {仮想記憶ページの情報を管理しま
+す。管理する情報は次のとおりです。</P>
+<P>\begin{itemize}
+\item 仮想記憶ページが物理メモリにマッピングされている場合、物理
+メモリのアドレスを記憶します。
+\item 仮想記憶ページが二次記憶装置にページアウトされているときに
+は、二次記憶装置のどこにページアウトしたかという情報を管理しま
+す。
+\end{itemize}
+}
+\end{lablist}
+\end{quote}</P>
+
+
+
+<H3>ページイン処理</H3>
+
+
+
+
+<H3>ページアウト処理</H3>
+
+
+
+
+<H3>仮想メモリマネージャのメッセージ</H3>
+
+<P>メモリマネージャが受け付けることのできるメッセージは、次のものがありま
+す。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{メモリマネージャの受けつけるメッセージ}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l p{10cm}}
+\hline
+\multicolumn{1}{c}{メッセージ} &
+\multicolumn{1}{c}{処理の内容} \\
+\hline\hline
+VM_FAULT  & ページフォールトの通知を行います。\\
+VM_CREATE & 仮想メモリ領域の生成を行います。\\
+VM_SHARE  & 仮想メモリ領域をプロセスの間で共有します。\\
+VM_REMOVE & 仮想メモリ領域を削除します。\\
+VM_READ   & 仮想メモリ領域の内容を読み取ります。\\
+VM_WRITE  & 仮想メモリ領域にデータを書き込みます。\\
+VM_UNSHARE& 仮想メモリ領域の共有を解除します。\\
+VM_MAP    & 仮想メモリ領域に物理メモリをマップします。\\
+VM_UNMAP  & 仮想メモリ領域に物理メモリをマップします。\\
+VM_LOCK   & 仮想メモリ領域をロックします。ロックしたメモリ領域
+は、ページアウトされなくなります。\\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:memory-manager-request}
+\end{table}</P>
+
+<P>\chapter{デバイス管理}
+\label{cha:device}</P>
+<P>\begin{center}
+\begin{minipage}<F>h</F>{13cm}
+{\small
+ハードウェアデバイスを使用するためには、デバイスドライバが必要です。</P>
+<P>この章では、B-Free/OS で使用するデバイスドライバについての説明とデバ
+イスドライバ自体を管理するためのマネージャであるデバイスドライバマネーッ
+ジャについての説明を行います。</P>
+<P>デバイスドライバマネージャは、BTRON 環境だけではなく、POSIX 環境でも
+使用する環境に依存しないマネージャです。
+}
+\end{minipage}
+\end{center}</P>
+
+
+
+
+<H2><A NAME="ss2.20">2.20 B-Free にとってのデバイスドライバとは何か</A></H2>
+
+<H3>デバイスマネージャとデバイスドライバ</H3>
+
+
+<P>デバイスドライバというのは、ハードウェアデバイス (FD や HD などのスト
+レージデバイスやキーボード、ディスプレイなどの入出力装置など) を管理す
+るためのソフトウェアです。</P>
+<P>B-Free では、デバイスドライバは、個々のデバイスを管理するためのデバイ
+スドライバと、それらのデバイスドライバを管理するデバイスマネージャとい
+う2つの構成要素から成り立っています。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=device-driver-and-device-manager.eps,height=5cm}
+\end{center}
+\caption{デバイスドライバとデバイスマネージャの関係}
+\label{fig:device-driver-and-device-manager}
+\end{figure}</P>
+
+
+<H3>論理デバイス名</H3>
+
+<P>B-Free の個々のデバイスドライバは、固有の論理デバイス名をもっています。
+論理デバイス名は、アプリケーションがデバイスを指定するときに使用します。</P>
+<P>論理デバイス名は、3つの要素からなりたっています。</P>
+<P>\begin{description}
+\item<F>デバイスの種類</F> \hfill \\
+デバイスの種類を表す名前です。</P>
+<P>\item<F>ユニット</F>  \hfill \\
+ひとつのデバイスドライバが、複数の物理デバイスを扱う場合にどのデバイ
+スかを指定するための名前です。英文字1文字が使用されます。</P>
+<P>\item<F>サブユニット</F>  \hfill \\
+ひとつのユニットが複数に分割できる場合の分割した個々の要素を表すため
+の名前です。最大3桁の数字で表現します。また、サブユニット全体 (例え
+ば HD 全体など)をあらわすためには、'\$' の文字を使用します。</P>
+<P>HD のパーティションなどがサブユニットにあたります。
+\end{description}</P>
+<P>論理デバイス名の例を 図 \ref{fig:device-name} に示します。</P>
+
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\begin{boxedminipage}<F>h</F>{13cm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+ｆｄａ    & 1 番目のフロッピィディスクデバイス \\
+ｈｄｂ＄　& 2 番目の HD デバイスのサブユニット全体 \\
+ｈｄｂ１　& 2 番目の HD デバイスの1番目のサブユニット(パーティ
+ション) \\
+\end{tabular}
+\end{boxedminipage}
+\end{center}
+\label{fig:device-name}
+\caption{論理デバイス名の例}
+\end{figure}</P>
+
+
+
+
+
+<H2><A NAME="ss2.21">2.21 デバイスマネージャ</A>\label{sec:device-managger}</H2>
+
+<P>デバイスマネージャは、デバイスドライバの管理を行います。
+デバイスマネージャは、ITRON レベルでのタスクとして動作します。</P>
+<P>表 \ref{tab:device-manager-request} に示すリクエストを受け付けます。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{デバイスマネージャのリクエスト一覧}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+\multicolumn{1}{c}{リクエスト名} &
+\multicolumn{1}{c}{処理内容} \\ \hline\hline
+dev_define & デバイスドライバの登録 \\
+dev_remove & デバイスドライバの削除 \\
+dev_find   & デバイスドライバの検索 \\
+dev_load   & デバイスドライバのローディグ \\
+dev_unload & デバイスドライバのアンローディグ \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:device-manager-request}
+\end{table}</P>
+
+
+<H3>dev_define --- デバイスドライバの登録</H3>
+
+<P>{\it dev_define ()} は、デバイスドライバの情報をデバイスドライバマネー
+ジャに登録します。 </P>
+<P>登録する情報は次のとおりです：</P>
+<P>\begin{itemize}
+\item (ユニット名/サブユニット名を除いた)デバイスドライバの名前
+\item ユニット名の最大値
+\item サブユニット名の最大値
+\item 要求受けつけ用のメッセージバッファ ID
+\item 次に示すデバイスドライバ属性
+\begin{itemize}
+\item ドライバのタイプ (ブロック or キャラクタ)
+\item ドライバに使用するバッファサイズ
+\item 排他的使用となるか非排他的使用(複数のプロセス間で共有可)となるか
+\end{itemize}
+\end{itemize}</P>
+<P>これらの情報は、デバイスドライバマネージャが内部に持っているデバイスド
+ライバの管理テーブルに記録します。</P>
+
+
+
+<H3>dev_remove --- デバイスドライバの削除</H3>
+
+<P>{\it dev_remove ()} は、デバイスドライバマネージャの中に記録してある
+デバイスドライバの情報のうち、指定したものを削除します。</P>
+<P>削除するデバイスドライバの指定は、名前で行います。</P>
+
+
+
+
+<H3>dev_find --- デバイスドライバの検索</H3>
+
+<P>{\it dev_find ()} は、デバイスドライバの検索を行います。</P>
+<P>具体的には、デバイスドライバを使用するために要求を送るメッセージバッファ 
+ID を調べるために使用します。</P>
+<P>検索に使用するキーは、デバイスドライバの名前です。</P>
+<P>デバイス名の中にユニット名/サブユニット名が含まれていた場合、
+デバイスの種類のみを取り出して、デバイスドライバ登録テーブルを検索しま
+す。</P>
+<P>たとえば、デバイスドライバ名として次の名称:</P>
+<P>\begin{center}
+\begin{minipage}<F>h</F>{13cm}
+\verb+hda1 ...... HD デバイスのユニット 0/サブユニット 1 を指定。+
+\end{minipage}
+\end{center}</P>
+<P>を指定した場合、ユニット名/サブユニット名を除いた次の名称に変換して検
+索します。</P>
+<P>\begin{center}
+\begin{minipage}<F>h</F>{13cm}
+\verb+hd ...... HD デバイスを指定(ユニット名/サブユニット名を除いた名前)+
+\end{minipage}
+\end{center}</P>
+
+<P>デバイスマネージャ自身は、デバイスドライバの登録しか行いませんが、
+BTRON OS 環境 あるいは POSIX OS 環境のサーバによって、動的にデバイスド
+ライバをロード/登録することも可能です。その場合、各 OS 環境の API によっ
+てファイルシステムからデバイスドライバをロードしタスクとして動作できる
+ようにしてから、デバイスドライバマネージャに登録するということになりま
+す。</P>
+
+
+
+<H3>デバイスドライバのロード</H3>
+
+<P>指定したファイルからデバイスドライバを読み取り、メモリ上にロードします。</P>
+
+
+
+<H3>デバイスドライバのアンロード</H3>
+
+<P>{\tt dev_load} によってファイルから読み込んだデバイスドライバをメモリ
+上から削除します。</P>
+<P>当然ですが、この処理を実行したあとはデバイスドライバは使用できません。</P>
+
+
+
+
+<H2><A NAME="ss2.22">2.22 デバイスドライバの機能</A></H2>
+
+<P>デバイスドライバが受信し、処理するパケットの種類は表 
+\ref{tab:driver-packet} のとおりです。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{ドライバの処理するパケットの種類}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} \hline
+\multicolumn{1}{c}{種類} &
+\multicolumn{1}{c}{処理} \\ \hline\hline
+DeviceInit   & デバイスドライバの初期化 \\
+DeviceExit   & デバイスドライバを終了させる \\
+DeviceOpen   & デバイスをオープンする \\
+DeviceClose  & デバイスをアンロックする \\
+DeviceRead   & デバイスから情報を読み出す \\
+DeviceWrite  & デバイスに情報を書き込む \\
+DeviceControl& デバイス固有の制御を行う \\
+DeviceProbe  & デバイスが実際にあるか探る \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:driver-packet}
+\end{table}</P>
+<P>B-Free では、デバイスドライバもひとつのタスクとして動作しています。</P>
+<P>デバイスドライバの概略をリストにすると次のようになります。</P>
+<P>\vspace{1cm}
+\tablehead{ 
+\hline 
+\multicolumn{1}{l}{\small 前ページより続く} \\
+\hline
+}
+\tablefirsthead{ \hline }
+\tabletail { 
+\hline
+\multicolumn{1}{r}{\small 次ページへ続く} \\
+\hline
+}
+\tablelasttail {\hline}</P>
+<P>\begin{supertabular}{| @{\hspace{1cm}} p{13cm} |} 
+\verb|driver_main ()| \\
+\verb|{| \\
+\verb|  < ドライバの初期化 >| \\
+\verb|    ・割り込みハンドラの登録。| \\
+\verb|    ・インタフェース LSI の初期化| \\
+\verb|    ・ドライバで使用するテーブル類の初期化| \\
+\verb|    ・要求受信用のメッセージバッファをドライバマネージャに登録| \\
+\verb|| \\
+\verb|  /* 要求受けつけループの実行 */| \\
+\verb|  for (;;)| \\
+\verb|    {| \\
+\verb|      <要求パケットの受信>| \\
+\verb|      switch (パケットタイプ)| \\
+\verb|        {| \\
+\verb|      case DeviceInit:   <デバイスドライバの初期化>| \\
+\verb|      case DeviceExit:   <デバイスドライバの終了>| \\
+\verb|      case DeviceOpen:   <デバイスのオープン処理>| \\
+\verb|      case DeviceClose:  <デバイスのクローズ処理>| \\
+\verb|      case DeviceRead:   <デバイスの read 処理>| \\
+\verb|      case DeviceWrite:  <デバイスの write 処理>| \\
+\verb|      case DeviceControl:<デバイスの Control 処理>| \\
+\verb|      case DeviceProbe:  <デバイスのプローヴ処理>| \\
+\verb|    }| \\
+\verb|}| \\
+\end{supertabular}
+\vspace{1cm}</P>
+
+
+
+<H2><A NAME="ss2.23">2.23 デバイスドライバが便利に使える関数群</A></H2>
+
+<P>デバイスドライバが共有する資源としては、DMA \footnote{Direct Memory
+Access}や割り込みなどがあります。</P>
+<P>この章では、これらの資源をアクセスするための関数について説明します。</P>
+<P>なお、これらの関数は、libkernel.a に入っています。</P>
+
+
+<H3>DMA の制御</H3>
+
+<P>PC9801 では、DMA の制御用として μPD8237A (DMAコントローラ) を使用しています。</P>
+<P>この LSI では、4 つの DMA 用のポートがありますが、ひとつは PC9801 のアー
+キテクチャ上の問題(メモリリフレッシュ用に使用)でデバイスドライバ用とし
+ては使用できないため、使えるのは 3 つということになります。</P>
+<P>PC9801 では、3つのDMAをそれぞれ次のデバイスに割り当ててあります。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{DMA ポート}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{c p{10cm}} \hline
+\multicolumn{1}{c}{DMA チャネル番号} &
+\multicolumn{1}{c}{使用機器} \\ \hline\hline
+0  & 5 インチハードディスク \\
+1  & メモリリフレシュ (デバイスドライバは使用できない) \\
+2  & 1MB FDD \\
+3  & 640K FDD \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:dma-port}
+\end{table}</P>
+<P>これら以外にも、デバイス自体に DMA コントローラを塔載しているものがあ
+ります(SCSI ボードなど)。</P>
+
+<P>B-Free では、DMA の制御を行うための次の関数を用意してあります。</P>
+
+
+<H3>dma_setup</H3>
+
+<P>dma_setup は、DMA を使用するための前準備を行います。
+具体的には、DMA コントローラに以下のパラメータを設定します。</P>
+<P>\begin{itemize}
+\item モード設定
+\item チャネルマスク値設定
+\item 転送アドレス設定
+\item バンク番号指定
+\item 転送カウント設定
+\end{itemize}</P>
+<P>dma_setup を実行すると、DMA コントローラは DMA 要求を受けつける状態に
+なります。その状態で、周辺デバイス ( FD ドライブならば FDD コントロー
+ラ ) が転送要求を DMA コントローラに送ると DMA 転送が発生します。</P>
+<P>dma_setup は、次のようにして呼び出します。</P>
+<P>{\bf dma_setup (void *addr, W mode, W length, W mask)}</P>
+<P>\begin{quote}
+\begin{description}
+\item<F>addr</F> 転送アドレス
+\item<F>mode</F> 転送モード
+\item<F>length</F> 転送長
+\item<F>mask</F> チャネルマスク値
+\end{description}
+\end{quote}</P>
+<P>{\tt dma_setup()} を実行すると DMA コントローラによる DMA 転送の準備
+が行われます。
+この後で、DMA コントローラに転送開始のイベントが上がることによって
+DMA 転送が行われます。
+このイベントは、通常各制御 LSI (例えば FDD の場合には μPD765) が、
+送ります。</P>
+
+
+
+<H3>割り込み制御</H3>
+
+<P>PC9801 の場合、周辺機器のために表 \ref{tab:interrupt-table}
+に示すような割り込みエントリが用意してあります。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{周辺機器のための割り込みエントリ}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{@{\hspace{1.5cm}} l l} \hline
+\multicolumn{1}{c}{割り込みエントリ番号} &
+\multicolumn{1}{c}{使用するデバイス} \\ \hline\hline
+0x08 & タイマ (8053) \\
+0x09 & キーボード (8251A) \\
+0x0A & CRTV (μPD7220 (マスタ)) \\
+0x0C & RS-232C (8251A) \\ 
+0x10 & セントロニクスプリンタ (9255A) \\
+0x11 & ハードディスク \\
+0x12 & 640KB FD \\
+0x13 & 1MB FD \\
+0x15 & マウス \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:interrupt-table}
+\end{table}</P>
+<P>割り込みを使用するためには、中心核のシステムコールを使って割り込みハン
+ドラを登録する必要があります。
+割り込みハンドラを登録するための中心核のシステムコールは、
+{\bf def_int ()} です。</P>
+<P>\begin{center}
+\begin{boxedminipage}<F>h</F>{15cm}
+\hspace{1cm} ER def_int (UINT intno, T_DINT pk_dint);</P>
+<P>\begin{quote}
+\begin{description}
+\item<F>intno</F> 割り込みのエントリ番号 (表 \ref{tab:interrupt-table}
+に示した番号) を指定します。
+\item<F>pk&thinsp;dint</F> 割り込みハンドラのアドレスを指定します。
+\end{description}
+\end{quote}
+\end{boxedminipage}
+\end{center}</P>
+
+
+
+
+<H2><A NAME="ss2.24">2.24 HD ドライバ</A></H2>
+
+<P>HD ドライバは、PC9801 版の B-Free では、SASI 版と SCSI 版
+の3種類があります。</P>
+
+
+
+
+<H2><A NAME="ss2.25">2.25 FD ドライバ</A>PC9801 の FDD は、μPD765A というコントロール LSI を使って制御しています。</H2>
+
+
+<H2><A NAME="ss2.26">2.26 RS232C ドライバ</A></H2>
+
+
+
+
+
+<H2><A NAME="ss2.27">2.27 コンソールドライバ</A></H2>
+
+
+
+<P>\chapter{外核}
+\label{cha:manager}</P>
+<P>\chapter{ユーザインタフェース}</P>
+<P>ユーザインタフェースについて説明する章。
+(ウィンドウや仮身実身など)</P>
+
+<P>\chapter{POSIXインタフェース}
+\label{cha:posix}</P>
+
+<P>\begin{flushright}
+{\small
+\begin{minipage}<F>h</F>{7cm}
+--- UNIX は単なるオペレーティングシステムではなく、プログラミング
+の思想なのだ。
+\end{minipage}</P>
+<P>Don Libes \& Sandy Ressler 「Life with UNIX」}
+\end{flushright}</P>
+<P>\vspace{5mm}</P>
+<P>\begin{quote}
+{\small
+B-Free /OS の基本構造がマイクロカーネルアプローチを取っていることから、
+ユーザからみたシステム環境は、複数個もたせることが可能です。</P>
+<P>ユーザからみたシステムインタフェースのうち、メインとなっているのは、
+これまで説明してきた BTRON/OS です。</P>
+<P>BTRON とは別のシステム環境が B-Free にはひとつあります。
+それが、この章で説明する POSIX インタフェースです。
+}
+\end{quote}</P>
+
+
+
+<H2><A NAME="ss2.28">2.28 Posixインタフェース</A></H2>
+
+<P>POSIX \footnote{Portable Operating System Interface for Computer
+Environments} 
+は、IEEE \footnote{電気電子技術者協会} が規定したオペレーティングシス
+テムのインタフェースです。</P>
+<P>基本的には、これまでの UN*X と呼ばれてきた OS の最大公約数といえます。</P>
+
+<P>B-Free の POSIX 環境には、以下の API があります。</P>
+
+<P>\begin{multicols}{4}
+\begin{verbatim}
+access
+chdir
+chmod
+chown
+close
+closedir
+creat
+dup
+dup2
+execl
+execle
+execlp
+execv
+execve
+execvp
+_exit
+fcntl
+fork
+fseek
+fstat
+getcwd
+getegid
+getenv
+geteuid
+getgid
+getgrgid
+getgrnam
+getgroups
+getlogin
+getpgrp
+getpid
+getppid
+getuid
+kill
+link
+lseek
+mkdir
+mkfifo
+open
+opendir
+pause
+pipe
+read
+readdir
+remove
+rename
+rewind
+rewinddir
+rmdir
+setgid
+setpgid
+setsid
+setuid
+sigaction
+sigaddset
+sigdelset 
+sigemptyset
+sigfillset 
+sigismember
+siglongjmp
+sigpending 
+sigprocmask
+sigsetjmp  
+sitsuspend
+sleep 
+stat  
+time  
+times 
+ttyname
+tzset 
+umask 
+uname 
+unlink     
+utime 
+watipid   
+write 
+mount
+umount
+\end{verbatim}
+\end{multicols}</P>
+<P>\par</P>
+<P>POSIX 環境は、BTRON 環境と同様に POSIX マネージャ と LOWLIB そしてユー
+ザプログラムからできています。</P>
+<P>この章の残りは次の構成になっています。</P>
+<P>\begin{itemize}
+\item POSIX マネージャについての説明
+\item POSIX システムコールをサポートした POSIX 用 LOWLIB の説明。
+\item POSIX プログラム(ユーザプログラム) の構成およびライブラリについての説明。
+\end{itemize}</P>
+
+
+
+<H2><A NAME="ss2.29">2.29 POSIX マネージャ</A></H2>
+
+<P>POSIX の OS 環境では、次の 4 つの POSIX マネージャが動きます
+\footnote{ここでいうマネージャとは、BTRON 環境での周辺核のことです。}。</P>
+<P>\vspace{5pt}
+\begin{tabular}<F>h</F>{l l}
+ファイルマネージャ (FM) & POSIX のセマンティクスに沿ったファイル管理
+機能を提供 \\
+プロセスマネージャ (PM) & POSIX プログラムのプロセス管理を行う \\
+メモリマネージャ (MM)   & 仮想メモリ管理を行う \\
+デバイスマネージャ (DM) & デバイスドライバの管理を行う  \\
+\end{tabular}</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\epsfile{file=posix-environment.eps,height=7cm}
+\end{center}
+\caption{POSIX 環境の構成}
+\label{fig:posix-environment}
+\end{figure}</P>
+
+<H3>ファイルマネージャ (FM)</H3>
+
+
+
+<H3>POSIX 環境でのファイルファイルマネージャは、POSIX が規定しているセマンティクスに従ったファイルシステムの管理機能を提供します。POSIX では、ファイルとして次のものを定義しています。\begin{itemize}\item いわゆる通常のファイル。中には、構造のないバイトの列。\item ディレクトリ。ファイルへのポインタが入る。\item スペシャル(デバイス)ファイル。入出力機器とのインタフェース。\end{itemize}\paragraph{パス名}ファイルの位置はパス(名)によって表現します。パスは、ファイルの名前をならべたものです。個々のファイル名は、'/' によって区切ります。'/' からはじまるパス(名)を絶対パス(名)。'/' からはじまらない (ファイル名からはじまる) パス(名)を相対パス(名)と呼びます。'/' の1つだけのパス名は、ルートディレクトリ ( root directory ) という特別のディレクトリを示しています。ルートディレクトリは、ファイルシステムの始点です。絶対パスの場合ルートディレクトリからパス名をたどっていくことになります。相対パスの場合、パスの基点はカレントディレクトリからとなります。カレントディレクトリというのは、パス名を指定したプロセスが今いる位置を示しています。カレントディレクトリは、専用の API によって変更することもできます。\begin{figure}<F>htbp</F>  \begin{center}    \leavevmode      \begin{boxedminipage}<F>h</F>{10cm}        \hspace{1cm}\verb+/foo/bar/baz ......+ 絶対パスの例\hspace{1cm}        \hspace{1cm}\verb+bar/baz ...........+ 相対パスの例\hspace{1cm}        \hspace{1cm}\verb+./../foo/bar/baz ......+ これも相対パスの例\hspace{1cm}      \end{boxedminipage}  \end{center}  \caption{パスの例}  \label{fig:posix-path-example}\end{figure}\paragraph{ファイル情報}POSIX 環境内でのファイルは、すべての(POSIX環境内での)ファイルシステムで共通な属性情報をもっています。属性は、\verb+/usr/include/sys/stat.h+ の中で定義している、stat 構造体で定義しています。この構造体には、以下の情報が入ります。\begin{itemize}\item ファイルの種類\item ファイルの識別番号 (Iノード番号\footnote{B-Free の場合、サブファ    イルシステムがファイルシステム内でユニークな番号を割り振ります。})\item ファイルのリンク数\item 所有ユーザ/所有グループ ID\item ファイルのサイズ\item 作成/更新/アクセス日付\end{itemize}実際の stat 構造体を、図 \ref{fig:file-status} に示します。\begin{figure}<F>htbp</F>  \begin{center}    \begin{boxedminipage}<F>h</F>{10cm}    \begin{verbatim}    struct stat    {      mode_t        st_mode;      ino_t         st_ino;      dev_t         st_dev;      nlink_t       st_nlink;      uid_t         st_uid;      gid_t         st_gid;      off_t         st_size;      time_t        st_atime;      time_t        st_mtime;      time_t        st_ctime;    };    \end{verbatim}    \end{boxedminipage}  \end{center}  \caption{ファイル情報}  \label{fig:file-status}\end{figure}BTRON では、ファイルは可変長レコードという構造をもっていましたが、POSIX 環境ではファイルは単なるバイトの列として扱います。</H3>
+
+<H3>ファイルマネージャが関係するシステムコールファイルマネージャが関係するシステムコールを 表 \ref{tab:fm-systemcall} に示します。\topcaption{ファイルマネージャが関与するシステムコール}\tablehead{   \hline   \multicolumn{2}{l}{{\footnotesize 前ページより続く}} \\  \hline  \multicolumn{1}{c}{システムコール名} &  \multicolumn{1}{c}{機能} \\ \hline\hline  }\tablefirsthead{ \hline  \multicolumn{1}{c}{システムコール名} &  \multicolumn{1}{c}{機能} \\ \hline\hline  }\tabletail {   \hline  \multicolumn{2}{r}{{\footnotesize 次ページへ続く}} \\  \hline  }\tablelasttail {\hline}\vspace{5mm}\label{tab:fm-systemcall}\begin{supertabular}{l @{\hspace{1cm}} p{10cm}}  access & ファイルにアクセスできるかをチェックします \\   open   & ファイルを読み書きする準備を行います               具体的には、ファイルマネージャは、指定したファイルを読               み書きするタスクを(必要ならば)生成し、読み出し元との通               信を行うメッセージバッファを生成します \\   close  & ファイルをクローズしますもし、ファイルをみているプロ               セスがひとつもないならば、読み書き用のタスクを除去しま               す\\   execXX & ファイルをメモリ中に読み込み、実行します \\  read   & ファイルの内容を読みます\\   write  & ファイルにデータを書き込みます\\   lseek  & ファイルのカレントポジション(読み書きの開始位置)を、指             定された値に変更します\\  select & 複数のファイルの入出力を同時に監視するためのシステムコー             ルです\\  fcntl  & ファイルを制御するためのシステムコールです。主にスペシャ             ルファイルに対して使用します\\  rename & ファイル名を変更します \\  remove & ファイルを削除します \\  mkdir  & ディレクトリを作成します \\  rmdir  & ディレクトリを消去します \\  chown  & ファイルの所有者を変更します \\  chgrp  & ファイルの所有グループを変更します \\  access & ファイルのアクセス権をチェックします \\  stat   & ファイルの管理情報を取得します \\  mount  & ファイルシステムを接続する \\  unmount& ファイルシステムの接続を解除する \\\end{supertabular}\vspace{1cm}これらのシステムコールについては、他のマネージャと協調して処理する場合もあります。</H3>
+
+<H3>マネージャの構造POSIX/ファイルマネージャは、中心核の上で直接動く ITRON タスク (の集合)です。ITRON 上で動くことからわかるように、POSIX プロセスとして動くわけではありません。そのため、POSIX/ファイルマネージャは中心核のシステムコールを使って、メモリ取得などを行います\footnote{そのためのライブラリが   libkernel.a です( Chapter \ref{cha:libkernel} を参照してください)。}。POSIX 環境上では、POSIX/プロセスとして動作するのはユーザプログラムだけとなります。POSIX環境のマネージャ群は、CPU のユーザモードで動作します。中心核は、安全のために、ユーザモードで動作するプロセスが(中心核の)システムコールを発行するのを禁止しています。そのため、ユーザプロセスは、LOWLIB を介してのみ中心核のシステムコールを使うようにしています。ただし、LOWLIB を使う方法は、中心核の使用頻度の高いマネージャでは動作のためのコストが高くなるため、使用しません。POSIX/マネージャ群は、中心核の ITRON からの拡張機能のひとつである、タスク生成時の属性指定により直接、中心核のシステムコールを発行することができます。POSIX/ファイルマネージャは、階層構造をもつ複数のタスクからできています。これらのタスクは、すべて一つの仮想記憶空間に収納します。そして、オープン中のファイルの情報などは、すべてのタスクで共有します。まず、トップレベルにあるのが、すべてのファイルシステムを管理するファイルマネージャのタスクです。\begin{quote}\begin{tabular}<F>h</F>{l @{\hspace{5mm}} p{10cm}}{\bf ファイルマネージャ主タスク} & ファイルマネージャ全体の管理をするタ  スクです。\\%{\bf オープンファイルタスク} & オープンしているファイルを管理するタスク  です。オープン中のファイルひとつにつき、ひとつのタスクが対応します。 \\\end{tabular}\end{quote}さらにサブレベルとして、個別のファイルシステムに依存したモジュールがあります。POSIX 環境では、複数のファイルシステム形式が混在して使用できるようになっています。\begin{figure}<F>tbp</F>  \begin{center}    \leavevmode    \epsfile{file=filesystem-manager-structure.eps,height=7cm}  \end{center}  \caption{ファイルシステムマネージャの構造}  \label{fig:filesystem-manager-structure}\end{figure}ファイルマネージャの動きを簡略化すると次のリストのようになります\footnote{ファイルマネージャ以外のマネージャについても大枠は同じです。}。\tablehead{   \hline   \multicolumn{1}{l}{\footnotesize 前ページより続く} \\  \hline  }\tablefirsthead{ \hline }\tabletail {   \hline  \multicolumn{1}{r}{\footnotesize 次ページへ続く} \\  \hline  }\tablelasttail {\hline}\vspace{5mm}{\small\begin{supertabular}{| @{\hspace{1cm}} p{13cm} |} \verb+    main ()+\\\verb+    {+\\\verb+      <ファイルマネージャ全体の初期化>+\\\verb+    +\\\verb+      for (;;)+\\\verb+        {+\\\verb+          <メッセージの受信>+\\\verb+          if (メッセージは正しい形式ではない)+\\\verb+            {+\\\verb+              <エラーを返す>+\\\verb+            }+\\\verb++\\\verb+          switch (受信したメッセージのタイプ)+\\\verb+            {+\\\verb+            case  FILE_NULL: +\\\verb+              <何もしない>+\\\verb+              break;+\\\verb+            case  FILE_TRAVERSE:+\\\verb+              file_traverse  (メッセージ);+\\\verb+              break;+\\\verb+              :+\\\verb+              :+\\\verb+            default:+\\\verb+              <認識できないメッセージタイプ -> エラーを返す>+\\\verb+              break;+\\\verb+            }+\\\verb++\\\verb+          <処理の結果を返答>+\\\verb+        }+\\\verb+    }+\\\end{supertabular}}\vspace{5mm}</H3>
+
+<H3>POSIX ファイルマネージャの初期化ファイルマネージャが起動すると、まず最初にファイルマネージャ内のテーブルを初期化します。ファイルマネージャで管理しているテーブルとしては、次のものがあります。\begin{description}\item<F>open&thinsp;file&thinsp;table</F> オープン中のファイルテーブルです。この中には、  ファイルの識別子、管理用タスクの ID そしてメッセージ通信用のメッセー  ジバッファ ID などが入っています。%\item<F>buffer&thinsp;table</F> 読み書きを高速化するためにファイルマネージャはデー  タのバッファリングを行います。buffer_table はバッファの内容を管理し  ます。\end{description}初期化が終了すると、ファイルマネージャはそのまま要求受け付け - 処理ループに入ります。</H3>
+
+<H3>要求の受けつけ</H3>
+
+<P>ファイルマネージャが受け付けるパケットの種類を 
+表 \ref{tab:file-packet}に示します。</P>
+<P>\vspace{5mm}
+\tablehead{ 
+\hline 
+\multicolumn{2}{l}{\footnotesize 前ページより続く} \\
+\hline
+\multicolumn{1}{c}{種類} &
+\multicolumn{1}{c}{処理} \\ \hline\hline
+}
+\tablefirsthead{ \hline
+\multicolumn{1}{c}{種類} &
+\multicolumn{1}{c}{処理} \\ \hline\hline
+}
+\tabletail { 
+\hline
+\multicolumn{2}{r}{\footnotesize 次ページへ続く} \\
+\hline
+}
+\tablelasttail {\hline}
+\topcaption{ファイルマネージャが処理するパケットの種類}
+\par
+\begin{supertabular}{l @{\hspace{1cm}} p{8cm}}
+\label{tab:file-packet}
+FILE_NULL       &  何もしない  \\
+FILE_TRAVERSE   &  パス名を辿る  \\
+FILE_CLOSE      &  ファイルをクローズする  \\
+FILE_SELECT     &  デバイスの select  \\
+FILE_READ       &  ファイルの読み取り  \\
+FILE_WRITE      &  ファイルの書き込み  \\
+FILE_TRANC      &  ファイルのサイズを変更  \\
+FILE_GETATTR    &  ファイル属性を得る  \\
+FILE_SETATTR    &  ファイル属性を設定  \\
+FILE_ACCESS     &  ファイルのアクセス権をチェック  \\
+FILE_LINK       &  ファイルのハードリンク  \\
+FILE_MKDIR      &  ディレクトリを作成  \\
+FILE_RMDIR      &  ディレクトリを削除  \\
+FILE_MKSPEC     &  スペシャルファイルの作成  \\
+FILE_RMSPEC     &  スペシャルファイルの削除  \\
+FILE_CONTROL    &  ファイルの制御  \\
+FILE_MOVE       &  ファイルの移動(名前の変更) \\
+FILE_MOUNT      &  ファイルシステムをマウントする \\
+FILE_UNMOUNT    &  ファイルシステムをアンマウントする \\
+\end{supertabular}
+\vspace{1cm}</P>
+<P>要求の受けつけは、次の {\tt get_request()}\footnote{
+libkernel.a で定義している関数です。
+}
+によって行います。</P>
+
+
+<H3>要求の処理</H3>
+
+<P>受信した要求メッセージは、まず {\tt doit()} 関数に渡されます。</P>
+<P>{\tt doit()} 関数は、次の処理を行います。</P>
+<P>\begin{description}
+\item<F>(1) 要求メッセージの分解</F>  \hfill \\
+ファイルマネージャに送られた要求メッセージを要求を処理する関数に渡す
+ために、メッセージを分解します。
+%
+\item<F>(2) 各要求に対応した処理を行う関数に分岐</F> \hfill \\
+要求メッセージの先頭に入っている要求の種類を見て、
+対応する関数を呼び出します。</P>
+<P>そのとき、分解したメッセージの内容を引数として関数に渡します。
+\end{description}</P>
+
+
+<H3>パスの辿り ({\tt traverse})</H3>
+
+<P>ファイルを使用する時には、open システムコールによってパス名を指定し、
+該当するファイルをオープンします。</P>
+<P>パスを辿る処理は次のように行います。</P>
+<P>\vspace{1cm}
+\tablehead{ 
+\hline 
+\multicolumn{1}{l}{\small 前ページより続く} \\
+\hline
+}
+\tablefirsthead{ \hline }
+\tabletail { 
+\hline
+\multicolumn{1}{r}{\small 次ページへ続く} \\
+\hline
+}
+\tablelasttail {\hline}</P>
+<P>\begin{supertabular}{| @{\hspace{1cm}} p{13cm} |} 
+\verb|| \\
+\verb|  /*| \\
+\verb|   * パス名の辿り ...... 引数 path で指定したパスを順々に辿って
+いく。| \\
+\verb|   *                     最後の要素まで辿ったら、その要素に対応
+する| \\
+\verb|   *                     ポートを返す。| \\
+\verb|   */| \\
+\verb|  ID| \\
+\verb|  traverse(char *path)| \\
+\verb|  {| \\
+\verb|    ID   tmp;| \\
+\verb|    char 残りのパス名;| \\
+\verb|    char 現在の要素;| \\
+\verb|    | \\
+\verb|    if (パス名が絶対パス)| \\
+\verb|       tmp = rootdir;| \\
+\verb|    else| \\
+\verb|       tmp = カレントプロセスのカレントディレクトリ;| \\
+\verb|| \\
+\verb|    残りのパス名 = path;| \\
+\verb|    | \\
+\verb|    while (<のこりのパス名が NULL ではない>)| \\
+\verb|      {| \\
+\verb|        現在の要素 = <残りのパス名から先頭要素をひとつ取り出す
+>;| \\
+\verb|        <残りの要素は残りのパス名に入れる>;| \\
+\verb|| \\
+\verb|        tmp = FS_LOOKUP (tmp, 現在の要素); /* パス名をひとつだけ
+辿る */| \\
+\verb|| \\
+\verb|        < 必要ならばエラー処理を行う >| \\
+\verb|| \\
+\verb|      }| \\
+\verb|    return (tmp);    /* 最後まで辿った */| \\
+\verb|  }| \\
+\verb|  | \\
+\end{supertabular}
+\vspace{1cm}</P>
+
+
+<H3>サブファイルシステム</H3>
+
+<P>ファイルマネージャ自体は、物理媒体 (HD/FD など) に対するアクセスは行い
+ません。
+物理媒体をアクセスするのは、サブファイルシステムというモジュールによっ
+て行います。</P>
+<P>サブファイルシステムは、ファイルシステムのタイプごとに存在しています。
+POSIX 環境では、次のサブファイルシステムがあります。</P>
+<P>\begin{description}
+\item<F>DOSファイルシステム</F> MS-DOS ファイルシステム。FAT による管理を行
+う。
+\end{description}</P>
+<P>各サブファイルシステムは、ファイルマネージャと同じ実行モジュールにリン
+クしています。
+そのため、サブファイルシステムの処理を行うタスクは、ファイルシステムマ
+ネージャと同じタスクとなります (ファイルシステムマネージャから見ると、
+サブファイルシステムを処理するのは単なる関数となります)。</P>
+<P>ただし、サブファイルシステムとファイルマネージャとは、表
+\ref{tab:sub-filesystem-if}示すインタフェースでのみやりとりを行います。 
+表 \ref{tab:sub-filesystem-if} に示したのはマクロ\footnote{
+src/posix/usr/include/server/file.h に定義。}
+ですが、サブファイルシステムは、このマクロに対応する関数インタフェース
+をもちます。</P>
+
+<P>\begin{table}<F>htbp</F>
+\caption{サブファイルシステムインタフェース}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} \hline
+\multicolumn{1}{c}{インタフェース名} &
+\multicolumn{1}{c}{機能} \\ \hline\hline
+FS_INIT   & サブファイルシステムの初期化 \\
+FS_LOOKUP & パス名を要素ひとつだけ辿る。 \\
+FS_GETATTR & ファイルの属性を読み取る \\
+FS_PUTATTR & ファイルの属性を書き込む(変更する) \\
+FS_READ   & ファイルの内容を読み取る \\
+FS_WRITE  & ファイルに情報を書き込む \\
+FS_TRUNC  & ファイルサイズを変更する \\
+FS_MKDIR  & ディレクトリを作成する \\
+FS_RMDIR  & ディレクトリを削除する \\
+FS_MKNOD  & スペシャルファイルを作成 \\
+FS_RMNOD  & スペシャルファイルを削除 \\
+FS_LINK   & (ハード)リンクを作成する \\
+FS_REMOVE & ファイルを削除する \\
+FS_MOUNT  & ファイルシステムをマウントする \\
+FS_UNMOUNT & ファイルシステムをアンマウントする \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:sub-filesystem-if}
+\end{table}</P>
+<P>サブファイルシステムインタフェースは、ファイルマネージャのインタフェー
+ス (表 \ref{tab:file-packet}) と同等のインタフェースをもちます。</P>
+
+
+<H3>{\tt MS-DOS} ファイルシステム</H3>
+
+<P>MS-DOS ファイルシステムは、POSIX 環境でのサブファイルシステムのひとつ
+です。</P>
+<P>基本的には、MS-DOS の FAT ファイルシステムと同一ですが、次の点が拡張さ
+れています。</P>
+<P>\begin{itemize}
+\item 長いファイル名 (最大 256 文字) のサポート
+\item シンボリックリンクのサポート
+\item スペシャルファイルのシミュレート機能のサポート
+\end{itemize}</P>
+<P>これらの拡張機能は、MS-DOS ファイルシステム自体は変更しない形で拡張し
+ています。そのため、従来の MS-DOS システムから読み書き可能となっていま
+す。</P>
+
+<P>\paragraph{拡張方法}</P>
+<P>FAT ファイルシステムの拡張方法は、DOS との共有を行えるようにすることか
+ら、もとの FAT ファイルシステムの管理情報はそのまま使用する方式をとり
+ます。</P>
+<P>拡張部分については、変換テーブルの入ったファイルを使用することにします
+(このファイルも通常の FAT ファイルです)。</P>
+<P>変換テーブルのファイルは、各ディレクトリにひとつだけ存在することとしま
+す。ファイル名は、POSIX.TBL となります。</P>
+<P>変換テーブルは次の情報が入ります。</P>
+<P>\begin{itemize}
+\item MS-DOS のファイル名(POSIX ファイルマネージャが自動的に生成します)
+\item POSIX 環境から見えるファイル名
+\item 属性情報(ファイルのパーミッション/ファイルの種類など)
+\end{itemize}</P>
+
+<P>具体的には変換テーブルの内容は次のようになります。</P>
+
+<P>\vspace{5mm}
+\begin{minipage}<F>h</F>{15cm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{4cm} @{\hspace{1cm}} p{4cm}}
+DOS001  &  長いファイル名の例        & \verb+<0777>regular+ \\
+DOS002  &  シンボリックファイルの例  & \verb+<0755>symbolic=../foo+ \\
+DOS003  &  長いファイルの例          & \verb+<0700>chrdev=0,0+ \\
+\end{tabular}
+\end{minipage}
+\vspace{5mm}</P>
+
+
+
+<H3>プロセスマネージャ</H3>
+
+<P>POSIX プロセスマネージャは、POSIX 環境上で動いているプロセス(以下 
+POSIX プロセスと略記) を管理します。</P>
+<P>各 POSIX プロセスは、プロセスマネージャ内では 構造体 
+{\tt process} で表現されます。この構造体は POSIX プロセスマネージャ内で
+のみ使用するものです \footnote{
+\tt src/posix/usr/src/sys/server/PM/pm.h で定義}。</P>
+<P>\vspace{5mm}
+\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}</P>
+<P>struct process
+{
+struct process      *prev;
+struct process      *next;</P>
+<P>enum proc_status    status; /* プロセスの状態を示す */
+pid_t                       pid;    /* プロセス ID */</P>
+<P>uid_t       uid;            /* プロセスが属する所有者 */
+gid_t       gid;            /* プロセスが属するグループ */</P>
+<P>ID  main_task;      /* ユーザプログラムのコードを実行するタスク */
+ID  signal_task;    /* シグナルの受信処理を行うタスク */
+ID  fifo_task;      /* パイプを使うときに使用するタスク */
+ID  alarm_task;     /* alarm システムコール用のタスク */</P>
+<P>ID  efile;          /* 実行ファイルを指しているメッセージポート 
+* コード部のページインのときに使用する。
+*/
+};</P>
+<P>\end{verbatim}
+\end{boxedminipage}
+\vspace{5mm}</P>
+<P>つまるところ、POSIX プロセスマネージャはこの構造体情報を管理するのが仕
+事となります。</P>
+
+
+<H3>POSIX/プロセスマネージャの機能</H3>
+
+<P>POSIX 環境でのプロセスマネージャは、アプリケーションに対して次の機能を
+提供します。</P>
+<P>\begin{itemize}
+\item 新しいプロセスの生成
+\item プロセスの終了処理
+\item プロセススケジューリング
+\item プログラムの実行 (exec)
+\item シグナルの処理
+\item インターバルタイマ
+\end{itemize}</P>
+
+
+
+<H3>新しいプロセスの生成</H3>
+
+<P>POSIX 環境上で新しいプロセスを生成するのは、{\tt fork} システムコール
+です。</P>
+<P>アプリケーションが {\tt fork} システムコールを実行すると、次の処理を行
+います。</P>
+<P>\begin{quote}
+\begin{description}
+\item<F>(1) アプリケーションが {\tt fork} システムコールを実行 </F> 
+\item<F>(2) ライブラリが LOWLIB へ {\tt fork} システムコールを発行する</F> 
+\item<F>(3) fork システムコールを受けとった LOWLIB は次の処理を行います</F>
+\hfill  \\</P>
+<P>\begin{enumerate}
+\item 中心核に対して、新しいタスクを生成するシステムコールを発行 
+({\tt cre_tsk})。</P>
+<P>デフォルトでは、1つのプロセスごとに以下のタスクを生成します
+(表 \ref{tab:posix-process-task} も参照のこと)。</P>
+<P>\begin{itemize}
+\item 主タスク
+\item シグナル
+\item alarm 用タスク
+\end{itemize}</P>
+<P>これら以外のタスクについては、必要なときに LOWLIB が生成する。</P>
+<P>\item 新しく生成したタスクの仮想空間に LOWLIB (自分自身) を複製しま
+す。以後の処理は、複製した LOWLIB が行います。</P>
+<P>\item 新しいタスクに対して {\tt fork} システムコールを発行した 
+Region の内容を複製する ({\tt vdup_reg})。</P>
+<P>複製は、以下の Region  に対して行う。</P>
+<P>\begin{itemize}
+\item コード領域
+\item データ領域
+\item スタック領域
+\end{itemize}</P>
+<P>\item 新しいタスクの実行ポイントを {\tt fork} の子プロセス実行エント
+リポイントへセット。</P>
+<P>子プロセスは次に CPU の使用権が渡ってくるときに、この処理で設定し
+たエントリから実行する。</P>
+<P>\item POSIX/プロセスマネージャに、新しく作成したプロセスの情報を追加。
+\end{enumerate}</P>
+<P>\item<F>(4) POSIX/プロセスマネージャは、プロセス情報テーブルに新しく作成
+したプロセスを追加する</F> </P>
+<P>\item<F>(5) 呼び出し元へ戻る</F> 
+\end{description}
+\end{quote}</P>
+
+
+
+<H3>プロセスの終了処理</H3>
+
+
+
+<H3>プロセススケジューリング</H3>
+
+
+
+<H3>プログラムの実行</H3>
+
+
+
+
+<H3>シグナルハンドリング</H3>
+
+
+<P>POSIX/プロセスマネージャでは、シグナルの送信/受信の処理のみを扱います。
+つまり、シグナルを受信した結果 core ダンプを作成するなどの処理は、
+各プロセスが自分自身で処理を行います。</P>
+<P>POSIX/プロセスマネージャが受信するメッセージのうち、シグナルに関係する
+のは次のものです。</P>
+<P>\vspace{5mm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm} }
+\hline
+PROC_KILL   & シグナルを送信する。\\
+PROC_SETUP  & シグナルを受信するメッセージバッファ ID を登録する。\\
+\hline
+\end{tabular}
+\vspace{5mm}</P>
+<P>これらのうち、{\tt PROC_SETUP} についてはプロセスの初期化の時に使用す
+るものです。</P>
+
+<P>\paragraph{\tt PROC_KILL シグナルを送信する} \hfill \\</P>
+<P>{\tt PROC_KILL} は、次の構造をもったメッセージです。</P>
+<P>\vspace{5mm}
+\begin{boxedminipage}<F>h</F>{13cm}
+\begin{verbatim}</P>
+<P>struct proc_kill
+{
+proc_t        dest_proc;    /* シグナルの送信先のプロセス ID */
+unsigned int  signo;        /* シグナル番号 */
+};
+\end{verbatim}</P>
+<P>\end{boxedminipage}
+\vspace{5mm}</P>
+<P>このメッセージで明らかのように送信元のプロセスは、送り先のプロセスにつ
+いては、プロセス ID のみ知っていることを前提にしています。</P>
+<P>このメッセージを受けとると、POSIX/プロセスマネージャはプロセス情報とし
+て登録しているシグナル情報の送信用メッセージバッファへシグナル情報を送
+信します。</P>
+<P>シグナル情報は、シグナル番号を表現する単なる 32 ビットの整数値です。</P>
+<P>シグナル情報を受信するのは LOWLIB 層で動いているシグナル処理用タスクで
+す。</P>
+
+
+
+<H3>インターバルタイマ</H3>
+
+
+<P>POSIXには、一定時間後にシグナル (SIGALRM) を送信する alarm システムコー
+ルがあります。</P>
+<P>alarm システムコールの使用方法は簡単です。</P>
+<P>\begin{quote}
+\begin{minipage}<F>h</F>{13cm}
+\verb+alarm (待ち時間)+
+\end{minipage}
+\end{quote}</P>
+<P>と指定することによって、引数 {\gt 待ち時間} で指定した時間が経過すると 
+カーネルが SIGALRM シグナルを alarm システムコールを実行したプロセスへ
+送ります。</P>
+<P>alarm システムコールを実行したあとも、ユーザプロセスは他の処理を続ける
+ことができるため、一種のマルチタスク的な処理を行うことができます。</P>
+<P>POSIX/プロセスマネージャは、alarm システムコールを実現するため、一定時
+間ごとに、起動するタスクをもっています。</P>
+
+
+
+<H3>メモリマネージャ</H3>
+
+<P>POSIX 環境で使用するメモリマネージャは、次の仕事をします。</P>
+<P>\begin{itemize}
+\item POSIX プロセスのページフォールト発生時の処理
+\item 仮想空間の割り当て管理
+\item POSIX プロセスのもつ物理メモリのページアウト処理
+\end{itemize}</P>
+
+
+<H3>POSIX プロセスの仮想空間レイアウト</H3>
+
+
+<P>POSIX プロセスの仮想空間上でのレイアウトを図 
+\ref{fig:posix-memory-layout} に示します。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+\leavevmode
+\begin{boxedminipage}<F>h</F>{13cm}
+\begin{verbatim}
+0x00000000 ---+
+|        |
+|        +- コード部分 
+|        |
+0x000fffff ---+
+0x00100000 ---+
+|        +- データ部分
+0x001fffff ---+
+0x01000000 ---+
+|        |
+|        +- ヒープ領域
+|        |
+0x01ffffff ---+
+0x40000000 ---+
+|        |
+|        +- スタック領域
+|        |
+0x7fffffff ---+
+\end{verbatim}
+\end{boxedminipage}
+\end{center}
+\caption{POSIX プロセスの仮想空間}
+\label{fig:posix-memory-layout}
+\end{figure}</P>
+
+
+<H3>ページフォールト</H3>
+
+
+<P>ページフォールトの処理は、オンデマンドに行われます。</P>
+<P>ユーザプロセスの処理中にページフォールトが発生した場合、その原因によっ
+て対処方法が異ります。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{ページフォールト処理}
+\begin{center}
+\leavevmode
+\begin{tabular}<F>h</F>{p{7cm} p{8cm} }
+\hline
+\multicolumn{1}{c}{ページフォールトの原因} &
+\multicolumn{1}{c}{対処方法} \\ \hline\hline
+ページアウトしている仮想ページをアクセスした &
+スワップ領域からページインを実行 \\
+読み込んでいないコード領域をアクセスした &
+実行ファイルを読み込み \\
+スタック領域をアクセス &
+スタックを成長する \\
+管理していない領域をアクセス &
+ページフォールトシグナルを発行 \\ 
+\hline
+\end{tabular}
+\end{center}
+\label{tab:posix-page-fault}
+\end{table}</P>
+
+
+<H3>ページアウト処理</H3>
+
+
+<P>ページアウト処理は、すでに使っていない物理メモリをマッピングしている領
+域を他の役割に使用するためのものです。</P>
+<P>ページアウト処理は、メモリマネージャの中の一タスクが行います。</P>
+
+
+
+
+<H3>デバイスドライバマネージャ</H3>
+
+<P>POSIX 環境でのデバイスマネージャは、BTRON 環境のデバイスドライバマネー
+ジャができるまでのつなぎとして動作します。</P>
+<P>インタフェースなどは、BTRON 環境のデバイスドライバマネージャと同じです
+ので、そちらを参照してください(Chapter \ref{cha:device})。</P>
+
+
+
+
+<H2><A NAME="ss2.30">2.30 POSIX 環境での LOWLIB</A></H2>
+
+
+<P>POSIX 環境を実現するために、POSIX 環境では独自の LOWLIB をもっています
+(以下、POSIX/LOWLIB と略記)。</P>
+
+<P>POSIX/LOWLIB は、次の処理を行います。</P>
+
+<P>\begin{description}
+\item<F>ユーザプロセスの初期化を行う部分</F> \hfill</P>
+<P>プロセスではじめに実行する処理です。</P>
+<P>ユーザのプログラムコードを実行するための準備を行います。
+ユーザプロセスが起動された状態では、スタックの内容などは設定されてい
+ません。LOWLIB のこの部分によってコマンドライン引数 (argc, argv) など
+の設定を行います。</P>
+<P>\item<F>システムコールの処理</F> \hfill</P>
+<P>ユーザプログラムが POSIX システムコールを発行したときに、システムコー
+ルの処理を実行する部分です。</P>
+<P>システムコールの機能は、POSIX に定められた規格に準拠しています。
+(一部拡張/変更あり)</P>
+<P>\item<F>シグナルの処理</F> \hfill</P>
+<P>シグナルの受信処理を行います。
+\end{description}</P>
+
+
+
+<H3>ユーザプロセスの初期化</H3>
+
+<P>ユーザプロセスの初期化は、POSIX/LOWLIB とユーザプロセスがリンクする初
+期化コード (pstart.o) の共同作業によって行います。</P>
+<P>\begin{lablist}
+\labitem{POSIX/LOWLIB} </P>
+<P>ユーザプロセスが動作するための環境を整えます。</P>
+<P>具体的には、以下の処理を実行します。</P>
+<P>\begin{itemize}
+\item ユーザプロセス用の仮想空間(コード/データ/ヒープ/スタック) を生成。
+\item 生成した仮想空間のうちコード部分を読み込む(正確にはデマンド
+ページングにより、アクセスした瞬間に実行ファイルを読み込むように設
+定する。
+\item プロセスマネージャにプロセスを登録する。
+\item ユーザスタックのボトム部に必要な引数 (argc/argv) をロードします。
+\item LOWLIB 層で動くタスクを生成します。
+\item ユーザプログラムのエントリ部分 (pstart.o の先頭) へジャンプし
+ます。
+\end{itemize}</P>
+<P>\labitem{\tt pstart.o}</P>
+<P>{\tt pstart.o} は、ユーザスタックの内容を整え {\tt main()} をコール
+します。
+\end{lablist}</P>
+
+
+
+<H3>システムコールの処理</H3>
+
+<P>POSIX 環境でのシステムコール番号は、65 番を使用します。</P>
+
+
+
+<H3>シグナルの処理</H3>
+
+<P>POSIX/プロセスマネージャから送られたシグナルメッセージは、
+まず、POSIX/LOWLIB 層で動いているシグナル(受信)タスクが受けとります。</P>
+<P>シグナルタスクは、受け取ったシグナルの種類によって次のどれかの処理を行
+います。</P>
+<P>\begin{quote}
+\begin{itemize}
+\item ユーザプロセスを強制終了させる(必要ならば core ダンプを出力する)。
+\item シグナルを無視する。
+\item ユーザプログラムのシグナルハンドラを実行する。
+\item プロセスを一時停止させる。
+\item プロセスを再開させる(すでにプロセスが一時停止していた場合)。
+\end{itemize}
+\end{quote}</P>
+
+
+
+
+
+<H2><A NAME="ss2.31">2.31 ユーザプロセス</A></H2>
+
+
+<P>POSIX 環境では、ユーザプロセスは複数のタスクが協調して動作しています。</P>
+<P>ユーザプログラムでもプロセスに従属しているタスクを生成することもできま
+す。ユーザプログラム中でタスクを生成していない状態では、次のタスクが動
+いています (表 \ref{tab:posix-process-task})。</P>
+<P>\begin{table}<F>htbp</F>
+\caption{各ユーザプロセスで動いているタスク}
+\begin{center}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}} \hline
+主タスク &           ユーザプログラムのコードを実行しているタスク。\\
+シグナル受信タスク & シグナルを受信するためのタスク。    \\
+IPC 用タスク &       パイプなどによって他のプロセスと通信を行う
+ときに動くタスク。 \\
+alarm タスク & Alarm システムコール用に使用するタスク。\\
+select 用タスク & select システムコール用のタスクです。複数のス
+トリームからの入力を監視します。通常は動きませ
+ん。\\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:posix-process-task}
+\end{table}</P>
+<P>同じプロセスに属しているタスクは、仮想記憶空間を共有します。
+つまり、同じプロセス内のタスクの間では、メモリ内容が互いに読み書きでき
+るようになっています。</P>
+<P>各タスクの関係を図によって示すと 図 \ref{fig:task-with-posix} のように
+なります。</P>
+<P>\begin{figure}<F>htbp</F>
+\begin{center}
+%    \leavevmode
+\epsfile{file=task-with-posix.eps,height=8cm}
+\end{center}
+\caption{POSIX プロセス内で動く(ITRON)タスク}
+\label{fig:task-with-posix}
+\end{figure}</P>
+
+
+<H3>主タスク</H3>
+
+<P>主タスクでは、ユーザプログラムのコード部分を実行します。</P>
+<P>プロセスに属しているタスクの中でもメインの処理を行うタスクです。</P>
+<P>ユーザプロセスは、主タスクを複数生成することができます \footnote{現状
+では、未サポート}。</P>
+
+
+
+<H3>シグナルタスク</H3>
+
+<P>シグナルの受信処理を行うタスクがこのシグナルタスクです。</P>
+<P>POSIX ではシグナルとして表 \ref{tab:posix-signal} に示す種類を定義して
+います。</P>
+<P>\vspace{1cm}
+\topcaption{シグナルの種類}
+\tablehead{
+\hline
+\multicolumn{2}{l}{\small 前ページより続く} \\
+\hline
+\multicolumn{1}{c}{シグナル名 (番号)}  & 
+\multicolumn{1}{c}{内 容}  \\ \hline\hline
+}
+\tablefirsthead{
+\hline
+\multicolumn{1}{c}{シグナル名 (番号)}  & 
+\multicolumn{1}{c}{内 容}  \\ \hline\hline
+}
+\tabletail{
+\hline
+\multicolumn{2}{r}{次ページへ続く} \\
+\hline
+}
+\tablelasttail{
+\hline
+}
+\begin{center}
+\begin{supertabular}{l @{\hspace{1cm}} p{10cm}}
+\label{tab:posix-signal}
+SIGHUP (1)    & ハングアップシグナル。端末がハングアップしたとき
+に発行するシグナル \\
+SIGINT  (2)    & キーボードの割り込みキーを入力したときにプロセ
+スに送るシグナル \\ 
+SIGQUIT (3)    & キーボードの割り込みキーを入力したときにプロセ
+スに送るシグナル \\
+SIGILL  (4)    & illegal instruction  \\
+SIGABRT (5)    & abort() 関数によって引き起こされるシグナル \\
+SIGFPE  (6)    &  \\
+SIGTTIN (7)    &  \\
+SIGTTOU (8)    &  \\
+SIGKILL (9)    & 強制終了シグナル。このシグナルはマスクすることが
+できない。 \\
+SIGSEGV (10)   & セグメンテーションフォールトが発生したときに送ら
+れるシグナル。 \\
+SIGALRM (11)   & アラームシグナル。alarm システムコールによって
+設定した時刻に送るシグナル。 \\
+SIGSTOP (12)   &  \\
+SIGUSR1 (13)   & ユーザ定義シグナル \\
+SIGUSR2 (14)   & ユーザ定義シグナル \\
+SIGTERM (15)   &  \\
+SIGCHLD (16)   &  \\
+SIGTSTP (17)   & プロセス中断シグナル \\
+SIGCONT (18)   & プロセス再開シグナル \\
+SIGPIPE (19)   &  \\
+\end{supertabular}
+\end{center}
+\vspace{1cm}</P>
+<P>これらのシグナルを受けとるとプロセス (シグナルタスク) は、次のいずれか
+の処理を行います。</P>
+<P>\begin{itemize}
+\item シグナルを無視する。
+\item プロセスを終了する。
+\item プロセスを中断する。
+\item プロセスを再開する。
+\item signal システムコールによって設定してあったシグナルハンドラを実
+行する。
+\end{itemize}</P>
+<P>これらのうち、シグナルハンドラを実行するケース以外のケースについては、
+シグナルタスク内だけで処理します。</P>
+
+
+
+<P>%
+%</P>
+<P>\appendix</P>
+
+<P>\chapter{B-Free のブート方式}
+\label{cha:kernel-boot}</P>
+
+
+
+
+
+<H2><A NAME="ss2.32">2.32 ブートの概要</A></H2>
+
+
+<P>ブートは、いくつかの段階に分けて実行されます。</P>
+<P>\begin{description}
+\item<F>0) IPL</F> \hfill \\
+IPL は、マシンの ROM に元々収められているプログラムです。
+IPL では、立ち上げデバイスの先頭ブロックにあるコードを読み取り、処理
+を受けわたします。</P>
+<P>PC9801 での IPL が終了した時点での各種レジスタの値は、次の仕様になっ
+ています。</P>
+<P>\begin{center}
+\begin{boxedminipage}<F>h</F>{13cm}
+\begin{verbatim}</P>
+<P>AX,BX,CX,DX                     不定</P>
+<P>ロードアドレス  セグメント      0x1FC0
+オフセット      0x0000
+ロードサイズ                    1024 バイト</P>
+<P>\end{verbatim}
+\end{boxedminipage}
+\end{center}</P>
+
+<P>\item<F>(1) first boot</F> \hfill \\
+まず、立ち上げデバイスの先頭ブロック(ブートブロック)に入っているブー
+トがマシンの IPL によって読み込まれ/実行されます。</P>
+<P>first boot は、コンソールに立ち上げメッセージを出力し、指定されたパー
+ティションから second boot を読み込み実行します。このとき second boot 
+のサイズは無条件に 64K bytes と見なします。</P>
+<P>first boot は、8086 モードで動作し、FD などの操作は、BIOS を介して行
+います。</P>
+<P>なお、first boot は、as86 (Linux にある 8086/8088 用アセンブラ)でか
+かれています。 </P>
+<P>\item<F>(2) second boot</F> 
+second boot は、マシン(CPU)のモードを32 ビットに変更し、カーネルをロー
+ドする。カーネルは、カーネル自身と最低限必要なマネージャがパックになっ
+た形式で second boot の直後に入っています。</P>
+<P>second boot は、ファイルシステムの扱いかたを知っていますが、特に指定
+しない限りファイルシステムは見に行きません。</P>
+<P>カーネルに処理を渡すときに、カーネルの動作環境も整える。具体的には、
+仮想メモリ環境のセットアップ、CPUモードの変更、GDT/IDT の初期化などを
+行います(つまりカーネルに制御が渡った時には、32ビットモードかつ仮想ペ
+ージ機能つきで CPU が動いています)。</P>
+<P>second boot は、C によって記述されています(一部はアセンブラが入って
+いる)。</P>
+<P>second boot が実行されたときのコンソールのメッセージを次に示します。
+(`;'の後は註釈です)</P>
+<P>\begin{verbatim}
+Loading second boot...done      ; first boot が出力します。
+Second BOOT for BTRON/386
+Version 1.0.0                   ; バージョン番号は異なっている
+; 場合があります。
+Waiting 10 second.              ; 10秒間待ちます。このときに何
+; かキーを押すと対話モードに入
+Loading kernel...done           ; ります。 
+; 後はカーネルに制御が渡ります
+\end{verbatim}</P>
+
+<P>second boot の対話モードでは、次のコマンドが使用できます。</P>
+<P>\vspace{5mm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+ls <F>parttion</F> <F>path</F>    &   pathで指定した実身のリンクを表示します \\
+boot <F>partition</F> <F>path</F> &   pathで指定したカーネルをロードします \\
+reset                   &   CPUをリセットします \\
+\hline
+\end{tabular}
+\vspace{5mm}</P>
+<P>partition は、次のように指定します。</P>
+<P>\vspace{5mm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+FD:0     &          ドライブ A の FD              \\
+SCSI0:0  &          SCSI ID 0 のパーティション 0  \\
+\hline
+\end{tabular}
+\vspace{5mm}</P>
+<P>path は、次のように指定します。</P>
+<P>\vspace{5mm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+/foo/bar &  実身 foo の中の 実身 bar \\
+\hline
+\end{tabular}
+\vspace{5mm}
+\end{description}</P>
+
+
+
+
+<H2><A NAME="ss2.33">2.33 ブートブロックの構造</A></H2>
+
+
+
+<P>パーティションの先頭にあるブートブロックは、次の構造をしています。</P>
+<P>\vspace{5mm}
+\begin{tabular}<F>h</F>{l @{\hspace{1cm}} p{10cm}}
+\hline
+1) firstboot (1024 bytes)   & 0 ブロック - 1 ブロック \\
+2) second boot (64 K bytes) & 2 ブロック - 129 ブロック \\
+3) kernel (MAX 1M bytes)    & 130 - 2177 ブロック \\
+\hline
+\end{tabular}
+\vspace{5mm}</P>
+<P>\begin{quote}
+\begin{boxedminipage}<F>h</F>{14cm}</P>
+<P>{\gt !! 重要 !!}</P>
+<P>現在の BTRON/386 のブートは1セクタ 512 バイトにしか対応していません。</P>
+<P>もし、ブートを作り直した時にうまくローディングできなかった場合には、
+フロッピィのフォーマットが1セクタ512バイトとなっているかを確認してみて
+ください。</P>
+<P>\end{boxedminipage}
+\end{quote}</P>
+
+
+
+<H2><A NAME="ss2.34">2.34 ファーストブート終了時のメモリマップ</A></H2>
+
+
+
+<P>ファーストブートがセカンドブートをロードした後のメモリマップは次のよう
+になっています。</P>
+<P>\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}</P>
+<P>Addr                  内容
+0x00000000      BIOSが使用する領域              4K
+0x00001000 --+  セカンドブートロード領域        60K
+|        |  0x00001000 16bit code.
+|        |  0x00002000 32bit code.  start address: 0x9000
+|        |
+0x0000FFFF --+
+0x00010000      GDTテーブル                     2K
+|
+0x00011FFF
+0x00012000      IDTテーブル                     2K
+|
+0x00013FFF</P>
+<P>\end{verbatim}
+\end{boxedminipage}</P>
+
+
+
+
+<H2><A NAME="ss2.35">2.35 セカンドブート終了時のメモリマップ</A></H2>
+
+
+<P>セカンドブートがカーネルをロードした後のメモリマップは、次のようになっ
+ています。</P>
+<P>\begin{boxedminipage}<F>h</F>{15cm}
+\begin{verbatim}
+(1)仮想アドレス</P>
+<P>0x00000000
+|
+|
+0x7FFFFFFF</P>
+<P>0x80000000 --+  セカンドブートロード領域の残骸
+|       |  ページテーブルに使用する。
+|       |  (0x80000000 - 0x800003FFF は、セカンドブートが
+|       |  初期化する。
+0x8000FFFF --+
+0x80010000      GDT テーブル                            2K
+|
+0x80011FFF
+0x80012000      IDTテーブル                     2K
+|
+0x80013FFF
+0x80020000 --+  カーネルが使用する領域          1G (Max)
+|       |  ここにカーネルのイメージが
+|       |  ロードされる。
+0xBFFFFFFF --+</P>
+
+<P>(2)物理アドレス</P>
+<P>0x00000000 --+  セカンドブートロード領域の残骸
+|       |  ページテーブルに使用する。
+|       |  (0x80000000 - 0x800003FFF は、セカンドブートが
+|       |  初期化する。
+0x0000FFFF --+
+0x00010000      GDT テーブル                    2K
+|
+0x00011FFF
+0x00012000      IDTテーブル                     2K
+|
+0x00013FFF
+0x00020000 --+  カーネルが使用する領域          1G (Max)
+|       |  ここにカーネルのイメージが
+|       |  ロードされる。
+0x3FFFFFFF --+
+\end{verbatim}
+\end{boxedminipage}</P>
+
+
+<P>\chapter{\tt libkernel.a}
+\label{cha:libkernel}</P>
+<P>\begin{flushright}
+{\small
+\begin{minipage}<F>h</F>{7cm}
+--- つまり、シュヴァルツシルト・ホールははだかの炎のようなもの。
+穴居人の道具ですな。コントロール可能なカーネルは、もっと洗練さ
+れたものです。
+\end{minipage}</P>
+<P>Charles Sheffield 「マッカンドルー航宙記」
+}
+\end{flushright}</P>
+
+
+
+
+<H2><A NAME="ss2.36">2.36 \tt libkernel.a の役割</A></H2>
+
+
+<P>{\tt libkernel.a} は、周辺核とデバイスドライバ そして LOWLIB で使用すること
+ができるライブラリです。 </P>
+<P>{\tt libkernel.a} は、以下の機能を提供します。</P>
+<P>\begin{itemize}
+\item 中心核の機能を使用するためのシステムコール関数
+\item デバイスに対して入出力を行うための関数
+\item 割り込み操作関数
+\item {\tt DMA} 操作関数
+\item 文字列操作などの各種ライブラリ関数
+\end{itemize}</P>
+<P>このライブラリを使用することによって、周辺核などの作成を助けることがで
+きます。</P>
+
+
+
+<H2><A NAME="ss2.37">2.37 使用方法</A></H2>
+
+
+<P>{\tt libkernel.a} は、ライブラリとしてリンクするだけで使用できます。</P>
+<P>{\tt libkernel.a} を使用する方法は、直接 {\tt libkernel.a} をリンクす
+る方法とライブラリパスを指定する方法の 2 通りがあります。</P>
+
+
+<H3>直接 libkernel.a をリンクする</H3>
+
+
+<P>直接 libkernel.a を指定してリンクする方法です。</P>
+<P>リンクコマンド <CODE>ld</CODE> を使う場合にはこの方法を使用します。</P>
+<P>
+<HR>
+<PRE>
+    ld -o foo bar ＜libkernel.a＞
+</PRE>
+<HR>
+</P>
+
+
+
+<H3>ライブラリパスを指定する方法</H3>
+
+
+<P><CODE>cc</CODE> のコマンドラインオプションのひとつ <CODE>-L</CODE> を
+指定する方法です。</P>
+<P>具体的には、次のように指定します。</P>
+<P>
+<HR>
+<PRE>
+    cc -o foo bar -L＜libkernel.a の入っているディレクトリ＞ -lkernel
+</PRE>
+<HR>
+</P>
+
+
+
+
+<H2><A NAME="ss2.38">2.38 libkernel.a の関数</A>表 \ref{tab:libkernel-list} に libkernel.a のもつライブラリ関数の一覧を示します。\topcaption{\tt libkernel.a の関数一覧}\tablehead{   \hline   \multicolumn{3}{l}{\small 前ページより続く} \\  \hline  \multicolumn{1}{c}{分類} &  \multicolumn{1}{|c}{関数名} &  \multicolumn{1}{|c}{機能} \\ \hline\hline  }\tablefirsthead{ \hline  \multicolumn{1}{c}{分類} &  \multicolumn{1}{|c}{関数名} &  \multicolumn{1}{|c}{機能} \\ \hline\hline  }\tabletail {   \hline  \multicolumn{3}{r}{\small 次ページへ続く} \\  \hline  }\tablelasttail {\hline}\begin{center}\begin{supertabular}{p{3cm} @{\hspace{1cm}} | p{3cm}@{\hspace{1cm}} | p{7cm}}  \label{tab:libkernel-list}  中心核システムコール & ITRON 構築マニュアルを参照のこと & \\ \hline  I/O 関係  & inb  & 指定したアドレスから 1 バイト幅で読み込む \\            & inh  & 指定したアドレスから 2 バイト幅で読み込む \\            & inw  & 指定したアドレスから 4 バイト幅で読み込む \\            & outb  & 指定したアドレスに 1 バイト幅で書き込む \\            & outh  & 指定したアドレスから 2 バイト幅で書き込む \\            & outw  & 指定したアドレスから 4 バイト幅で書き込む \\  \hline  DMA 関係  & dma_setup & DMA の転送設定を行う \\  \hline  文字列操作 & strlen & 文字列の長さを測定(ASCII 文字を前提) \\             & strcmp & 2つの文字列が一致しているかを調べる \\             & strcat & 2つの文字列を連結 (concat) する \\\end{supertabular}\end{center}\chapter{{\tt B-Free OS} のインストール方法}\label{cha:bfree-install}\chapter{B-Free ソースディレクトリ一覧}\label{cha:bfree-source-tree}1995年3月 現在の B-Free OS のディレクトリは次のとおりです。\section*{bin}make に必要なツールが入ったディレクトリです。今のところ入っているのは、文字コード変換用の kp コマンドだけです。\section*{doc}ドキュメント類の入ったディレクトリです。更に次のようなサブディレクトリに分かれています。\begin{description}\item<F>introduction</F> この文書が入ったディレクトリです。\item<F>manual</F>       マニュアル類が入ったディレクトリです。\item<F>meeting</F>      B-Free プロジェクトチームのミーティングの記録です。\item<F>note</F>         細かなメモ文書が入っているディレクトリです。\end{description}\section*{src}ソースの入っているディレクトリです。\chapter{B-Free 宣言{\sf (95.1.1)}}\label{cha:bfree-manifest}\section*{はじめに}　この文書「B-Free 宣言」は、私たちが「B-Free プロジェクト」を始めるにあたっての決意表明であり、またプロジェクトの目指すべき目標を公に宣言するものであります。\section*{プロジェクトの目的}　B-Free (びーふりー)プロジェクトとは、BTRON仕様に準拠したOSを一からフルスクラッチで作成するプロジェクトです。　私たちは、これから作成するBTRON仕様OSを『B-Free  OS(びーふりー・おーえす)』と名付け、仕様の設計とコーディングを行っています。B-Free  OSは、マイクロカーネルをベースとした完全なマルチタスクOSであり、32bit以上のCPUを対象としたOSです。　私たちは、以下の三つの事実に勇気づけられ、BTRONを作成する決意をし、また、BTRON規模のOSであっても個人規模で作成可能である、という根拠にしています。・個人によるITRONの実装例がいくつも報告されている・ITRONをカーネルとしたBTRONの実装例が報告されている・フィンランドのLinus B.Torvaldsさんが個人規模で作ったLinuxが、　現実に存在し稼働している　私たちの作成するB-Free  OSは、将来、ソースコードも含めてフリーに配布される予定です。B-Free  OSが全世界で使われ、TRONプロジェクトへの理解者と協力者が増えることを願っています。\section*{プロジェクトの目標}　B-Free プロジェクトでは、以下の成果物の作成を目標としています。\begin{itemize}\item 32bit CPUを対象とした BTRON仕様準拠OS (80386/PowerPC/etc...)\item 同OSのソースコード\item 同OS上のセルフ開発環境\item 同OS上のアプリケーション\item 各種ドキュメント\end{itemize}\section*{プロジェクトの性格}\begin{description}\item<F>成果物の公開</F> プロジェクトの成果物は、最終的にフリーで公開される予定です。\item<F>著作権</F> ここで発生した著作権は、B-Free プロジェクトと、各メンバー  に属します。\item<F>メンバーの資格</F> B-Free  OSの作成作業に協力して下さる方なら、どな  たでもメンバーになれます。\end{description}\section*{プロジェクトの現状報告}\begin{description}\item<F>94.8</F> プロジェクト発足\item<F>94.10</F> 開発環境の決定\item<F>94.11</F> PC9801版のマイクロカーネルのα版完成\item<F>94.12</F> 周辺核の仕様検討開始\end{description}\section*{当プロジェクトへの連絡先}仕様の設計やコーディングをやりたい方、アプリケーションを作りたい方、また、それ以外になんらかの形で協力して下さる方は、以下のメイルアドレスに連絡を下さい。開発用マシン(現在は、Linuxを開発環境としています)、ミーティング場所の提供なども助かります。\begin{quote}B-Free プロジェクトプロデューサ 長谷川 徹NIFTY-Serve NBF01763 (NBF01763@niftyserve.or.jp)\end{quote}また、B-Free  OSのためのメイリングリストが設置されています。参加希望の方は、以下のメイルアドレスに連絡を下さい。\begin{quote}B-Free プロジェクトプロデューサ 長谷川 徹NIFTY-Serve NBF01763 (NBF01763@niftyserve.or.jp)\end{quote}\section*{転載について}　この文書は、内容に変更を加えない限り、自由に転載してくださって結構です。\begin{flushright}B-Free プロジェクトリーダー 内藤　隆一 \\NIFTY-Serve GGC00661 \\(GGC00661@niftyserve.or.jp)\end{flushright}\chapter{\tt API 一覧}</H2>
+
+
+<H2><A NAME="ss2.39">2.39 \ITRON (中心核)</A></H2>
+
+
+
+<H3>リージョン操作システムコール</H3>
+
+
+
+
+
+
+<HR>
+<A HREF="intro-1.html">Previous</A>
+<A HREF="intro-3.html">Next</A>
+<A HREF="intro.html#toc2">連絡を下さい。開発用マシン(現在は、Linuxを開発環境としています)、ミーティング場所の提供なども助かります。\begin{quote}B-Free プロジェクトプロデューサ 長谷川 徹NIFTY-Serve NBF01763 (NBF01763@niftyserve.or.jp)\end{quote}また、B-Free  OSのためのメイリングリストが設置されています。参加希望の方は、以下のメイルアドレスに連絡を下さい。\begin{quote}B-Free プロジェクトプロデューサ 長谷川 徹NIFTY-Serve NBF01763 (NBF01763@niftyserve.or.jp)\end{quote}\section*{転載について}　この文書は、内容に変更を加えない限り、自由に転載してくださって結構です。\begin{flushright}B-Free プロジェクトリーダー 内藤　隆一 \\NIFTY-Serve GGC00661 \\(GGC00661@niftyserve.or.jp)\end{flushright}\chapter{\tt API 一覧}</A>
+</BODY>
+</HTML>

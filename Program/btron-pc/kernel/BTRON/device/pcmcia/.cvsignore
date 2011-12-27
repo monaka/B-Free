@@ -1,0 +1,4 @@
+pcmcia
+misc.o
+pcmcia.o
+pcmcialow.o

@@ -1,0 +1,138 @@
+\contentsline {part}{\uppercase {i}\phspace {1em}概要}{5}
+\contentsline {chapter}{\numberline {1}ＴＲＯＮって何？}{7}
+\contentsline {section}{\numberline {1.1}歴史}{7}
+\contentsline {subsection}{\numberline {1.1.1}それは夢から始まった}{7}
+\contentsline {subsection}{\numberline {1.1.2}誰にでも使えるコンピュータを！}{7}
+\contentsline {section}{\numberline {1.2}ＴＲＯＮファミリー}{7}
+\contentsline {subsection}{\numberline {1.2.1}ITRON}{7}
+\contentsline {subsection}{\numberline {1.2.2}BTRON}{7}
+\contentsline {subsection}{\numberline {1.2.3}CTRON}{8}
+\contentsline {subsection}{\numberline {1.2.4}MBTRON}{8}
+\contentsline {subsubsection}{TRONチップ}{8}
+\contentsline {subsection}{\numberline {1.2.5}その他のプロジェクト}{8}
+\contentsline {section}{\numberline {1.3}BTRON/386}{8}
+\contentsline {subsection}{\numberline {1.3.1}BTRON/1}{8}
+\contentsline {subsection}{\numberline {1.3.2}設計目標}{8}
+\contentsline {part}{\uppercase {ii}\phspace {1em}BTRON/386}{9}
+\contentsline {chapter}{\numberline {2}構成要素の概要}{11}
+\contentsline {section}{\numberline {2.1}カーネル}{12}
+\contentsline {subsection}{\numberline {2.1.1}定義}{12}
+\contentsline {subsection}{\numberline {2.1.2}タスク管理}{12}
+\contentsline {subsubsection}{ITRON のタスク管理の設計目標}{12}
+\contentsline {subsubsection}{タスク管理情報}{12}
+\contentsline {paragraph}{タスク ID}{12}
+\contentsline {paragraph}{タスク属性}{13}
+\contentsline {paragraph}{タスク状態}{13}
+\contentsline {paragraph}{タスク待ち要因}{13}
+\contentsline {paragraph}{タスク優先度}{13}
+\contentsline {paragraph}{仮想メモリ管理テーブル}{13}
+\contentsline {paragraph}{カーネルスタック}{13}
+\contentsline {paragraph}{IPC (Inter process communication) 用の情報}{13}
+\contentsline {paragraph}{例外処理ハンドラテーブル}{14}
+\contentsline {subsubsection}{タスク切り替えの方法}{14}
+\contentsline {subsection}{\numberline {2.1.3}同期・通信機構(IPC)}{15}
+\contentsline {subsubsection}{RON でサポートしている同期・通信機能}{15}
+\contentsline {subsubsection}{セマフォ}{16}
+\contentsline {paragraph}{セマフォ操作のための関数}{16}
+\contentsline {paragraph}{セマフォの生成}{16}
+\contentsline {paragraph}{セマフォの削除}{16}
+\contentsline {paragraph}{セマフォの解放}{16}
+\contentsline {paragraph}{セマフォの獲得}{16}
+\contentsline {paragraph}{セマフォ状態の参照}{17}
+\contentsline {paragraph}{ Implementation}{17}
+\contentsline {subsubsection}{イベントフラグ}{17}
+\contentsline {paragraph}{イベントフラグ操作のための関数}{17}
+\contentsline {paragraph}{イベントフラグ生成}{17}
+\contentsline {paragraph}{イベントフラグ削除}{18}
+\contentsline {paragraph}{イベントフラグのセット}{18}
+\contentsline {paragraph}{イベントフラグのクリア}{18}
+\contentsline {paragraph}{イベントフラグ待ち}{18}
+\contentsline {paragraph}{イベントフラグ状態参照}{18}
+\contentsline {subsubsection}{メッセージ}{19}
+\contentsline {paragraph}{メッセージ操作のための関数}{19}
+\contentsline {paragraph}{メッセージバッファの生成}{19}
+\contentsline {paragraph}{メッセージバッファの削除}{19}
+\contentsline {paragraph}{メッセージバッファへの送信}{20}
+\contentsline {paragraph}{メッセージバッファからの受信}{20}
+\contentsline {paragraph}{メッセージバッファ状態の参照}{20}
+\contentsline {subsection}{\numberline {2.1.4}割り込み管理機能}{20}
+\contentsline {subsubsection}{割り込み管理関数}{20}
+\contentsline {subsubsection}{割込みハンドラ定義}{21}
+\contentsline {subsubsection}{割込みハンドラからの復帰}{21}
+\contentsline {subsubsection}{割込みハンドラ復帰とタスク起床(wakeup)}{21}
+\contentsline {subsubsection}{割込みとディスパッチの禁止}{21}
+\contentsline {subsubsection}{割込みとディスパッチの許可}{22}
+\contentsline {subsubsection}{割込み禁止}{22}
+\contentsline {subsubsection}{割込み許可}{22}
+\contentsline {subsubsection}{割込みマスク(レベル、優先度)変更}{22}
+\contentsline {subsubsection}{割込みマスク(レベル、優先度)参照}{22}
+\contentsline {subsection}{\numberline {2.1.5}例外管理機能}{22}
+\contentsline {subsubsection}{システムコールハンドラの設定}{22}
+\contentsline {subsubsection}{例外管理関数}{22}
+\contentsline {subsection}{\numberline {2.1.6}メモリプール管理機能}{22}
+\contentsline {subsection}{\numberline {2.1.7}時間管理機能}{23}
+\contentsline {subsection}{\numberline {2.1.8}システム管理機能}{23}
+\contentsline {subsection}{\numberline {2.1.9}仮想メモリ管理機能}{23}
+\contentsline {subsubsection}{仮想メモリ管理機能関連のシステムコール}{24}
+\contentsline {paragraph}{仮想メモリエントリの作成}{24}
+\contentsline {paragraph}{仮想メモリエントリの削除}{24}
+\contentsline {paragraph}{仮想メモリの属性を取得する}{24}
+\contentsline {paragraph}{仮想メモリの属性を設定する}{24}
+\contentsline {paragraph}{ページフォルト時のハンドラを定義する}{24}
+\contentsline {subsubsection}{仮想メモリ管理のインプリメンテーション}{24}
+\contentsline {section}{\numberline {2.2}BTRON サーバ}{25}
+\contentsline {section}{\numberline {2.3}マネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.1}マネージャとは何か}{25}
+\contentsline {subsection}{\numberline {2.3.2}ウィンドウマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.3}パーツマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.4}パネルマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.5}メニューマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.6}データマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.7}トレイマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.8}フォントマネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.9}文字入力マネージャ}{25}
+\contentsline {subsection}{\numberline {2.3.10}仮身/実身マネージャ}{25}
+\contentsline {section}{\numberline {2.4}ライブラリ}{25}
+\contentsline {subsection}{\numberline {2.4.1}ライブラリ}{26}
+\contentsline {subsection}{\numberline {2.4.2}API}{26}
+\contentsline {subsection}{\numberline {2.4.3}その他 \pldots POSIX ライブラリ}{26}
+\contentsline {section}{\numberline {2.5}アプリケーション}{26}
+\contentsline {subsection}{\numberline {2.5.1}システムアプリケーション}{26}
+\contentsline {subsection}{\numberline {2.5.2}ファインダー}{26}
+\contentsline {subsection}{\numberline {2.5.3}基本文章エディタ}{26}
+\contentsline {subsection}{\numberline {2.5.4}基本図形エディタ}{26}
+\contentsline {part}{\uppercase {iii}\phspace {1em}カーネル}{27}
+\contentsline {chapter}{\numberline {3}カーネルの概要}{29}
+\contentsline {section}{\numberline {3.1}API}{29}
+\contentsline {section}{\numberline {3.2}タスク管理管理}{30}
+\contentsline {section}{\numberline {3.3}メモリ管理}{30}
+\contentsline {section}{\numberline {3.4}IPC}{30}
+\contentsline {section}{\numberline {3.5}イベントマネージャ}{30}
+\contentsline {section}{\numberline {3.6}ディスプレイプリミティブ}{30}
+\contentsline {section}{\numberline {3.7}システムの起動}{30}
+\contentsline {part}{\uppercase {iv}\phspace {1em}BTRON サーバ}{31}
+\contentsline {section}{\numberline {3.8}概要}{33}
+\contentsline {part}{\uppercase {v}\phspace {1em}マネージャ}{35}
+\contentsline {part}{\uppercase {vi}\phspace {1em}ライブラリ}{37}
+\contentsline {chapter}{\numberline {4}システムコール}{39}
+\contentsline {chapter}{\numberline {5}高レベル関数}{41}
+\contentsline {chapter}{\numberline {6}POSIX エミュレーション}{43}
+\contentsline {part}{\uppercase {vii}\phspace {1em}Appendix}{45}
+\contentsline {chapter}{\numberline {A}システムのインストール}{47}
+\contentsline {section}{\numberline {A.1}2つの方法}{47}
+\contentsline {subsection}{\numberline {A.1.1}ソースコードからのインストール}{47}
+\contentsline {subsection}{\numberline {A.1.2}バイナリからのインストール}{47}
+\contentsline {section}{\numberline {A.2}バイナリ}{47}
+\contentsline {subsection}{\numberline {A.2.1}材料}{47}
+\contentsline {subsubsection}{インストールディスク}{47}
+\contentsline {subsection}{\numberline {A.2.2}さあ、作ってみよう！}{47}
+\contentsline {subsubsection}{インストールディスクの作成}{47}
+\contentsline {subsubsection}{ハードディスクのフォーマット}{47}
+\contentsline {subsubsection}{ハードディスクへのインストール}{47}
+\contentsline {section}{\numberline {A.3}トラブルシューティング}{47}
+\contentsline {subsection}{\numberline {A.3.1}システムが起動しない}{47}
+\contentsline {chapter}{\numberline {B}API}{49}
+\contentsline {section}{\numberline {B.1}ITRON システムコール}{49}
+\contentsline {section}{\numberline {B.2}BTRON システムコール}{49}
+\contentsline {section}{\numberline {B.3}マネージャ}{49}
+\contentsline {chapter}{\numberline {C}Index}{51}

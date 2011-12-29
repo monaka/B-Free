@@ -7,6 +7,7 @@ LD=/bin/ld
 GCC=/usr/bin/gcc
 #CONVOUT=/usr/local/bin/convout
 CFLAGS=-D__LINUX__
+IMGS=boottable 2ndboot build
 
 all: image
 
@@ -18,7 +19,7 @@ help:
 	@echo "  clean" 
 
 fd: image
-image: boottable 1stboot 2ndboot build
+image: ${IMGS}
 	sync
 	sync
 	./build 1st/1stboot 2nd/2ndboot bootimage

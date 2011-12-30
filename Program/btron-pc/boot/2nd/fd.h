@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT fd routines.
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/fd.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/fd.h,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: fd.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -148,13 +151,13 @@ extern void	intr_fd (void);
 extern int	fd_ready_check (void);
 extern int	on_motor (BYTE drive);
 extern int	stop_motor (BYTE drive);
-extern int fd_read (BYTE drive, int blockno, BYTE *buff);
 extern int	fd_get_status (BYTE drive, int datan);
 extern int	fd_recalibrate (BYTE drive);
 extern int	fd_seek (BYTE drive, int head, int cylinder, int motor);
 extern int	fd_specify (UWORD32,UWORD32,UWORD32,UWORD32);
 extern int	fd_reset (void);
+extern int	fd_read (BYTE drive, int blockno, BYTE *buff);
 
 
-#endif __FD_H__
+#endif /* __FD_H__ */
 

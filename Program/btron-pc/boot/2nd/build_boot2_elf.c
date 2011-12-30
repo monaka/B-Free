@@ -268,12 +268,12 @@ read_elf_efile (char *fname, int *size, ELF32_Word type, ELF32_Word flag, ELF32_
 
   for (i = 0; i < ent; i++)
     {
-#ifdef nodef
+      //#ifdef nodef
       fprintf (stderr, "ph[%d].p_type = 0x%x, ph[%d].p_flags = 0x%x\n",
 	       i, ph[i].p_type,
 	       i, ph[i].p_flags);
-#endif
-      if ((ph[i].p_type == type) && (ph[i].p_flags == flag))
+      //#endif
+      if ((ph[i].p_type == type) && (ph[i].p_flags & flag))
 	{
 	  break;
 	}

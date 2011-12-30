@@ -11,9 +11,12 @@ Version 2, June 1991
 /***********************************************************************
  * idt.c
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/idt.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/idt.h,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: idt.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -71,4 +74,4 @@ void	ignore (void);
 
 
 
-#endif __IDT_H__
+#endif /* __IDT_H__ */

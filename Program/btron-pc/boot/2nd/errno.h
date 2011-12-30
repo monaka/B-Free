@@ -10,10 +10,13 @@ Version 2, June 1991
 */
 /* <errno.h> --- •®•È°º»÷πÊ§ŒƒÍµ¡
  *
- * $Date: 2011/12/27 17:13:35 $
- * $Revision: 1.1 $
+ * $Date: 2011/12/30 00:57:06 $
+ * $Revision: 1.2 $
  * $Author: liu1 $
  * $Log: errno.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * „Ç≥„É≥„Éë„Ç§„É´„Ç®„É©„Éº„ÅÆ‰øÆÊ≠£„ÄÇ
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -97,7 +100,7 @@ Version 2, June 1991
 
 typedef	UWORD32		ERRNO;
 
-#endif __ERRNO_H__
+#endif /* __ERRNO_H__ */
 
 
 

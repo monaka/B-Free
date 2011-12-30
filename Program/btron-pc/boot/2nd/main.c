@@ -12,10 +12,13 @@ Version 2, June 1991
  *
  *		2nd BOOT main routine.
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/main.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/main.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  *
  * $Log: main.c,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -164,7 +167,7 @@ Version 2, June 1991
  * 
  */
 
-static char	rcsid[] = "$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/main.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+static char	rcsid[] = "$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/main.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $";
 
 #include "boot.h"
 #include "lib.h"
@@ -500,7 +503,7 @@ read_multi_module ()
 
   boot_printf ("Multiple module boot.\n");
   info = (struct boot_header *)MODULE_TABLE;
-  fd_read (0, 0, (char *)info);
+  fd_read (0, 0, (BYTE *)info);
   info->machine.base_mem = base_mem;
   info->machine.ext_mem = ext_mem;
   info->machine.real_mem = real_mem;
@@ -538,7 +541,7 @@ read_single_module (int start_block, void *paddr, struct module_info *info)
   struct exec	*exec_info;
 
   bn = start_block;
-  fd_read (0, bn, tmp);
+  fd_read (0, bn, (BYTE *)tmp);
   exec_info = (struct exec *)tmp;
   if (N_BADMAG (*exec_info))
     {
@@ -564,7 +567,7 @@ read_single_module (int start_block, void *paddr, struct module_info *info)
 	   i++, bn++)
 	{
 	  boot_printf (".");
-	  fd_read (0, bn, buf);
+	  fd_read (0, bn, (BYTE*)buf);
 	  bcopy (buf,
 		 (char *)(paddr + i * BLOCK_SIZE),
 		 BLOCK_SIZE);

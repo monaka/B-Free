@@ -39,4 +39,4 @@ void	banner (void);
 void	panic (char*);
 void	print_binary (int);
 
-#endif __CONFIG_H__
+#endif /* __CONFIG_H__ */

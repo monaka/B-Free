@@ -9,9 +9,12 @@ Version 2, June 1991
 
 */
 
-/* $Id: lib.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+/* $Id: lib.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: lib.c,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -48,7 +51,7 @@ Version 2, June 1991
  */
 
 
-static char	rcsid[] = "$Id: lib.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+static char	rcsid[] = "$Id: lib.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $";
 
 #include "types.h"
 #include "location.h"
@@ -64,8 +67,13 @@ static void	write_string ();
 static void	write_digit ();
 static void	write_digit2 ();
 
+#define  _AUPBND                (sizeof (int) - 1)
+#define  _ADNBND                (sizeof (int) - 1)
 
-#define INC(x,type)	(((type *)x) += 1)
+#define _bnd(X, bnd)            (((sizeof (X)) + (bnd)) & (~(bnd)))
+#define va_arg(ap, T)           (*(T *)(((ap) += (_bnd (T, _AUPBND))) - (_bnd (T,_ADNBND))))
+#define INC(ap,T)           	((T *)(((ap) += (_bnd (T, _AUPBND))) - (_bnd (T,_ADNBND))))
+/* (((t *)x) += 1) */
 
 void
 boot_printf (char *fmt, ...)
@@ -520,7 +528,7 @@ scroll_up ()
   UWORD16 *addr;
   int i;
   
-  addr = (WORD16 *)TEXT_VRAM_ADDR;
+  addr = (UWORD16 *)TEXT_VRAM_ADDR;
   for (i = 0; i < TEXT_VRAM_SIZE - 80; i++)
     {
       addr[i] = addr[i + 80];

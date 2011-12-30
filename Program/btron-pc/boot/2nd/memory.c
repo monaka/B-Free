@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT memory allocate/deallocate routine.
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/memory.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/memory.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: memory.c,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * „Ç≥„É≥„Éë„Ç§„É´„Ç®„É©„Éº„ÅÆ‰øÆÊ≠£„ÄÇ
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -60,7 +63,7 @@ Version 2, June 1991
  * 
  */
 
-static char	rcsid[] = "$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/memory.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+static char	rcsid[] = "$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/memory.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $";
 
 #include "types.h"
 #include "location.h"
@@ -124,7 +127,7 @@ init_memory (void)
    */
   enable_A20 ();
 #endif
-  for (p = (int *)0x100000; (int)p < 0xf000000; (int)p += 0x100000)
+  for (p = (int *)0x100000; (int)p < 0xf000000; p = (int *)((int)p + 0x100000))
     {
       *p = 0;
       *p = 0xAA;
@@ -156,7 +159,7 @@ init_memory (void)
 static void
 init_malloc (void *last, int size)
 {
-  (BYTE *)alloc_reg = (BYTE *)last - size;
+  alloc_reg = (struct alloc_entry *)(last - size);
   alloc_reg->size = size;
   alloc_reg->next = alloc_reg;
 #ifdef nodef
@@ -222,7 +225,7 @@ malloc (int size)
 					/* ¡«§«§¢§Î§≥§»§À√Ì∞’ */
     }
 
-  (char *)alloced = ((char *)p) + (p->size - true_size);
+  alloced = (struct alloc_entry *)(((char *)p) + (p->size - true_size));
   p->size -= true_size;
   alloced->size = true_size;
   return (alloced->body);

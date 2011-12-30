@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT misc routine.
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/misc.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/misc.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: misc.c,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * „Ç≥„É≥„Éë„Ç§„É´„Ç®„É©„Éº„ÅÆ‰øÆÊ≠£„ÄÇ
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -49,7 +52,7 @@ Version 2, June 1991
  * øß°π§ ¥ÿøÙ§ŒΩ∏πÁ
  */
 
-static char	rcsid[] = "$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/misc.c,v 1.1 2011/12/27 17:13:35 liu1 Exp $";
+static char	rcsid[] = "$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/misc.c,v 1.2 2011/12/30 00:57:06 liu1 Exp $";
 
 #include "console.h"
 #include "keyboard.h"
@@ -115,3 +118,11 @@ gets (char *line)
   return (line);
 }
 
+void
+__stack_chk_fail(void)
+{
+  boot_printf("stack over flow\n");
+  for(;;) {
+    ;
+  }
+}

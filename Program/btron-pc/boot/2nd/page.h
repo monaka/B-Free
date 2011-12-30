@@ -55,4 +55,4 @@ int	map_vm (ULONG raddr, ULONG vaddr, ULONG size);
 struct page_table_entry *get_page_entry (unsigned long addr);
 
 
-#endif __PAGE_H__
+#endif /* __PAGE_H__ */

@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT main routine.
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/misc.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/misc.h,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: misc.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -43,6 +46,7 @@ extern char	*gets (char *);
 extern unsigned short	shift_to_jis (unsigned short shift);
 extern unsigned short	jis_to_shift (unsigned short shift);
 extern char		*string_shift_to_jis (char *s);
+extern void	__stack_chk_fail(void);
 
 
-#endif __MISC_H__
+#endif /* __MISC_H__ */

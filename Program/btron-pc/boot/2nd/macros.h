@@ -22,4 +22,4 @@ Version 2, June 1991
 #define ISDIGIT(x)	((x >= '0') && (x <= '9'))
 
 
-#endif __MACROS_H__
+#endif /* __MACROS_H__ */

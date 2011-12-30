@@ -8,10 +8,13 @@ Version 2, June 1991
 (C) B-Free Project.
 
 */
-/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/include/keyboard_def.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $ */
+/* @(#)$Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/include/keyboard_def.h,v 1.2 2011/12/30 00:57:32 liu1 Exp $ */
 
 /*
  * $Log: keyboard_def.h,v $
+ * Revision 1.2  2011/12/30 00:57:32  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -205,5 +208,5 @@ static W        key_table_101[4][255] =
 };
 
 
-#endif __KEYBOARD_DEF_H__
+#endif /* __KEYBOARD_DEF_H__ */
 

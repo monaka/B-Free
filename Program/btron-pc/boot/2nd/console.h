@@ -10,7 +10,7 @@ Version 2, June 1991
 */
 /* $Source: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/console.h,v $
  *
- * $Date: 2011/12/27 17:13:35 $
+ * $Date: 2011/12/30 00:57:06 $
  * $Author: liu1 $
  *
  *
@@ -31,6 +31,6 @@ extern int init_console (void);
 extern int putchar (int ch);
 
 
-#endif __CONSOLE_H__
+#endif /* __CONSOLE_H__ */
 
 

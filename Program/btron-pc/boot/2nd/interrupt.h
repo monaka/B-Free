@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT interrupt definition
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/interrupt.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/interrupt.h,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: interrupt.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -81,6 +84,6 @@ extern void	ignore_handler (void);
 
 extern void	intr_ide ();
 
-#endif __INTERRUPT_H__
+#endif /* __INTERRUPT_H__ */
 
  

@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT date
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/date.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/date.h,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: date.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -58,4 +61,4 @@ extern void init_clock (void);
 extern int  read_clock (struct date_t *date);
 extern void busywait(int x);
 
-#endif __DATE_H__
+#endif /* __DATE_H__ */

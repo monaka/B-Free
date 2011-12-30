@@ -10,7 +10,7 @@ Version 2, June 1991
 */
 /* $Source: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/keyboard.h,v $
  *
- * $Date: 2011/12/27 17:13:35 $
+ * $Date: 2011/12/30 00:57:06 $
  * $Author: liu1 $
  *
  *
@@ -26,6 +26,6 @@ extern int read_keyboard (void);
 
 //extern void k101us(char *argv[]);
 //extern void k106jp(char *argv[]);
-#endif __KEYBOARD_H__
+#endif /* __KEYBOARD_H__ */
 
 

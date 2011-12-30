@@ -53,5 +53,5 @@ Version 2, June 1991
 
 extern int	setup_dma (void *addr, int mode, int length, int mask);
 
-#endif __DMA_H__
+#endif /* __DMA_H__ */
 

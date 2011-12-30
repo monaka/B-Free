@@ -12,9 +12,12 @@ Version 2, June 1991
  *
  *		2nd BOOT types definition.
  *
- * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/types.h,v 1.1 2011/12/27 17:13:35 liu1 Exp $
+ * $Header: /cvsroot/bfree-info/B-Free/Program/btron-pc/boot/2nd/types.h,v 1.2 2011/12/30 00:57:06 liu1 Exp $
  *
  * $Log: types.h,v $
+ * Revision 1.2  2011/12/30 00:57:06  liu1
+ * コンパイルエラーの修正。
+ *
  * Revision 1.1  2011/12/27 17:13:35  liu1
  * Initial Version.
  *
@@ -83,5 +86,5 @@ typedef int		(*FUNCP)();
 
 #define MAXINT		(0x7fffffff)
 
-#endif __TYPES_H__
+#endif /* __TYPES_H__ */
 

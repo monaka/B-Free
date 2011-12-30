@@ -209,4 +209,4 @@ extern int	get_record (struct file *fp,
 #define FILE_SNAME_SIZE(x)	(x->fs_block.header.shortname_table_size)
 
 
-#endif __FILE_H__
+#endif /* __FILE_H__ */
